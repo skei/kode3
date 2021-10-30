@@ -6,7 +6,7 @@
 	<stdint.h>
 	"base/debug/kode_debug.h"
 
-1635624188 source:/DISKS/sda2/code/git/kode3/build/build.cpp
+1635624986 source:/DISKS/sda2/code/git/kode3/build/build.cpp
 	"kode.h"
 	"plugin/kode_plugin.h"
 
@@ -58,15 +58,15 @@
 	"kode.h"
 	"plugin/kode_editor.h"
 
-1635605510 /DISKS/sda2/code/git/kode3/src/plugin/kode_editor.h
+1635624308 /DISKS/sda2/code/git/kode3/src/plugin/kode_editor.h
 	"kode.h"
 	"base/types/kode_array.h"
 	"plugin/kode_parameter.h"
 	"gui/kode_widget.h"
 
-1635624246 /DISKS/sda2/code/git/kode3/src/plugin/exe/kode_exe_plugin.h
+1635624285 /DISKS/sda2/code/git/kode3/src/plugin/exe/kode_exe_plugin.h
 
-1635614430 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_plugin.h
+1635628162 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_plugin.h
 	"kode.h"
 	"plugin/lv2/kode_lv2.h"
 	"plugin/lv2/kode_lv2_instance.h"
@@ -292,12 +292,12 @@
 	<string.h>
 	<stdarg.h>
 
-1635613036 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_instance.h
+1635628772 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_instance.h
 	"kode.h"
 	"plugin/kode_instance.h"
 	"plugin/lv2/kode_lv2.h"
 
-1635613854 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_editor.h
+1635628380 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_editor.h
 	"kode.h"
 	"plugin/lv2/kode_lv2.h"
 

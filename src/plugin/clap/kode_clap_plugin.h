@@ -32,7 +32,7 @@ clap_process_status clap_instance_process_callback(const struct clap_plugin* plu
 const void*         clap_instance_get_extension_callback(const struct clap_plugin* plugin, const char *id);
 void                clap_instance_on_main_thread_callback(const struct clap_plugin* plugin);
 
-// TODO: fill out with info from KODE_Descriptort
+// TODO: fill out with info from KODE_Descriptor
 
 const struct clap_plugin_descriptor kode_clap_descriptor = {
   CLAP_VERSION,
@@ -239,6 +239,9 @@ void clap_refresh_callback(void) {
 //
 //----------------------------------------------------------------------
 
+// warning: ‘visibility’ attribute ignored [-Wattributes]|
+
+//CLAP_EXPORT
 //__attribute__ ((visibility ("default")))
 const struct clap_plugin_entry clap_plugin_entry = {
   CLAP_VERSION,

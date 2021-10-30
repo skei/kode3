@@ -2,8 +2,33 @@
 #define kode_lv2_editor_included
 //----------------------------------------------------------------------
 
+/*
+  LV2UI_Write_Function
+  A host-provided function that sends data to a plugin's input ports.
+
+  controller
+    The opaque controller pointer passed to LV2UI_Descriptor::instantiate().
+  port_index
+    Index of the port to update.
+  buffer
+    Buffer containing `buffer_size` bytes of data.
+  buffer_size
+    Size of `buffer` in bytes.
+  port_protocol
+    Either 0 or the URID for a ui:PortProtocol.  If 0, the protocol is
+    implicitly ui:floatProtocol, the port MUST be an lv2:ControlPort input,
+    `buffer` MUST point to a single float value, and `buffer_size` MUST be
+    sizeof(float).  The UI SHOULD NOT use a protocol not supported by the
+    host, but the host MUST gracefully ignore any protocol it does not
+    understand.
+*/
+
+//----------------------------------------------------------------------
+
 #include "kode.h"
 #include "plugin/lv2/kode_lv2.h"
+
+//----------------------------------------------------------------------
 
 class KODE_Lv2Editor {
 
@@ -11,6 +36,13 @@ class KODE_Lv2Editor {
 private:
 //------------------------------
 
+  const LV2UI_Descriptor*   MLv2UIDescriptor    = nullptr;
+  const char*               MLv2UIPluginUri     = "";
+  const char*               MLv2UIBundlePath    = "";
+  LV2UI_Write_Function      MLv2UIWriteFunction = nullptr;
+  LV2UI_Controller          MLv2UIController    = nullptr;
+  LV2UI_Widget*             MLv2UIWidget        = nullptr;
+  const LV2_Feature* const* MLv2UIFeatures      = nullptr;
 
 //------------------------------
 public:
@@ -55,6 +87,13 @@ public: // lv2
   */
 
   void lv2ui_instantiate(const struct LV2UI_Descriptor* descriptor, const char* plugin_uri, const char* bundle_path, LV2UI_Write_Function write_function, LV2UI_Controller controller, LV2UI_Widget* widget, const LV2_Feature* const* features) {
+    MLv2UIDescriptor    = descriptor;
+    MLv2UIPluginUri     = plugin_uri;
+    MLv2UIBundlePath    = bundle_path;
+    MLv2UIWriteFunction = write_function;
+    MLv2UIController    = controller;
+    MLv2UIWidget        = widget;
+    MLv2UIFeatures      = features;
   }
 
   //----------
@@ -96,25 +135,3 @@ public:
 
 //----------------------------------------------------------------------
 #endif
-
-
-/*
-  LV2UI_Write_Function
-  A host-provided function that sends data to a plugin's input ports.
-
-  controller
-    The opaque controller pointer passed to LV2UI_Descriptor::instantiate().
-  port_index
-    Index of the port to update.
-  buffer
-    Buffer containing `buffer_size` bytes of data.
-  buffer_size
-    Size of `buffer` in bytes.
-  port_protocol
-    Either 0 or the URID for a ui:PortProtocol.  If 0, the protocol is
-    implicitly ui:floatProtocol, the port MUST be an lv2:ControlPort input,
-    `buffer` MUST point to a single float value, and `buffer_size` MUST be
-    sizeof(float).  The UI SHOULD NOT use a protocol not supported by the
-    host, but the host MUST gracefully ignore any protocol it does not
-    understand.
-*/

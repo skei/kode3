@@ -1,0 +1,86 @@
+notes to self while developing lv2 support
+
+----------------------------------------------------------------------
+
+https://lv2plug.in
+http://ll-plugins.nongnu.org/lv2pftci/
+https://en.wikipedia.org/wiki/LV2
+
+----------------------------------------------------------------------
+
+  - host calls lv2_descriptor()
+  - plugin returns ptr to LV2_Descriptor
+  - host calls LV2_Descriptor.instantiate()
+  - plugin creates 'real' plugin instance class,
+    and returns ptr to this as the 'handle'
+
+  - host calls various callback functions given in the LV2_Descriptor
+    the plugin returned earlier
+  - callback functions typecast the handle argument as ptr to 'real'
+    plugin instance class, and calls proper method
+
+------------------------------
+uri
+------------------------------
+
+  a URI means nothing. it is a string, an identifier for things, an ID
+
+  "<urn:skei.audio/kode_debug>"
+
+------------------------------
+.lv2
+------------------------------
+
+  lv2 plugins come in "bundles".
+  a bundle contains one or more plugins.
+  a bundle is just a directory, with three files inside:
+
+    manifest.ttl
+    <plugin_name>.ttl
+    <plugin_name>.so
+
+------------------------------
+mainfest.ttl
+------------------------------
+
+  //@prefix lv2:    <http://lv2plug.in/ns/lv2core#>           .
+  //@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#>   .
+  //
+  //<http://lv2plug.in/plugins/plugin_name>
+  //  a             lv2:Plugin                                ;
+  //  rdfs:seeAlso  <plugin_name.ttl>                         ;
+  //  lv2:binary    <plugin_name.so>                          ;
+  //  doap:name     "plugin_name"                             ;
+  //  doap:license  <http://usefulinc.com/doap/licenses/gpl>  ;
+
+  @prefix lv2:  <urn:skei.audio/plugin>         .
+  @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+  <http://lv2plug.in/plugins/plugin_name>
+    a             lv2:Plugin        ;
+    rdfs:seeAlso  <plugin_name.ttl> .
+
+------------------------------
+plugin_name.ttl
+------------------------------
+
+  @prefix lv2:  <http://lv2plug.in/ns/lv2core#>.
+  @prefix doap: <http://usefulinc.com/ns/doap#>.
+
+  <http://lv2plug.in/plugins/plugin_name>
+    a             lv2:Plugin                                ;
+    lv2:binary    <plugin_name.so>                          ;
+    doap:name     "plugin_name"                             ;
+    doap:license  <http://usefulinc.com/doap/licenses/gpl>  ;
+    lv2:port [
+      a           lv2:ControlPort, lv2:InputPort  ;
+      lv2:index   0                               ;
+      lv2:symbol  "width"                         ;
+      lv2:name    "Width"                         ;
+    ]                                             ,
+    [
+      a           lv2:AudioPort, lv2:OutputPort   ;
+      lv2:index   5                               ;
+      lv2:symbol  "right_output"                  ;
+      lv2:name    "Right output"                  ;
+    ]                                             .

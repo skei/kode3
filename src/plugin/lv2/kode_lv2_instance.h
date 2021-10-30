@@ -6,7 +6,7 @@
 #include "plugin/kode_instance.h"
 #include "plugin/lv2/kode_lv2.h"
 
-//
+//----------------------------------------------------------------------
 
 class KODE_Lv2Instance {
 
@@ -15,6 +15,14 @@ private:
 //------------------------------
 
   KODE_Instance*  MInstance = nullptr;
+
+  const LV2_Descriptor*     MLv2Descriptor  = nullptr;
+  double                    MLv2SampleRate  = 0.0;
+  const char*               MLv2BundlePath  = nullptr;
+  const LV2_Feature* const* MLv2Features    = nullptr;
+
+  uint32_t                  MNumPorts       = 0;
+  void**                    MPortPointers   = nullptr;
 
 //------------------------------
 public:
@@ -62,6 +70,10 @@ public: // lv2
   */
 
   void lv2_instantiate(const struct LV2_Descriptor* descriptor, double sample_rate, const char* bundle_path, const LV2_Feature* const* features) {
+    MLv2Descriptor  = descriptor;
+    MLv2SampleRate  = sample_rate;
+    MLv2BundlePath  = bundle_path;
+    MLv2Features    = features;
   }
 
   //----------
@@ -99,6 +111,7 @@ public: // lv2
   */
 
   void lv2_connect_port(uint32_t port, void* data_location) {
+    MPortPointers[port] = data_location;
   }
 
   //----------

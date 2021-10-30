@@ -2,10 +2,19 @@
 #define kode_clap_instance_included
 //----------------------------------------------------------------------
 
+#include "kode.h"
+#include "plugin/clap/kode_clap.h"
+
+//----------------------------------------------------------------------
+
 class KODE_ClapInstance {
+
 private:
+
   clap_plugin MClapPlugin;
+
 public:
+
   const clap_plugin* getClapPlugin() { return &MClapPlugin; }
 
 
