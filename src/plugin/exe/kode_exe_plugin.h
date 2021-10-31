@@ -26,6 +26,9 @@ public:
 public:
 
   int main(int argc, char** argv) {
+
+    //KODE_Print("__GNUC__ %i\n",__GNUC__);
+
     descriptor = new DESCRIPTOR();
     if (descriptor) {
       descriptor->name = "myPlugin";

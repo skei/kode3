@@ -6,12 +6,6 @@
 #include "plugin/clap/kode_clap.h"
 #include "plugin/clap/kode_clap_instance.h"
 
-//#include "plugs/dc-offset/dc-offset.hh"
-//#include "plugs/gain/gain.hh"
-//#include "plugs/transport/transport-info.hh"
-//#include "path-provider.hh"
-
-
 //----------------------------------------------------------------------
 
 KODE_Instance*      _kode_clap_get_instance();
@@ -39,17 +33,24 @@ void                clap_instance_on_main_thread_callback(const struct clap_plug
 
 const struct clap_plugin_descriptor kode_clap_descriptor = {
   CLAP_VERSION,
-  "plugin_id",
-  "plugin",
-  "skei.audio",
+  "id",
+  "name",
+  "vendor",
   "url",
   "manual_url",
   "support_url",
-  "version - '0.0.0'",
+  "0.0.0",
   "description",
   "keyword1;jeyword2",
   CLAP_PLUGIN_AUDIO_EFFECT,
 };
+
+//  clap_plugin_params          MClapPluginParams       = {};
+//  clap_plugin_gui             MClapPluginGui          = {};
+//  clap_plugin_gui_x11         MClapPluginGuiX11       = {};
+//  clap_plugin_render          MClapPluginRender       = {};
+//  clap_plugin_state           MClapPluginState        = {};
+//  clap_plugin_timer_support   MClapPluginTimerSupport = {};
 
 //----------------------------------------------------------------------
 //
@@ -65,12 +66,8 @@ const struct clap_plugin_descriptor kode_clap_descriptor = {
 */
 
 bool clap_instance_init_callback(const struct clap_plugin* plugin) {
-  if (plugin) {
-    KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
-    if (instance) {
-      return instance->clap_instance_init();
-    }
-  }
+  KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
+  if (instance) return instance->clap_instance_init();
   return false;
 }
 
@@ -82,12 +79,8 @@ bool clap_instance_init_callback(const struct clap_plugin* plugin) {
 */
 
 void clap_instance_destroy_callback(const struct clap_plugin* plugin) {
-  if (plugin) {
-    KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
-    if (instance) {
-      instance->clap_instance_destroy();
-    }
-  }
+  KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
+  if (instance) instance->clap_instance_destroy();
 }
 
 //----------
@@ -98,12 +91,8 @@ void clap_instance_destroy_callback(const struct clap_plugin* plugin) {
 */
 
 bool clap_instance_activate_callback(const struct clap_plugin* plugin, double sample_rate) {
-  if (plugin) {
-    KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
-    if (instance) {
-      return instance->clap_instance_activate(sample_rate);
-    }
-  }
+  KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
+  if (instance) return instance->clap_instance_activate(sample_rate);
   return false;
 }
 
@@ -115,12 +104,8 @@ bool clap_instance_activate_callback(const struct clap_plugin* plugin, double sa
 */
 
 void clap_instance_deactivate_callback(const struct clap_plugin* plugin) {
-  if (plugin) {
-    KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
-    if (instance) {
-      instance->clap_instance_deactivate();
-    }
-  }
+  KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
+  if (instance) instance->clap_instance_deactivate();
 }
 
 //----------
@@ -132,12 +117,8 @@ void clap_instance_deactivate_callback(const struct clap_plugin* plugin) {
 */
 
 bool clap_instance_start_processing_callback(const struct clap_plugin* plugin) {
-  if (plugin) {
-    KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
-    if (instance) {
-      return instance->clap_instance_start_processing();
-    }
-  }
+  KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
+  if (instance) return instance->clap_instance_start_processing();
   return false;
 }
 
@@ -150,12 +131,8 @@ bool clap_instance_start_processing_callback(const struct clap_plugin* plugin) {
 */
 
 void clap_instance_stop_processing_callback(const struct clap_plugin* plugin) {
-  if (plugin) {
-    KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
-    if (instance) {
-      instance->clap_instance_stop_processing();
-    }
-  }
+  KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
+  if (instance) instance->clap_instance_stop_processing();
 }
 
 
@@ -167,12 +144,8 @@ void clap_instance_stop_processing_callback(const struct clap_plugin* plugin) {
 */
 
 clap_process_status clap_instance_process_callback(const struct clap_plugin* plugin, const clap_process *process) {
-  if (plugin) {
-    KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
-    if (instance) {
-      return instance->clap_instance_process(process);
-    }
-  }
+  KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
+  if (instance) return instance->clap_instance_process(process);
   return CLAP_PROCESS_ERROR;
 }
 
@@ -185,12 +158,11 @@ clap_process_status clap_instance_process_callback(const struct clap_plugin* plu
 */
 
 const void* clap_instance_get_extension_callback(const struct clap_plugin* plugin, const char *id) {
-  if (plugin) {
-    KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
-    if (instance) {
-      return instance->clap_instance_get_extension(id);
-    }
-  }
+  KODE_Print("id: %s\n",id);
+  KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
+  if (instance) return instance->clap_instance_get_extension(id);
+  //if (strcmp(id,CLAP_EXT_GUI_X11) == 0) return &MClapPluginParams;
+  //if (strcmp(id,CLAP_EXT_PARAMS) == 0)  return &MClapPluginParams;
   return nullptr;
 }
 
@@ -203,12 +175,8 @@ const void* clap_instance_get_extension_callback(const struct clap_plugin* plugi
 */
 
 void clap_instance_on_main_thread_callback(const struct clap_plugin* plugin) {
-  if (plugin) {
-    KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
-    if (instance) {
-      instance->clap_instance_on_main_thread();
-    }
-  }
+  KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
+  if (instance) instance->clap_instance_on_main_thread();
 }
 
 //----------------------------------------------------------------------
@@ -274,9 +242,11 @@ const clap_plugin_descriptor* clap_get_plugin_descriptor_callback(uint32_t index
 */
 
 const clap_plugin* clap_create_plugin_callback(const clap_host *host, const char *plugin_id) {
+
   KODE_Instance*      instance      = _kode_clap_get_instance();
   KODE_ClapInstance*  clapinstance  = new KODE_ClapInstance(host,instance);
   clap_plugin*        plugin        = (clap_plugin*)malloc(sizeof(clap_plugin));
+  // not const/static because plugin_data differs for each instance
   plugin->desc              = &kode_clap_descriptor;
   plugin->plugin_data       = clapinstance;
   plugin->init              = clap_instance_init_callback;

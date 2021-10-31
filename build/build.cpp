@@ -1,6 +1,4 @@
 
-#define KODE_DEBUG
-
 #include "kode.h"
 #include "plugin/kode_plugin.h"
 
