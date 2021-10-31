@@ -11,7 +11,10 @@
 //#include "plugs/transport/transport-info.hh"
 //#include "path-provider.hh"
 
+
 //----------------------------------------------------------------------
+
+KODE_Instance*      _kode_clap_get_instance();
 
 bool                clap_init_callback(const char *plugin_path);
 void                clap_deinit_callback(void);
@@ -51,8 +54,15 @@ const struct clap_plugin_descriptor kode_clap_descriptor = {
 //----------------------------------------------------------------------
 //
 // clap instance callbacks
+// (these could be moved to KODE_ClapInstance, but i keep them here,
+// so that we have all callbacks in one place)
 //
 //----------------------------------------------------------------------
+
+/*
+  Must be called after creating the plugin.
+  If init returns false, the host must destroy the plugin instance.
+*/
 
 bool clap_instance_init_callback(const struct clap_plugin* plugin) {
   if (plugin) {
@@ -66,6 +76,11 @@ bool clap_instance_init_callback(const struct clap_plugin* plugin) {
 
 //----------
 
+/*
+  Free the plugin and its resources.
+  It is not required to deactivate the plugin prior to this call.
+*/
+
 void clap_instance_destroy_callback(const struct clap_plugin* plugin) {
   if (plugin) {
     KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
@@ -76,6 +91,11 @@ void clap_instance_destroy_callback(const struct clap_plugin* plugin) {
 }
 
 //----------
+
+/*
+  activation
+  [main-thread]
+*/
 
 bool clap_instance_activate_callback(const struct clap_plugin* plugin, double sample_rate) {
   if (plugin) {
@@ -89,6 +109,11 @@ bool clap_instance_activate_callback(const struct clap_plugin* plugin, double sa
 
 //----------
 
+/*
+  deactivation
+  [main-thread]
+*/
+
 void clap_instance_deactivate_callback(const struct clap_plugin* plugin) {
   if (plugin) {
     KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
@@ -99,6 +124,12 @@ void clap_instance_deactivate_callback(const struct clap_plugin* plugin) {
 }
 
 //----------
+
+/*
+  Set to true before processing
+  (and to false before sending the plugin to sleep)
+  [audio-thread]
+*/
 
 bool clap_instance_start_processing_callback(const struct clap_plugin* plugin) {
   if (plugin) {
@@ -112,6 +143,12 @@ bool clap_instance_start_processing_callback(const struct clap_plugin* plugin) {
 
 //----------
 
+/*
+  (Set to true before processing)
+  and to false before sending the plugin to sleep.
+  [audio-thread]
+*/
+
 void clap_instance_stop_processing_callback(const struct clap_plugin* plugin) {
   if (plugin) {
     KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
@@ -123,6 +160,11 @@ void clap_instance_stop_processing_callback(const struct clap_plugin* plugin) {
 
 
 //----------
+
+/*
+  process audio, events, ...
+  [audio-thread]
+*/
 
 clap_process_status clap_instance_process_callback(const struct clap_plugin* plugin, const clap_process *process) {
   if (plugin) {
@@ -136,6 +178,12 @@ clap_process_status clap_instance_process_callback(const struct clap_plugin* plu
 
 //----------
 
+/*
+  Query an extension.
+  The returned pointer is owned by the plugin.
+  [thread-safe]
+*/
+
 const void* clap_instance_get_extension_callback(const struct clap_plugin* plugin, const char *id) {
   if (plugin) {
     KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
@@ -147,6 +195,12 @@ const void* clap_instance_get_extension_callback(const struct clap_plugin* plugi
 }
 
 //----------
+
+/*
+  Called by the host on the main thread in response to a previous call to:
+  host->request_callback(host);
+  [main-thread]
+*/
 
 void clap_instance_on_main_thread_callback(const struct clap_plugin* plugin) {
   if (plugin) {
@@ -163,22 +217,42 @@ void clap_instance_on_main_thread_callback(const struct clap_plugin* plugin) {
 //
 //----------------------------------------------------------------------
 
+/*
+  NOTE: missing comments/documentation
+*/
+
 bool clap_init_callback(const char *plugin_path) {
   return true;
 }
 
 //----------
 
+/*
+  NOTE: missing comments/documentation
+*/
+
 void clap_deinit_callback(void) {
 }
 
 //----------
+
+/*
+  Get the number of plugins available.
+  [thread-safe]
+*/
 
 uint32_t clap_get_plugin_count_callback(void) {
   return 1;
 }
 
 //----------
+
+/*
+  Retrieves a plugin descriptor by its index.
+  Returns null in case of error.
+  The descriptor does not need to be freed.
+  [thread-safe]
+*/
 
 const clap_plugin_descriptor* clap_get_plugin_descriptor_callback(uint32_t index) {
   switch(index) {
@@ -191,11 +265,20 @@ const clap_plugin_descriptor* clap_get_plugin_descriptor_callback(uint32_t index
 
 //----------
 
+/*
+  Create a clap_plugin by its plugin_id.
+  The returned pointer must be freed by calling plugin->destroy(plugin);
+  The plugin is not allowed to use the host callbacks in the create method.
+  Returns null in case of error.
+  [thread-safe]
+*/
+
 const clap_plugin* clap_create_plugin_callback(const clap_host *host, const char *plugin_id) {
-  clap_plugin*        plugin = (clap_plugin*)malloc(sizeof(clap_plugin));
-  KODE_ClapInstance*  instance = new KODE_ClapInstance();
+  KODE_Instance*      instance      = _kode_clap_get_instance();
+  KODE_ClapInstance*  clapinstance  = new KODE_ClapInstance(host,instance);
+  clap_plugin*        plugin        = (clap_plugin*)malloc(sizeof(clap_plugin));
   plugin->desc              = &kode_clap_descriptor;
-  plugin->plugin_data       = instance;
+  plugin->plugin_data       = clapinstance;
   plugin->init              = clap_instance_init_callback;
   plugin->destroy           = clap_instance_destroy_callback;
   plugin->activate          = clap_instance_activate_callback;
@@ -210,11 +293,20 @@ const clap_plugin* clap_create_plugin_callback(const clap_host *host, const char
 
 //----------
 
+/*
+  Get the number of invalidation source.
+*/
+
 uint32_t clap_get_invalidation_sources_count_callback(void) {
   return 0;
 }
 
 //----------
+
+/*
+  Get the invalidation source by its index.
+  [thread-safe]
+*/
 
 /*
   typedef struct clap_plugin_invalidation_source {
@@ -230,6 +322,11 @@ const clap_plugin_invalidation_source* clap_get_invalidation_sources_callback(ui
 
 //----------
 
+/*
+  In case the host detected a invalidation event, it can call refresh() to let
+  the plugin_entry scan the set of plugins available.
+*/
+
 void clap_refresh_callback(void) {
 }
 
@@ -239,7 +336,27 @@ void clap_refresh_callback(void) {
 //
 //----------------------------------------------------------------------
 
-// warning: ‘visibility’ attribute ignored [-Wattributes]|
+/*
+  This interface is the entry point of the dynamic library.
+  There is an invalidation mechanism for the set of plugins which is based on
+  files. The host can watch the plugin DSO's mtime and a set of files's mtime
+  provided by get_clap_invalidation_source().
+  The set of plugins must not change, except during a call to refresh() by the
+  host.
+  Every methods must be thread-safe.
+*/
+
+//----------------------------------------------------------------------
+
+/*
+  NOTE:
+    (simplified)
+    > g++ --version
+    g++ (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0
+    > g++ -Wall -g -I../src -c build.cpp -o build.o
+    > g++  -o kode3_debug build.o
+    warning: ‘visibility’ attribute ignored [-Wattributes]|
+*/
 
 //CLAP_EXPORT
 //__attribute__ ((visibility ("default")))
@@ -257,8 +374,11 @@ const struct clap_plugin_entry clap_plugin_entry = {
 
 //----------
 
-#define KODE_CLAP_PLUGIN_ENTRYPOINT(D,I)      \
-                                              \
+#define KODE_CLAP_PLUGIN_ENTRYPOINT(DESCRIPTOR,INSTANCE)      \
+  /* TODO */                                  \
+  KODE_Instance* _kode_clap_get_instance() {  \
+    return new INSTANCE();                    \
+  }                                           \
 
 //----------------------------------------------------------------------
 #endif

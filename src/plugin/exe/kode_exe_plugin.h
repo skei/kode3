@@ -34,9 +34,9 @@ public:
         editor = instance->createEditor(nullptr);
         if (editor) {
           editor->setListener(this);
-          instance->openEditor();
-          editor->eventLoop();
-          instance->closeEditor();
+          //instance->openEditor();
+          //editor->eventLoop();
+          //instance->closeEditor();
           instance->deleteEditor();
         } // editor
         delete instance;

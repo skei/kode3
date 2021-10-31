@@ -12,9 +12,9 @@ public:
 public:
   virtual KODE_Editor*  createEditor(void* ptr)  { return nullptr; }
   virtual void          deleteEditor()           { }
-  virtual bool          openEditor()             { return false; }
-  virtual void          closeEditor()            { }
-  virtual void          updateEditor()           { }
+  //virtual bool          openEditor()             { return false; }
+  //virtual void          closeEditor()            { }
+  //virtual void          updateEditor()           { }
 };
 
 //----------------------------------------------------------------------
