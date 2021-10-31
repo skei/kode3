@@ -16,23 +16,23 @@ public:
 
   // KODE_EditorListener
   void parameter_changed_from_editor(uint32_t index, float value) final {
+    KODE_PRINT;
   }
 
   //----------
 
   void editor_resized_from_editor(float delta_x, float delta_y) final {
+    KODE_PRINT;
   }
 
 public:
 
   int main(int argc, char** argv) {
-
-    //KODE_Print("__GNUC__ %i\n",__GNUC__);
-
+    KODE_PRINT;
     descriptor = new DESCRIPTOR();
     if (descriptor) {
       descriptor->name = "myPlugin";
-      instance = new INSTANCE();
+      instance = new INSTANCE(descriptor);
       if (instance) {
         editor = instance->createEditor(nullptr);
         if (editor) {
@@ -62,6 +62,7 @@ public:
   KODE_ExePlugin<D,I> EXE_PLUGIN;       \
                                         \
 int main(int argc, char** argv) {       \
+  KODE_PRINT;                           \
   return EXE_PLUGIN.main(argc,argv);    \
 }                                       \
 

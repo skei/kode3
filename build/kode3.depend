@@ -6,15 +6,16 @@
 	<stdint.h>
 	"base/debug/kode_debug.h"
 
-1635648089 source:/DISKS/sda2/code/git/kode3/build/build.cpp
+1635694604 source:/DISKS/sda2/code/git/kode3/build/build.cpp
 	"kode.h"
 	"plugin/kode_plugin.h"
 
-1635538112 /DISKS/sda2/code/git/kode3/src/plugin/kode_plugin.h
+1635694272 /DISKS/sda2/code/git/kode3/src/plugin/kode_plugin.h
 	"kode.h"
 	"plugin/kode_descriptor.h"
 	"plugin/kode_instance.h"
 	"plugin/kode_editor.h"
+	"plugin/kode_host.h"
 	"plugin/clap/kode_clap_plugin.h"
 	"plugin/dssi/kode_dssi_plugin.h"
 	"plugin/exe/kode_exe_plugin.h"
@@ -30,7 +31,7 @@
 	"kode.h"
 	<memory.h>
 
-1635532700 /DISKS/sda2/code/git/kode3/src/plugin/kode_descriptor.h
+1635694420 /DISKS/sda2/code/git/kode3/src/plugin/kode_descriptor.h
 	"kode.h"
 	"plugin/kode_parameter.h"
 	"plugin/kode_preset.h"
@@ -54,19 +55,19 @@
 1635531550 /DISKS/sda2/code/git/kode3/src/plugin/kode_preset.h
 	"base/types/kode_array.h"
 
-1635640821 /DISKS/sda2/code/git/kode3/src/plugin/kode_instance.h
+1635694388 /DISKS/sda2/code/git/kode3/src/plugin/kode_instance.h
 	"kode.h"
 	"plugin/kode_editor.h"
 
-1635624308 /DISKS/sda2/code/git/kode3/src/plugin/kode_editor.h
+1635694566 /DISKS/sda2/code/git/kode3/src/plugin/kode_editor.h
 	"kode.h"
 	"base/types/kode_array.h"
 	"plugin/kode_parameter.h"
 	"gui/kode_widget.h"
 
-1635647802 /DISKS/sda2/code/git/kode3/src/plugin/exe/kode_exe_plugin.h
+1635694543 /DISKS/sda2/code/git/kode3/src/plugin/exe/kode_exe_plugin.h
 
-1635628162 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_plugin.h
+1635694698 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_plugin.h
 	"kode.h"
 	"plugin/lv2/kode_lv2.h"
 	"plugin/lv2/kode_lv2_instance.h"
@@ -87,7 +88,7 @@
 
 1635538132 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_plugin.h
 
-1635649574 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_plugin.h
+1635693290 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_plugin.h
 	"kode.h"
 	"plugin/clap/kode_clap.h"
 	"plugin/clap/kode_clap_instance.h"
@@ -286,21 +287,30 @@
 1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/draft/midi-mappings.h
 	"../../clap.h"
 
-1635650405 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_instance.h
+1635652232 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_instance.h
 	"kode.h"
 	"plugin/clap/kode_clap.h"
 
-1635606385 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug.h
+1635694599 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug.h
 	<stdio.h>
 	<string.h>
 	<stdarg.h>
+	<sys/time.h>
+	<sys/syscall.h>
+	<sys/unistd.h>
+	<unistd.h>
+	<sys/socket.h>
+	<sys/un.h>
 
-1635628881 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_instance.h
+1635694778 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_instance.h
 	"kode.h"
 	"plugin/kode_instance.h"
 	"plugin/lv2/kode_lv2.h"
 
-1635628380 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_editor.h
+1635694799 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_editor.h
 	"kode.h"
 	"plugin/lv2/kode_lv2.h"
+
+1635694026 /DISKS/sda2/code/git/kode3/src/plugin/kode_host.h
+	"kode.h"
 

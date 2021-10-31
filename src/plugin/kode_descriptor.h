@@ -10,6 +10,8 @@
 
 #define KODE_MAGIC 0xffff0000
 
+//----------
+
 enum KODE_PluginFlags {
   NONE              = 0,
   CAN_RECEIVE_MIDI  = 1,
@@ -18,12 +20,16 @@ enum KODE_PluginFlags {
   HAS_EDITOR        = 8
 };
 
+//----------
+
 struct KODE_PluginPort {
   const char* name      = "port";
   uint32_t    type      = 0; // audio, midi, ..
   uint32_t    channels  = 2;  // mono, stereo, (num midi channels?)
   uint32_t    direction = 0; // 0=input, 1=output
 };
+
+//----------
 
 typedef KODE_Array<KODE_PluginPort*> KODE_PluginPortArray;
 
@@ -35,8 +41,8 @@ typedef KODE_Array<KODE_PluginPort*> KODE_PluginPortArray;
 
 class KODE_Descriptor {
 public:
-  KODE_Descriptor() {}
-  virtual ~KODE_Descriptor() {}
+  KODE_Descriptor()           { KODE_PRINT; }
+  virtual ~KODE_Descriptor()  { KODE_PRINT; }
 public:
   const char*           name            = "plugin";
   const char*           author          = "author";

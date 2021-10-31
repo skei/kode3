@@ -22,20 +22,20 @@ public:
 
   /*
     NOTE:
-      is host_data for jost usage, or for plugin usage?
+      is host_data for host usage, or for plugin usage?
       should we stay away?
   */
 
   KODE_ClapInstance(const clap_host *host, KODE_Instance* AInstance) {
+    KODE_PRINT;
     MClapHost = host;
     MInstance = AInstance;
-    KODE_Print("\n");
   }
 
   //----------
 
   ~KODE_ClapInstance() {
-    KODE_Print("\n");
+    KODE_PRINT;
   }
 
 //------------------------------
@@ -48,7 +48,7 @@ public: // instance
   */
 
   bool clap_instance_init() {
-    KODE_Print("\n");
+    KODE_PRINT;
     return false;
   }
 
@@ -60,7 +60,7 @@ public: // instance
   */
 
   void clap_instance_destroy() {
-    KODE_Print("\n");
+    KODE_PRINT;
   }
 
   //----------
@@ -71,7 +71,7 @@ public: // instance
   */
 
   bool clap_instance_activate(double sample_rate) {
-    KODE_Print("\n");
+    KODE_PRINT;
     return false;
   }
 
@@ -83,7 +83,7 @@ public: // instance
   */
 
   void clap_instance_deactivate() {
-    KODE_Print("\n");
+    KODE_PRINT;
   }
 
   //----------
@@ -97,7 +97,7 @@ public: // instance
   */
 
   bool clap_instance_start_processing() {
-    KODE_Print("\n");
+    KODE_PRINT;
     return false;
   }
 
@@ -110,7 +110,7 @@ public: // instance
   */
 
   void clap_instance_stop_processing() {
-    KODE_Print("\n");
+    KODE_PRINT;
   }
 
 
@@ -122,7 +122,7 @@ public: // instance
   */
 
   clap_process_status clap_instance_process(const clap_process *process) {
-    //KODE_Print("\n");
+    //KODE_PRINT;
     return CLAP_PROCESS_ERROR;
   }
 
@@ -155,7 +155,7 @@ public: // instance
   */
 
   void clap_instance_on_main_thread() {
-    KODE_Print("\n");
+    KODE_PRINT;
   }
 
 //------------------------------
@@ -287,12 +287,16 @@ private:
 
   //clap_render_set_callback
 
+  //----------
+
   static
   bool clap_state_save_callback(const clap_plugin *plugin, clap_ostream *stream) {
     //KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
     //if (instance) return instance->clap_instance_state_save(stream);
     return false;
   }
+
+  //----------
 
   static
   bool clap_state_load_callback(const clap_plugin *plugin, clap_istream *stream) {

@@ -6,6 +6,9 @@
 #include "plugin/clap/kode_clap.h"
 #include "plugin/clap/kode_clap_instance.h"
 
+KODE_Descriptor*  _kode_plugin_create_descriptor();
+KODE_Instance*    _kode_plugin_create_instance(KODE_Descriptor* ADescriptor);
+
 //----------------------------------------------------------------------
 
 KODE_Instance*      _kode_clap_get_instance();
@@ -66,6 +69,7 @@ const struct clap_plugin_descriptor kode_clap_descriptor = {
 */
 
 bool clap_instance_init_callback(const struct clap_plugin* plugin) {
+  KODE_PRINT;
   KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
   if (instance) return instance->clap_instance_init();
   return false;
@@ -79,6 +83,7 @@ bool clap_instance_init_callback(const struct clap_plugin* plugin) {
 */
 
 void clap_instance_destroy_callback(const struct clap_plugin* plugin) {
+  KODE_PRINT;
   KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
   if (instance) instance->clap_instance_destroy();
 }
@@ -91,6 +96,7 @@ void clap_instance_destroy_callback(const struct clap_plugin* plugin) {
 */
 
 bool clap_instance_activate_callback(const struct clap_plugin* plugin, double sample_rate) {
+  KODE_PRINT;
   KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
   if (instance) return instance->clap_instance_activate(sample_rate);
   return false;
@@ -104,6 +110,7 @@ bool clap_instance_activate_callback(const struct clap_plugin* plugin, double sa
 */
 
 void clap_instance_deactivate_callback(const struct clap_plugin* plugin) {
+  KODE_PRINT;
   KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
   if (instance) instance->clap_instance_deactivate();
 }
@@ -117,6 +124,7 @@ void clap_instance_deactivate_callback(const struct clap_plugin* plugin) {
 */
 
 bool clap_instance_start_processing_callback(const struct clap_plugin* plugin) {
+  KODE_PRINT;
   KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
   if (instance) return instance->clap_instance_start_processing();
   return false;
@@ -131,6 +139,7 @@ bool clap_instance_start_processing_callback(const struct clap_plugin* plugin) {
 */
 
 void clap_instance_stop_processing_callback(const struct clap_plugin* plugin) {
+  KODE_PRINT;
   KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
   if (instance) instance->clap_instance_stop_processing();
 }
@@ -144,6 +153,7 @@ void clap_instance_stop_processing_callback(const struct clap_plugin* plugin) {
 */
 
 clap_process_status clap_instance_process_callback(const struct clap_plugin* plugin, const clap_process *process) {
+  //KODE_PRINT;
   KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
   if (instance) return instance->clap_instance_process(process);
   return CLAP_PROCESS_ERROR;
@@ -175,6 +185,7 @@ const void* clap_instance_get_extension_callback(const struct clap_plugin* plugi
 */
 
 void clap_instance_on_main_thread_callback(const struct clap_plugin* plugin) {
+  KODE_PRINT;
   KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
   if (instance) instance->clap_instance_on_main_thread();
 }
@@ -190,6 +201,7 @@ void clap_instance_on_main_thread_callback(const struct clap_plugin* plugin) {
 */
 
 bool clap_init_callback(const char *plugin_path) {
+  KODE_PRINT;
   return true;
 }
 
@@ -200,6 +212,7 @@ bool clap_init_callback(const char *plugin_path) {
 */
 
 void clap_deinit_callback(void) {
+  KODE_PRINT;
 }
 
 //----------
@@ -210,6 +223,7 @@ void clap_deinit_callback(void) {
 */
 
 uint32_t clap_get_plugin_count_callback(void) {
+  KODE_PRINT;
   return 1;
 }
 
@@ -223,6 +237,7 @@ uint32_t clap_get_plugin_count_callback(void) {
 */
 
 const clap_plugin_descriptor* clap_get_plugin_descriptor_callback(uint32_t index) {
+  KODE_PRINT;
   switch(index) {
     case 0:
       return &kode_clap_descriptor;
@@ -242,11 +257,14 @@ const clap_plugin_descriptor* clap_get_plugin_descriptor_callback(uint32_t index
 */
 
 const clap_plugin* clap_create_plugin_callback(const clap_host *host, const char *plugin_id) {
+  KODE_PRINT;
 
-  KODE_Instance*      instance      = _kode_clap_get_instance();
-  KODE_ClapInstance*  clapinstance  = new KODE_ClapInstance(host,instance);
-  clap_plugin*        plugin        = (clap_plugin*)malloc(sizeof(clap_plugin));
-  // not const/static because plugin_data differs for each instance
+  KODE_Descriptor*    descriptor    = _kode_plugin_create_descriptor();
+  KODE_Instance*      instance      = _kode_plugin_create_instance(descriptor);
+
+  KODE_ClapInstance*  clapinstance  = new KODE_ClapInstance(host,instance);       // TODO: who deletes this? and where?
+  clap_plugin*        plugin        = (clap_plugin*)malloc(sizeof(clap_plugin));  // TODO: who frees this? and where?
+
   plugin->desc              = &kode_clap_descriptor;
   plugin->plugin_data       = clapinstance;
   plugin->init              = clap_instance_init_callback;
@@ -268,6 +286,7 @@ const clap_plugin* clap_create_plugin_callback(const clap_host *host, const char
 */
 
 uint32_t clap_get_invalidation_sources_count_callback(void) {
+  KODE_PRINT;
   return 0;
 }
 
@@ -287,6 +306,7 @@ uint32_t clap_get_invalidation_sources_count_callback(void) {
 */
 
 const clap_plugin_invalidation_source* clap_get_invalidation_sources_callback(uint32_t index) {
+  KODE_PRINT;
   return nullptr;
 }
 
@@ -298,6 +318,7 @@ const clap_plugin_invalidation_source* clap_get_invalidation_sources_callback(ui
 */
 
 void clap_refresh_callback(void) {
+  KODE_PRINT;
 }
 
 //----------------------------------------------------------------------
@@ -344,11 +365,18 @@ const struct clap_plugin_entry clap_plugin_entry = {
 
 //----------
 
-#define KODE_CLAP_PLUGIN_ENTRYPOINT(DESCRIPTOR,INSTANCE)      \
-  /* TODO */                                  \
-  KODE_Instance* _kode_clap_get_instance() {  \
-    return new INSTANCE();                    \
-  }                                           \
+#define KODE_CLAP_PLUGIN_ENTRYPOINT(DESCRIPTOR,INSTANCE)                        \
+                                                                                \
+  KODE_Descriptor* _kode_plugin_create_descriptor() {                           \
+    KODE_PRINT;                                                                 \
+    return new DESCRIPTOR();                                                    \
+  }                                                                             \
+                                                                                \
+  KODE_Instance* _kode_plugin_create_instance(KODE_Descriptor* ADescriptor) {   \
+    KODE_PRINT;                                                                 \
+    return new INSTANCE(ADescriptor);                                           \
+  }                                                                             \
 
+//----------------------------------------------------------------------
 //----------------------------------------------------------------------
 #endif

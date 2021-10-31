@@ -49,11 +49,13 @@ public:
 //------------------------------
 
   KODE_Lv2Editor() {
+    KODE_PRINT;
   }
 
   //----------
 
   virtual ~KODE_Lv2Editor() {
+    KODE_PRINT;
   }
 
 //------------------------------
@@ -87,6 +89,7 @@ public: // lv2
   */
 
   void lv2ui_instantiate(const struct LV2UI_Descriptor* descriptor, const char* plugin_uri, const char* bundle_path, LV2UI_Write_Function write_function, LV2UI_Controller controller, LV2UI_Widget* widget, const LV2_Feature* const* features) {
+    KODE_PRINT;
     MLv2UIDescriptor    = descriptor;
     MLv2UIPluginUri     = plugin_uri;
     MLv2UIBundlePath    = bundle_path;
@@ -104,6 +107,7 @@ public: // lv2
   */
 
   void lv2ui_cleanup() {
+    KODE_PRINT;
   }
 
   //----------
@@ -125,6 +129,7 @@ public: // lv2
   */
 
   void lv2ui_port_event(uint32_t port_index, uint32_t buffer_size, uint32_t format, const void* buffer) {
+    KODE_PRINT;
   }
 
 //------------------------------

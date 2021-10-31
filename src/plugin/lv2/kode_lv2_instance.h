@@ -14,7 +14,7 @@ class KODE_Lv2Instance {
 private:
 //------------------------------
 
-  KODE_Instance*  MInstance = nullptr;
+  KODE_Instance*            MInstance       = nullptr;
 
   const LV2_Descriptor*     MLv2Descriptor  = nullptr;
   double                    MLv2SampleRate  = 0.0;
@@ -28,13 +28,15 @@ private:
 public:
 //------------------------------
 
-  KODE_Lv2Instance(KODE_Instance* AInstance) {
+  KODE_Lv2Instance(KODE_Descriptor* ADescriptor, KODE_Instance* AInstance) {
+    KODE_PRINT;
     MInstance = AInstance;
   }
 
   //----------
 
   virtual ~KODE_Lv2Instance() {
+    KODE_PRINT;
   }
 
 //------------------------------
@@ -70,6 +72,7 @@ public: // lv2
   */
 
   void lv2_instantiate(const struct LV2_Descriptor* descriptor, double sample_rate, const char* bundle_path, const LV2_Feature* const* features) {
+    KODE_PRINT;
     MLv2Descriptor  = descriptor;
     MLv2SampleRate  = sample_rate;
     MLv2BundlePath  = bundle_path;
@@ -111,6 +114,7 @@ public: // lv2
   */
 
   void lv2_connect_port(uint32_t port, void* data_location) {
+    KODE_PRINT;
     MPortPointers[port] = data_location;
   }
 
@@ -136,6 +140,7 @@ public: // lv2
   */
 
   void lv2_activate() {
+    KODE_PRINT;
   }
 
   //----------
@@ -162,6 +167,7 @@ public: // lv2
   */
 
   void lv2_run(uint32_t sample_count) {
+    //KODE_PRINT;
   }
 
   //----------
@@ -183,6 +189,7 @@ public: // lv2
   */
 
   void lv2_deactivate() {
+    KODE_PRINT;
   }
 
   //----------
@@ -198,6 +205,7 @@ public: // lv2
   */
 
   void lv2_cleanup() {
+    KODE_PRINT;
   }
 
 //------------------------------
