@@ -3,12 +3,11 @@
 //----------------------------------------------------------------------
 
 #include "kode.h"
-#include "plugin/vst3/kode_vst3.h"
+//#include "plugin/vst3/kode_vst3.h"
 
 //----------------------------------------------------------------------
 
 #define VST3_PLUGIN_API
-
 class VST3_IPluginFactory {
 };
 
