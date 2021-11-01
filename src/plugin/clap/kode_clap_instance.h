@@ -21,7 +21,7 @@ public:
 //------------------------------
 
   /*
-    NOTE:
+    NOTE_CLAP:
       is host_data for host usage, or for plugin usage?
       should we stay away?
   */
@@ -93,7 +93,7 @@ public: // instance
     (and to false before sending the plugin to sleep)
     [audio-thread]
 
-    NOTE: clarify documentation/comments
+    NOTE_CLAP: clarify documentation/comments
   */
 
   bool clap_instance_start_processing() {

@@ -61,6 +61,9 @@
 			<Add option="-Wall" />
 			<Add directory="../src" />
 		</Compiler>
+		<Linker>
+			<Add library="dl" />
+		</Linker>
 		<Unit filename="../src/base/debug/kode_debug.h" />
 		<Unit filename="../src/base/types/kode_array.h" />
 		<Unit filename="../src/base/types/kode_queue.h" />
@@ -113,6 +116,7 @@
 		<Unit filename="../src/extern/vst2/vestige.h" />
 		<Unit filename="../src/extern/vst2/vstfxstore.h" />
 		<Unit filename="../src/gui/kode_widget.h" />
+		<Unit filename="../src/gui/kode_window.h" />
 		<Unit filename="../src/kode.h" />
 		<Unit filename="../src/plugin/clap/kode_clap.h" />
 		<Unit filename="../src/plugin/clap/kode_clap_editor.h" />
@@ -155,7 +159,6 @@
 		<Unit filename="../src/plugin/lv2/kode_lv2_instance.h" />
 		<Unit filename="../src/plugin/lv2/kode_lv2_plugin.h" />
 		<Unit filename="../src/plugin/lv2/kode_lv2_utils.h" />
-		<Unit filename="../src/plugin/lv2/lv2.txt" />
 		<Unit filename="../src/plugin/vst2/kode_vst2.h" />
 		<Unit filename="../src/plugin/vst2/kode_vst2_editor.h" />
 		<Unit filename="../src/plugin/vst2/kode_vst2_host.h" />
@@ -170,7 +173,15 @@
 		<Unit filename="../src/plugin/vst3/kode_vst3_instance.h" />
 		<Unit filename="../src/plugin/vst3/kode_vst3_plugin.h" />
 		<Unit filename="../src/plugin/vst3/kode_vst3_utils.h" />
-		<Unit filename="build.cpp" />
+		<Unit filename="apps/test1.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="kode3.cpp" />
+		<Unit filename="plugins/test1.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

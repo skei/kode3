@@ -6,6 +6,7 @@
 #include "base/types/kode_array.h"
 #include "plugin/kode_parameter.h"
 #include "gui/kode_widget.h"
+#include "gui/kode_window.h"
 
 //----------------------------------------------------------------------
 //
@@ -17,9 +18,11 @@ public:
   KODE_Parameter* parameter = nullptr;
 };
 
+//----------
+
 typedef KODE_Array<KODE_Control*> KODE_ControlArray;
 
-//----------
+//----------------------------------------------------------------------
 
 class KODE_EditorListener {
   virtual void parameter_changed_from_editor(uint32_t index, float value) = 0;  //{}
@@ -27,12 +30,9 @@ class KODE_EditorListener {
 };
 
 //----------------------------------------------------------------------
-//
-//
-//
-//----------------------------------------------------------------------
 
-class KODE_Editor {
+class KODE_Editor
+: public KODE_Window {
 
 //------------------------------
 private:
@@ -45,8 +45,14 @@ private:
 public:
 //------------------------------
 
-  KODE_Editor() { KODE_PRINT; };
-  virtual ~KODE_Editor() { KODE_PRINT; };
+  KODE_Editor()
+  : KODE_Window() {
+    KODE_PRINT;
+  };
+
+  virtual ~KODE_Editor() {
+    KODE_PRINT;
+  };
 
 //------------------------------
 public:

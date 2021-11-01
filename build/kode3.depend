@@ -2,13 +2,20 @@
 1635527366 source:/DISKS/sda2/code/git/kode3/src/kode.cpp
 	"kode.h"
 
-1635606425 /DISKS/sda2/code/git/kode3/src/kode.h
+1635715885 /DISKS/sda2/code/git/kode3/src/kode.h
 	<stdint.h>
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<memory.h>
+	<string.h>
 	"base/debug/kode_debug.h"
 
-1635694604 source:/DISKS/sda2/code/git/kode3/build/build.cpp
+1635709368 source:/DISKS/sda2/code/git/kode3/build/build.cpp
 	"kode.h"
 	"plugin/kode_plugin.h"
+	"plugin/clap/kode_clap.h"
+	"plugin/clap/kode_clap_hosted_plugin.h"
 
 1635694272 /DISKS/sda2/code/git/kode3/src/plugin/kode_plugin.h
 	"kode.h"
@@ -67,7 +74,7 @@
 
 1635694543 /DISKS/sda2/code/git/kode3/src/plugin/exe/kode_exe_plugin.h
 
-1635694698 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_plugin.h
+1635711865 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_plugin.h
 	"kode.h"
 	"plugin/lv2/kode_lv2.h"
 	"plugin/lv2/kode_lv2_instance.h"
@@ -88,7 +95,7 @@
 
 1635538132 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_plugin.h
 
-1635693290 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_plugin.h
+1635711180 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_plugin.h
 	"kode.h"
 	"plugin/clap/kode_clap.h"
 	"plugin/clap/kode_clap_instance.h"
@@ -107,7 +114,7 @@
 	"kode.h"
 	"extern/clap/all.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/all.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/all.h
 	"clap.h"
 	"ext/audio-ports.h"
 	"ext/audio-ports-config.h"
@@ -136,158 +143,158 @@
 	"ext/draft/vst3-convert.h"
 	"ext/draft/midi-mappings.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/clap.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/clap.h
 	"plugin.h"
 	"host.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/plugin.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/plugin.h
 	"macros.h"
 	"host.h"
 	"process.h"
 
-1635647829 /DISKS/sda2/code/git/kode3/src/extern/clap/macros.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/macros.h
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/host.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/host.h
 	"version.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/version.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/version.h
 	<stdbool.h>
 	<stdint.h>
 	"macros.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/process.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/process.h
 	"events.h"
 	"audio-buffer.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/events.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/events.h
 	<stdbool.h>
 	<stddef.h>
 	"fixedpoint.h"
 	"id.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/fixedpoint.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/fixedpoint.h
 	<stdint.h>
 	"macros.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/id.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/id.h
 	<stdint.h>
 	"macros.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/audio-buffer.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/audio-buffer.h
 	<stdint.h>
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/audio-ports.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/audio-ports.h
 	"../clap.h"
 	"../chmap.h"
 	"../string-sizes.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/chmap.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/chmap.h
 	<stdint.h>
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/string-sizes.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/string-sizes.h
 	<stdint.h>
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/audio-ports-config.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/audio-ports-config.h
 	"../clap.h"
 	"../chmap.h"
 	"../string-sizes.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/gui.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/gui.h
 	"../clap.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/gui-x11.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/gui-x11.h
 	"../clap.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/gui-win32.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/gui-win32.h
 	"../clap.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/gui-cocoa.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/gui-cocoa.h
 	"../clap.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/gui-free-standing.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/gui-free-standing.h
 	"../clap.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/log.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/log.h
 	"../clap.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/params.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/params.h
 	"../clap.h"
 	"../string-sizes.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/render.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/render.h
 	"../clap.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/state.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/state.h
 	"../clap.h"
 	"../stream.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/stream.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/stream.h
 	<stdint.h>
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/latency.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/latency.h
 	"../clap.h"
 	<stdint.h>
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/thread-check.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/thread-check.h
 	"../clap.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/timer-support.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/timer-support.h
 	<stddef.h>
 	"../clap.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/fd-support.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/fd-support.h
 	<stddef.h>
 	"../clap.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/note-name.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/note-name.h
 	"../clap.h"
 	"../string-sizes.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/event-filter.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/event-filter.h
 	"../clap.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/draft/preset-load.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/draft/preset-load.h
 	"../../clap.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/draft/quick-controls.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/draft/quick-controls.h
 	"../../clap.h"
 	"../../string-sizes.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/draft/thread-pool.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/draft/thread-pool.h
 	"../../clap.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/draft/track-info.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/draft/track-info.h
 	"../../clap.h"
 	"../../chmap.h"
 	"../../color.h"
 	"../../string-sizes.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/color.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/color.h
 	<stdint.h>
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/draft/tuning.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/draft/tuning.h
 	"../../clap.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/draft/file-reference.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/draft/file-reference.h
 	"../../clap.h"
 	"../../hash.h"
 	"../../string-sizes.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/hash.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/hash.h
 	"clap.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/draft/vst2-convert.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/draft/vst2-convert.h
 	"../../clap.h"
 	"../../stream.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/draft/vst3-convert.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/draft/vst3-convert.h
 	"../../clap.h"
 	"../../stream.h"
 
-1634654345 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/draft/midi-mappings.h
+1635717665 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/draft/midi-mappings.h
 	"../../clap.h"
 
-1635652232 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_instance.h
+1635711300 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_instance.h
 	"kode.h"
 	"plugin/clap/kode_clap.h"
 
@@ -313,4 +320,19 @@
 
 1635694026 /DISKS/sda2/code/git/kode3/src/plugin/kode_host.h
 	"kode.h"
+
+1635703438 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_hosted_plugin.h
+	<dlfcn.h>
+	"kode.h"
+	"plugin/clap/kode_clap.h"
+
+1635709368 source:/DISKS/sda2/code/git/kode3/build/kode3.cpp
+	"kode.h"
+	"plugin/kode_plugin.h"
+	"plugin/clap/kode_clap.h"
+	"plugin/clap/kode_clap_hosted_plugin.h"
+
+1635716226 source:/DISKS/sda2/code/git/kode3/build/plugins/test1.cpp
+	"kode.h"
+	"plugin/kode_plugin.h"
 

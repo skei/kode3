@@ -16,11 +16,28 @@ class KODE_Lv2Plugin {
 private:
 //------------------------------
 
-  LV2_Descriptor    MLv2Descriptor            = {};
-  LV2UI_Descriptor  MLv2UiDescriptor          = {};
-
+  DESCRIPTOR        MDescriptor               = {};
   char              MManifestTtlBuffer[65536] = {0};
   char              MPluginTtlBuffer[65536]   = {0};
+
+  LV2_Descriptor MLv2Descriptor = {
+    "urn:skei.audio/plugin",
+    lv2_instantiate_callback,
+    lv2_connect_port_callback,
+    lv2_activate_callback,
+    lv2_run_callback,
+    lv2_deactivate_callback,
+    lv2_cleanup_callback,
+    lv2_extension_data_callback
+  };
+
+  LV2UI_Descriptor MLv2UiDescriptor = {
+    "urn:skei.audio/editor",
+    lv2ui_instantiate_callback,
+    lv2ui_cleanup_callback,
+    lv2ui_port_event_callback,
+    lv2ui_extension_data_callback
+  };
 
 //------------------------------
 public:
@@ -42,14 +59,6 @@ public:
 
   const LV2_Descriptor* get_lv2_descriptor(uint32_t index) {
     KODE_Print("index %i\n",index);
-    MLv2Descriptor.URI               = "urn:skei.audio/plugin";
-    MLv2Descriptor.instantiate       = lv2_instantiate_callback;
-    MLv2Descriptor.connect_port      = lv2_connect_port_callback;
-    MLv2Descriptor.activate          = lv2_activate_callback;
-    MLv2Descriptor.run               = lv2_run_callback;
-    MLv2Descriptor.deactivate        = lv2_deactivate_callback;
-    MLv2Descriptor.cleanup           = lv2_cleanup_callback;
-    MLv2Descriptor.extension_data    = lv2_extension_data_callback;
     return &MLv2Descriptor;
   }
 
@@ -57,11 +66,6 @@ public:
 
   const LV2UI_Descriptor* get_lv2ui_descriptor(uint32_t index) {
     KODE_Print("index %i\n",index);
-    MLv2UiDescriptor.URI             = "urn:skei.audio/editor";
-    MLv2UiDescriptor.instantiate     = lv2ui_instantiate_callback;
-    MLv2UiDescriptor.cleanup         = lv2ui_cleanup_callback;
-    MLv2UiDescriptor.port_event      = lv2ui_port_event_callback;
-    MLv2UiDescriptor.extension_data  = lv2ui_extension_data_callback;
     return &MLv2UiDescriptor;
   }
 
@@ -69,13 +73,16 @@ public:
 
   void export_ttl(KODE_Descriptor* ADescriptor) {
     KODE_PRINT;
-    char TXT[512];
-    char plugin_uri[256];
+    FILE* fp;
+    char TXT[256];
+    char plugin_uri[64];
     MManifestTtlBuffer[0] = 0;
     MPluginTtlBuffer[0]   = 0;
+
     const char* plugin_name   = ADescriptor->name;                // "plugin";
     const char* plugin_author = ADescriptor->author;              // "author";
     sprintf(plugin_uri,"<urn:%s/%s>",plugin_author,plugin_name);  // "<urn:author/plugin>"
+
     // manifest.ttl
     sprintf( TXT, "@prefix lv2:      %s          . \n",  "<http://lv2plug.in/ns/lv2core#>"           );   strcat( MManifestTtlBuffer, TXT );
     sprintf( TXT, "@prefix rdfs:     %s          . \n",  "<http://www.w3.org/2000/01/rdf-schema#>"   );   strcat( MManifestTtlBuffer, TXT );
@@ -83,6 +90,11 @@ public:
     sprintf( TXT, "%s                              \n",  plugin_uri                                  );   strcat( MManifestTtlBuffer, TXT );
     sprintf( TXT, "  a               lv2:Plugin  ; \n"                                               );   strcat( MManifestTtlBuffer, TXT );
     sprintf( TXT, "  rdfs:seeAlso    <%s.ttl>    . \n",  plugin_name                                 );   strcat( MManifestTtlBuffer, TXT );
+
+    fp = fopen("manifest.ttl","wt");
+    fwrite(MManifestTtlBuffer,1,strlen(MManifestTtlBuffer),fp);
+    fclose(fp);
+
     // plugin.ttl
     sprintf( TXT, "@prefix lv2:      %s          . \n",  "<http://lv2plug.in/ns/lv2core#>"           );   strcat( MPluginTtlBuffer, TXT );
     sprintf( TXT, "@prefix doap:     %s          . \n",  "<http://usefulinc.com/ns/doap#>"           );   strcat( MPluginTtlBuffer, TXT );
@@ -97,7 +109,7 @@ public:
     sprintf( TXT, "    a             %s          ; \n",  "lv2:ControlPort, lv2:InputPort"            );   strcat( MPluginTtlBuffer, TXT );
     sprintf( TXT, "    lv2:index     %i          ; \n",  0                                           );   strcat( MPluginTtlBuffer, TXT );
     sprintf( TXT, "    lv2:symbol    \"%s\"      ; \n",  "width"                                     );   strcat( MPluginTtlBuffer, TXT );
-    sprintf( TXT, "    lv2:name      \"%s\"      ; \n",  "Width parameter"                           );   strcat( MPluginTtlBuffer, TXT );
+    sprintf( TXT, "    lv2:name      \"%s\"      ; \n",  "Width Parameter"                           );   strcat( MPluginTtlBuffer, TXT );
     sprintf( TXT, "  ]                           , \n"                                               );   strcat( MPluginTtlBuffer, TXT );
     sprintf( TXT, "  [                             \n"                                               );   strcat( MPluginTtlBuffer, TXT );
     sprintf( TXT, "    a             %s          ; \n",  "lv2:AudioPort, lv2:OutputPort"             );   strcat( MPluginTtlBuffer, TXT );
@@ -105,12 +117,10 @@ public:
     sprintf( TXT, "    lv2:symbol    \"%s\"      ; \n",  "right_output"                              );   strcat( MPluginTtlBuffer, TXT );
     sprintf( TXT, "    lv2:name      \"%s\"      ; \n",  "Right output"                              );   strcat( MPluginTtlBuffer, TXT );
     sprintf( TXT, "  ]                           . \n"                                               );   strcat( MPluginTtlBuffer, TXT );
-    //FILE* fp = fopen("manifest.ttl","wt");
-    //fwrite(MManifestTtlBuffer,strlen(MManifestTtlBuffer),fp);
-    //fclose(fp);
-    //FILE* fp = fopen("plugin.ttl","wt");
-    //fwrite(MPluginTtlBuffer,strlen(MPluginTtlBuffer),fp);
-    //fclose(fp);
+
+    fp = fopen("plugin.ttl","wt");
+    fwrite(MPluginTtlBuffer,1,strlen(MPluginTtlBuffer),fp);
+    fclose(fp);
   }
 
 //------------------------------
@@ -124,6 +134,14 @@ public: // lv2 callbacks
     KODE_Lv2Instance* lv2_instance = new KODE_Lv2Instance(desc,inst);
     lv2_instance->lv2_instantiate(descriptor,sample_rate,bundle_path,features);
     return lv2_instance;
+  }
+
+  //----------
+
+  static
+  void lv2_cleanup_callback(LV2_Handle handle) {
+    KODE_Lv2Instance* lv2_instance = (KODE_Lv2Instance*)handle;
+    if (lv2_instance) lv2_instance->lv2_cleanup();
   }
 
   //----------
@@ -145,14 +163,6 @@ public: // lv2 callbacks
   //----------
 
   static
-  void lv2_run_callback(LV2_Handle handle, uint32_t sample_count) {
-    KODE_Lv2Instance* inst = (KODE_Lv2Instance*)handle;
-    if (inst) inst->lv2_run(sample_count);
-  }
-
-  //----------
-
-  static
   void lv2_deactivate_callback(LV2_Handle handle) {
     KODE_Lv2Instance* inst = (KODE_Lv2Instance*)handle;
     if (inst) inst->lv2_deactivate();
@@ -161,9 +171,9 @@ public: // lv2 callbacks
   //----------
 
   static
-  void lv2_cleanup_callback(LV2_Handle handle) {
+  void lv2_run_callback(LV2_Handle handle, uint32_t sample_count) {
     KODE_Lv2Instance* inst = (KODE_Lv2Instance*)handle;
-    if (inst) inst->lv2_cleanup();
+    if (inst) inst->lv2_run(sample_count);
   }
 
   //----------
@@ -181,6 +191,7 @@ public: // lv2 callbacks
 
   static
   const void* lv2_extension_data_callback(const char* uri) {
+    KODE_Print("uri %s\n",uri);
     return nullptr;
   }
 
@@ -222,6 +233,7 @@ public: // lv2ui callbacks
 
   static
   const void* lv2ui_extension_data_callback(const char* uri) {
+    KODE_Print("uri %s\n",uri);
     return nullptr;
   }
 

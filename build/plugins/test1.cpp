@@ -10,27 +10,53 @@
 #include "plugin/kode_plugin.h"
 
 //----------------------------------------------------------------------
-
+//
 //----------------------------------------------------------------------
 
 class myDescriptor
 : public KODE_Descriptor {
+
 public:
-  myDescriptor() {
+
+  myDescriptor()
+  : KODE_Descriptor() {
     KODE_PRINT;
-    name = "kode_debug";
-    author = "skei.audio";
+    #ifdef KODE_DEBUG
+    name    = "kode_plugin_debug";
+    #else
+    name    = "kode_plugin";
+    #endif
+    author  = "skei.audio";
   }
-  virtual ~myDescriptor() { KODE_PRINT; }
+
+  virtual ~myDescriptor() {
+    KODE_PRINT;
+  }
+
 };
+
+//----------
+
+//class myEditor
+//: public KODE_Editor {
+//};
 
 //----------
 
 class myInstance
 : public KODE_Instance {
+
 public:
-  myInstance(KODE_Descriptor* ADescriptor) : KODE_Instance(ADescriptor) { KODE_PRINT; }
-  virtual ~myInstance() { KODE_PRINT; }
+
+  myInstance(KODE_Descriptor* ADescriptor)
+  : KODE_Instance(ADescriptor) {
+    KODE_PRINT;
+  }
+
+  virtual ~myInstance() {
+    KODE_PRINT;
+  }
+
 };
 
 //----------------------------------------------------------------------
