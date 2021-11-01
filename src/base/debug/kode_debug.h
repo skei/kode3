@@ -17,6 +17,8 @@ void KODE_NoPrint(const char*,...) {}
   #include <string.h>   // strcal
   #include <stdarg.h>   // va_
 
+  //#include "kode_debug_stacktrace.h"
+
   #ifdef KODE_DEBUG_PRINT_TIME
     //#include <time.h>     // timer
     #include <sys/time.h> // gettimeofday
