@@ -23,7 +23,7 @@ class KODE_Vst3Plugin
 private:
 //------------------------------
 
-  DESCRIPTOR        MDescriptor               = {};
+  DESCRIPTOR MDescriptor = {};
 
 //------------------------------
 public:
@@ -47,15 +47,6 @@ public:
 //----------------------------------------------------------------------
 //
 //----------------------------------------------------------------------
-
-//#define KODE_VST3_MAIN_SYMBOL asm ("GetPluginFactory");
-//IPluginFactory* PLUGIN_API kode_vst3_entryPoint() KODE_VST3_MAIN_SYMBOL
-
-//#ifdef __cplusplus
-//extern "C" {
-//#endif
-
-//----------
 
 #define VST3_ENTRYPOINT_SYMBOL    asm ("GetPluginFactory");
 #define VST3_MODULE_ENTRY_SYMBOL  asm ("ModuleEntry");

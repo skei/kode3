@@ -17,7 +17,7 @@
 	"plugin/clap/kode_clap.h"
 	"plugin/clap/kode_clap_hosted_plugin.h"
 
-1635694272 /DISKS/sda2/code/git/kode3/src/plugin/kode_plugin.h
+1635772046 /DISKS/sda2/code/git/kode3/src/plugin/kode_plugin.h
 	"kode.h"
 	"plugin/kode_descriptor.h"
 	"plugin/kode_instance.h"
@@ -66,15 +66,16 @@
 	"kode.h"
 	"plugin/kode_editor.h"
 
-1635694566 /DISKS/sda2/code/git/kode3/src/plugin/kode_editor.h
+1635767951 /DISKS/sda2/code/git/kode3/src/plugin/kode_editor.h
 	"kode.h"
 	"base/types/kode_array.h"
 	"plugin/kode_parameter.h"
 	"gui/kode_widget.h"
+	"gui/kode_window.h"
 
-1635694543 /DISKS/sda2/code/git/kode3/src/plugin/exe/kode_exe_plugin.h
+1635767786 /DISKS/sda2/code/git/kode3/src/plugin/exe/kode_exe_plugin.h
 
-1635711865 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_plugin.h
+1635799640 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_plugin.h
 	"kode.h"
 	"plugin/lv2/kode_lv2.h"
 	"plugin/lv2/kode_lv2_instance.h"
@@ -93,18 +94,26 @@
 	<lv2/urid/urid.h>
 	<lv2/lv2plug.in/ns/extensions/ui/ui.h>
 
-1635538132 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_plugin.h
+1635799154 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_plugin.h
+	"kode.h"
+	"plugin/vst3/kode_vst3.h"
 
-1635711180 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_plugin.h
+1635800667 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_plugin.h
 	"kode.h"
 	"plugin/clap/kode_clap.h"
 	"plugin/clap/kode_clap_instance.h"
 
-1635538018 /DISKS/sda2/code/git/kode3/src/plugin/dssi/kode_dssi_plugin.h
+1635799386 /DISKS/sda2/code/git/kode3/src/plugin/dssi/kode_dssi_plugin.h
+	"kode.h"
+	"plugin/dssi/kode_dssi.h"
 
-1635538043 /DISKS/sda2/code/git/kode3/src/plugin/ladspa/kode_ladspa_plugin.h
+1635799456 /DISKS/sda2/code/git/kode3/src/plugin/ladspa/kode_ladspa_plugin.h
+	"kode.h"
+	"plugin/ladspa/kode_ladspa.h"
 
-1635538063 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_plugin.h
+1635801269 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_plugin.h
+	"kode.h"
+	"plugin/vst2/kode_vst2.h"
 
 1635538793 /DISKS/sda2/code/git/kode3/src/gui/kode_widget.h
 	"kode.h"
@@ -309,7 +318,7 @@
 	<sys/socket.h>
 	<sys/un.h>
 
-1635694778 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_instance.h
+1635799684 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_instance.h
 	"kode.h"
 	"plugin/kode_instance.h"
 	"plugin/lv2/kode_lv2.h"
@@ -326,13 +335,34 @@
 	"kode.h"
 	"plugin/clap/kode_clap.h"
 
-1635709368 source:/DISKS/sda2/code/git/kode3/build/kode3.cpp
+1635767583 source:/DISKS/sda2/code/git/kode3/build/kode3.cpp
 	"kode.h"
-	"plugin/kode_plugin.h"
-	"plugin/clap/kode_clap.h"
-	"plugin/clap/kode_clap_hosted_plugin.h"
+	"plugins/test1.cpp"
 
 1635716226 source:/DISKS/sda2/code/git/kode3/build/plugins/test1.cpp
 	"kode.h"
 	"plugin/kode_plugin.h"
+
+1635769372 /DISKS/sda2/code/git/kode3/build/plugins/test1.cpp
+	"kode.h"
+	"plugin/kode_plugin.h"
+	"plugin/kode_editor.h"
+
+1635719359 /DISKS/sda2/code/git/kode3/src/gui/kode_window.h
+	"kode.h"
+	"gui/kode_widget.h"
+
+1635534008 /DISKS/sda2/code/git/kode3/src/plugin/dssi/kode_dssi.h
+
+1635534008 /DISKS/sda2/code/git/kode3/src/plugin/ladspa/kode_ladspa.h
+
+1635799837 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2.h
+	"kode.h"
+	"extern/vst2/vestige.h"
+
+1572704736 /DISKS/sda2/code/git/kode3/src/extern/vst2/vestige.h
+	<stdint.h>
+
+1635768079 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3.h
+	"kode.h"
 

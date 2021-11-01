@@ -270,12 +270,6 @@ public: // lv2ui callbacks
 
 //----------
 
-//#ifdef __cplusplus
-//extern "C" {
-//#endif
-
-//----------
-
 const LV2_Descriptor*   kode_lv2_descriptor(uint32_t index)   asm("lv2_descriptor");
 const LV2UI_Descriptor* kode_lv2ui_descriptor(uint32_t index) asm("lv2ui_descriptor");
 void                    kode_export_ttl(void)                 asm("export_ttl");
@@ -306,12 +300,6 @@ void                    kode_export_ttl(void)                 asm("export_ttl");
     LV2_PLUGIN.export_ttl(descriptor);                            \
     delete descriptor;                                            \
   }                                                               \
-
-//----------
-
-//#ifdef __cplusplus
-//} // extern "C"
-//#endif
 
 //----------------------------------------------------------------------
 #endif

@@ -55,20 +55,8 @@ public:
 //
 //----------------------------------------------------------------------
 
-//#ifdef __cplusplus
-//extern "C" {
-//#endif
-
-//----------
-
 #define DSSI_ENTRYPOINT_SYMBOL asm ("dssi_descriptor");
 const DSSI_Descriptor* dssi_entrypoint(uint32_t index) DSSI_ENTRYPOINT_SYMBOL;
-
-//#define VST3_MODULE_ENTRY_SYMBOL  asm ("ModuleEntry");
-//#define VST3_MODULE_EXIT_SYMBOL   asm ("ModuleExit");
-
-//bool vst3_module_entry(void* sharedLibraryHandle)  VST3_MODULE_ENTRY_SYMBOL;
-//bool vst3_module_exit(void)                        VST3_MODULE_EXIT_SYMBOL;
 
 //----------
 
@@ -81,10 +69,6 @@ const DSSI_Descriptor* dssi_entrypoint(uint32_t index) DSSI_ENTRYPOINT_SYMBOL;
     KODE_Print("\n");                                                       \
     return DSSI_PLUGIN.entrypoint(index);                                   \
   }
-
-//#ifdef __cplusplus
-//}
-//#endif
 
 //----------------------------------------------------------------------
 #endif

@@ -55,20 +55,8 @@ public:
 //
 //----------------------------------------------------------------------
 
-//#ifdef __cplusplus
-//extern "C" {
-//#endif
-
-//----------
-
 #define LADSPA_ENTRYPOINT_SYMBOL asm ("ladspa_descriptor");
 const LADSPA_Descriptor* ladspa_entrypoint() LADSPA_ENTRYPOINT_SYMBOL;
-
-//#define VST3_MODULE_ENTRY_SYMBOL  asm ("ModuleEntry");
-//#define VST3_MODULE_EXIT_SYMBOL   asm ("ModuleExit");
-
-//bool vst3_module_entry(void* sharedLibraryHandle)  VST3_MODULE_ENTRY_SYMBOL;
-//bool vst3_module_exit(void)                        VST3_MODULE_EXIT_SYMBOL;
 
 //----------
 
