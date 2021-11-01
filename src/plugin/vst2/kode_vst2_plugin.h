@@ -23,7 +23,8 @@ class KODE_Vst2Plugin
 private:
 //------------------------------
 
-  DESCRIPTOR MDescriptor = {};
+  DESCRIPTOR  MDescriptor = {};
+  AEffect     MAEffect    = {0};
 
 //------------------------------
 public:
@@ -41,11 +42,96 @@ public:
   }
 
 //------------------------------
+private:
+//------------------------------
+
+  void vst2_set_parameter(int index, float value) {
+  }
+
+  //----------
+
+  float vst2_get_parameter(int index) {
+    return 0.0f;
+  }
+
+  //----------
+
+  intptr_t vst2_dispatcher(int opcode, int index, intptr_t ip, void* ptr, float f) {
+    switch(opcode) {
+    }
+    return 0;
+  }
+
+  //----------
+
+  void vst2_process(float** inputs, float** outputs, int length) {
+  }
+
+  //----------
+
+  void vst2_process_replacing(float** inputs, float** outouts, int length) {
+  }
+
+//------------------------------
+private:
+//------------------------------
+
+  static
+  void vst2_set_parameter_callback(struct _AEffect* aeffect, int i, float f) {
+    KODE_Vst2Plugin* vst2_plugin = (KODE_Vst2Plugin*)aeffect->user;
+    //KODE_Vst2Instance* vst2_instance = (KODE_Vst2Instance*)aeffect->object;
+    vst2_plugin->vst2_set_parameter(i,f);
+  }
+
+  static
+  float vst2_get_parameter_callback(struct _AEffect* aeffect, int i) {
+    KODE_Vst2Plugin* vst2_plugin = (KODE_Vst2Plugin*)aeffect->user;
+    return vst2_plugin->vst2_get_parameter(i);
+  }
+
+  static
+  intptr_t vst2_dispatcher_callback(struct _AEffect* aeffect, int i1, int i2, intptr_t ip, void* p, float f) {
+    KODE_Vst2Plugin* vst2_plugin = (KODE_Vst2Plugin*)aeffect->user;
+    return vst2_plugin->vst2_dispatcher(i1,i2,ip,p,f);
+  }
+
+  static
+  void vst2_process_callback(struct _AEffect* aeffect, float** f1, float** f2, int i) {
+    KODE_Vst2Plugin* vst2_plugin = (KODE_Vst2Plugin*)aeffect->user;
+    vst2_plugin->vst2_process(f1,f2,i);
+  }
+
+  static
+  void vst2_process_replacing_callback(struct _AEffect* aeffect, float** f1, float** f2, int i) {
+    KODE_Vst2Plugin* vst2_plugin = (KODE_Vst2Plugin*)aeffect->user;
+    vst2_plugin->vst2_process_replacing(f1,f2,i);
+  }
+
+
+//------------------------------
 public:
 //------------------------------
 
   AEffect* entrypoint(audioMasterCallback audioMaster) {
-    return nullptr;
+    //KODE_Vst2Instance* vst2_instance = new KODE_Vst2Instance();
+    memset(&MAEffect,0,sizeof(AEffect));
+    MAEffect.magic            = 0;
+    MAEffect.flags            = 0;
+    MAEffect.numPrograms      = 0;
+    MAEffect.numParams        = 0;
+    MAEffect.numInputs        = 0;
+    MAEffect.numOutputs       = 0;
+    MAEffect.initialDelay     = 0;
+    MAEffect.object           = 0; //this;
+    MAEffect.user             = 0; //instance;
+    MAEffect.uniqueID         = 0;
+    MAEffect.version          = 0;
+    MAEffect.setParameter     = vst2_set_parameter_callback;
+    MAEffect.getParameter     = vst2_get_parameter_callback;
+    MAEffect.dispatcher       = vst2_dispatcher_callback;
+    MAEffect.process          = vst2_process_callback;
+    MAEffect.processReplacing = vst2_process_replacing_callback;
+    return &MAEffect;
   }
 
 };
