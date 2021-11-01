@@ -22,13 +22,15 @@ public:
 
 typedef KODE_Array<KODE_Control*> KODE_ControlArray;
 
-//----------------------------------------------------------------------
+//----------
 
 class KODE_EditorListener {
-  virtual void parameter_changed_from_editor(uint32_t index, float value) = 0;  //{}
-  virtual void editor_resized_from_editor(float delta_x, float delta_y)   = 0;  //{}
+  virtual void parameter_changed_from_editor(uint32_t index, float value) = 0;
+  virtual void editor_resized_from_editor(float delta_x, float delta_y)   = 0;
 };
 
+//----------------------------------------------------------------------
+//
 //----------------------------------------------------------------------
 
 class KODE_Editor
@@ -49,6 +51,8 @@ public:
   : KODE_Window() {
     KODE_PRINT;
   };
+
+  //----------
 
   virtual ~KODE_Editor() {
     KODE_PRINT;

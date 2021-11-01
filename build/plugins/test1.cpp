@@ -8,6 +8,7 @@
 
 #include "kode.h"
 #include "plugin/kode_plugin.h"
+#include "plugin/kode_editor.h"
 
 //----------------------------------------------------------------------
 //
@@ -20,6 +21,7 @@ public:
 
   myDescriptor()
   : KODE_Descriptor() {
+
     KODE_PRINT;
     #ifdef KODE_DEBUG
     name    = "kode_plugin_debug";
@@ -27,7 +29,10 @@ public:
     name    = "kode_plugin";
     #endif
     author  = "skei.audio";
+
   }
+
+  //----------
 
   virtual ~myDescriptor() {
     KODE_PRINT;
@@ -35,13 +40,17 @@ public:
 
 };
 
-//----------
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
 
-//class myEditor
-//: public KODE_Editor {
-//};
+class myEditor
+: public KODE_Editor {
+};
 
-//----------
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
 
 class myInstance
 : public KODE_Instance {
@@ -53,6 +62,8 @@ public:
     KODE_PRINT;
   }
 
+  //----------
+
   virtual ~myInstance() {
     KODE_PRINT;
   }
@@ -61,4 +72,4 @@ public:
 
 //----------------------------------------------------------------------
 
-KODE_PLUGIN_ENTRYPOINT(myDescriptor,myInstance);
+KODE_PLUGIN_ENTRYPOINT(myDescriptor,myInstance,myEditor);

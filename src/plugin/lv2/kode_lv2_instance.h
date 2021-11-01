@@ -28,6 +28,8 @@ private:
 public:
 //------------------------------
 
+  // we must delete ADescriptor & AInstance
+
   KODE_Lv2Instance(KODE_Descriptor* ADescriptor, KODE_Instance* AInstance) {
     KODE_PRINT;
     MInstance = AInstance;

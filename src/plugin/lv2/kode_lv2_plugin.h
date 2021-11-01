@@ -9,14 +9,15 @@
 
 //----------------------------------------------------------------------
 
-template <class DESCRIPTOR, class INSTANCE>
+template <class DESCRIPTOR, class INSTANCE, class EDITOR>
 class KODE_Lv2Plugin {
 
 //------------------------------
 private:
 //------------------------------
 
-  DESCRIPTOR        MDescriptor               = {};
+  //DESCRIPTOR        MDescriptor               = {};
+
   char              MManifestTtlBuffer[65536] = {0};
   char              MPluginTtlBuffer[65536]   = {0};
 
@@ -84,6 +85,7 @@ public:
     sprintf(plugin_uri,"<urn:%s/%s>",plugin_author,plugin_name);  // "<urn:author/plugin>"
 
     // manifest.ttl
+
     sprintf( TXT, "@prefix lv2:      %s          . \n",  "<http://lv2plug.in/ns/lv2core#>"           );   strcat( MManifestTtlBuffer, TXT );
     sprintf( TXT, "@prefix rdfs:     %s          . \n",  "<http://www.w3.org/2000/01/rdf-schema#>"   );   strcat( MManifestTtlBuffer, TXT );
     sprintf( TXT, "                                \n"                                               );   strcat( MManifestTtlBuffer, TXT );
@@ -91,11 +93,8 @@ public:
     sprintf( TXT, "  a               lv2:Plugin  ; \n"                                               );   strcat( MManifestTtlBuffer, TXT );
     sprintf( TXT, "  rdfs:seeAlso    <%s.ttl>    . \n",  plugin_name                                 );   strcat( MManifestTtlBuffer, TXT );
 
-    fp = fopen("manifest.ttl","wt");
-    fwrite(MManifestTtlBuffer,1,strlen(MManifestTtlBuffer),fp);
-    fclose(fp);
-
     // plugin.ttl
+
     sprintf( TXT, "@prefix lv2:      %s          . \n",  "<http://lv2plug.in/ns/lv2core#>"           );   strcat( MPluginTtlBuffer, TXT );
     sprintf( TXT, "@prefix doap:     %s          . \n",  "<http://usefulinc.com/ns/doap#>"           );   strcat( MPluginTtlBuffer, TXT );
     sprintf( TXT, "                                \n"                                               );   strcat( MPluginTtlBuffer, TXT );
@@ -117,6 +116,10 @@ public:
     sprintf( TXT, "    lv2:symbol    \"%s\"      ; \n",  "right_output"                              );   strcat( MPluginTtlBuffer, TXT );
     sprintf( TXT, "    lv2:name      \"%s\"      ; \n",  "Right output"                              );   strcat( MPluginTtlBuffer, TXT );
     sprintf( TXT, "  ]                           . \n"                                               );   strcat( MPluginTtlBuffer, TXT );
+
+    fp = fopen("manifest.ttl","wt");
+    fwrite(MManifestTtlBuffer,1,strlen(MManifestTtlBuffer),fp);
+    fclose(fp);
 
     fp = fopen("plugin.ttl","wt");
     fwrite(MPluginTtlBuffer,1,strlen(MPluginTtlBuffer),fp);
@@ -279,10 +282,10 @@ void                    kode_export_ttl(void)                 asm("export_ttl");
 
 //----------
 
-#define KODE_LV2_PLUGIN_ENTRYPOINT(DESCRIPTOR,INSTANCE)           \
+#define KODE_LV2_PLUGIN_ENTRYPOINT(D,I,E)                         \
                                                                   \
   /*static*/                                                      \
-  KODE_Lv2Plugin<DESCRIPTOR,INSTANCE> LV2_PLUGIN;                 \
+  KODE_Lv2Plugin<D,I,E> LV2_PLUGIN;                               \
                                                                   \
   __attribute__ ((visibility ("default")))                        \
   const LV2_Descriptor* kode_lv2_descriptor(uint32_t index) {     \
@@ -299,7 +302,7 @@ void                    kode_export_ttl(void)                 asm("export_ttl");
   __attribute__ ((visibility ("default")))                        \
   void kode_export_ttl(void) {                                    \
     KODE_PRINT;                                                   \
-    KODE_Descriptor* descriptor = new DESCRIPTOR();               \
+    KODE_Descriptor* descriptor = new D();                        \
     LV2_PLUGIN.export_ttl(descriptor);                            \
     delete descriptor;                                            \
   }                                                               \

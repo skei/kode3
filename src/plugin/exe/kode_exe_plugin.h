@@ -57,14 +57,14 @@ public:
 //
 //----------------------------------------------------------------------
 
-#define KODE_EXE_PLUGIN_ENTRYPOINT(D,I) \
-                                        \
-  KODE_ExePlugin<D,I> EXE_PLUGIN;       \
-                                        \
-int main(int argc, char** argv) {       \
-  KODE_PRINT;                           \
-  return EXE_PLUGIN.main(argc,argv);    \
-}                                       \
+#define KODE_EXE_PLUGIN_ENTRYPOINT(D,I,E) \
+                                          \
+  KODE_ExePlugin<D,I> EXE_PLUGIN;         \
+                                          \
+int main(int argc, char** argv) {         \
+  KODE_PRINT;                             \
+  return EXE_PLUGIN.main(argc,argv);      \
+}                                         \
 
 
 //----------------------------------------------------------------------

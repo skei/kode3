@@ -400,7 +400,7 @@ const struct clap_plugin_entry clap_plugin_entry = {
 
 //----------------------------------------------------------------------
 
-#define KODE_CLAP_PLUGIN_ENTRYPOINT(DESCRIPTOR,INSTANCE)                        \
+#define KODE_CLAP_PLUGIN_ENTRYPOINT(DESCRIPTOR,INSTANCE,EDITOR)                 \
                                                                                 \
   /*static*/                                                                    \
   KODE_ClapPluginEntry<DESCRIPTOR,INSTANCE> CLAP_PLUGIN;                        \
