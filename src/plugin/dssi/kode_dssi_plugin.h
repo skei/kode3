@@ -23,7 +23,7 @@ class KODE_DssiPlugin {
 private:
 //------------------------------
 
-  DESCRIPTOR MDescriptor = {};
+  DESCRIPTOR* MDescriptor = nullptr;
 
 //------------------------------
 public:
@@ -31,12 +31,14 @@ public:
 
   KODE_DssiPlugin() {
     KODE_PRINT;
+    MDescriptor = new DESCRIPTOR();
   }
 
   //----------
 
   ~KODE_DssiPlugin() {
     KODE_PRINT;
+    delete MDescriptor;
   }
 
 //------------------------------

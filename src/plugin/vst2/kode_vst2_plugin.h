@@ -22,8 +22,8 @@ class KODE_Vst2Plugin {
 private:
 //------------------------------
 
-  DESCRIPTOR  MDescriptor = {};
-  AEffect     MAEffect    = {0};
+  DESCRIPTOR* MDescriptor = nullptr;
+  AEffect*    MAEffect    = nullptr;
 
 //------------------------------
 public:
@@ -31,12 +31,17 @@ public:
 
   KODE_Vst2Plugin() {
     KODE_PRINT;
+    MDescriptor = new DESCRIPTOR();
+    MAEffect = (AEffect*)malloc(sizeof(AEffect));
+    memset(MAEffect,0,sizeof(AEffect));
   }
 
   //----------
 
   ~KODE_Vst2Plugin() {
     KODE_PRINT;
+    free(MAEffect);
+    delete MDescriptor;
   }
 
 //------------------------------
@@ -112,24 +117,24 @@ public:
 
   AEffect* entrypoint(audioMasterCallback audioMaster) {
     //KODE_Vst2Instance* vst2_instance = new KODE_Vst2Instance();
-    memset(&MAEffect,0,sizeof(AEffect));
-    MAEffect.magic            = 0;
-    MAEffect.flags            = 0;
-    MAEffect.numPrograms      = 0;
-    MAEffect.numParams        = 0;
-    MAEffect.numInputs        = 0;
-    MAEffect.numOutputs       = 0;
-    MAEffect.initialDelay     = 0;
-    MAEffect.object           = 0; //this;
-    MAEffect.user             = 0; //instance;
-    MAEffect.uniqueID         = 0;
-    MAEffect.version          = 0;
-    MAEffect.setParameter     = vst2_set_parameter_callback;
-    MAEffect.getParameter     = vst2_get_parameter_callback;
-    MAEffect.dispatcher       = vst2_dispatcher_callback;
-    MAEffect.process          = vst2_process_callback;
-    MAEffect.processReplacing = vst2_process_replacing_callback;
-    return &MAEffect;
+    //memset(&MAEffect,0,sizeof(AEffect));
+    MAEffect->magic            = 0;
+    MAEffect->flags            = 0;
+    MAEffect->numPrograms      = 0;
+    MAEffect->numParams        = 0;
+    MAEffect->numInputs        = 0;
+    MAEffect->numOutputs       = 0;
+    MAEffect->initialDelay     = 0;
+    MAEffect->object           = 0; //this;
+    MAEffect->user             = 0; //instance;
+    MAEffect->uniqueID         = 0;
+    MAEffect->version          = 0;
+    MAEffect->setParameter     = vst2_set_parameter_callback;
+    MAEffect->getParameter     = vst2_get_parameter_callback;
+    MAEffect->dispatcher       = vst2_dispatcher_callback;
+    MAEffect->process          = vst2_process_callback;
+    MAEffect->processReplacing = vst2_process_replacing_callback;
+    return MAEffect;
   }
 
 };

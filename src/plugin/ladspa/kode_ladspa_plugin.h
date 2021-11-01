@@ -23,7 +23,7 @@ class KODE_LadspaPlugin {
 private:
 //------------------------------
 
-  DESCRIPTOR MDescriptor = {};
+  DESCRIPTOR* MDescriptor = nullptr;
 
 //------------------------------
 public:
@@ -31,12 +31,14 @@ public:
 
   KODE_LadspaPlugin() {
     KODE_PRINT;
+    MDescriptor = new DESCRIPTOR();
   }
 
   //----------
 
   ~KODE_LadspaPlugin() {
     KODE_PRINT;
+    delete MDescriptor;
   }
 
 //------------------------------

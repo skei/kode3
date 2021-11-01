@@ -12,37 +12,41 @@ clap_plugin_descriptor* kode_clap_get_clap_descriptor(uint32_t AIndex);
 
 //----------------------------------------------------------------------
 
-template <class DESCRIPTOR, class INSTANCE>
+template <class DESCRIPTOR, class INSTANCE, class EDITOR>
 class KODE_ClapPluginEntry {
 
 //------------------------------
 private:
 //------------------------------
 
-  DESCRIPTOR                    MDescriptor       = {};
-  struct clap_plugin_descriptor MClapDescriptor   = {0};
+  DESCRIPTOR*                     MDescriptor       = nullptr;
+  struct clap_plugin_descriptor*  MClapDescriptor   = {0};
 
 //------------------------------
 public:
 //------------------------------
 
   KODE_ClapPluginEntry() {
-    MClapDescriptor.clap_version = CLAP_VERSION;
-    MClapDescriptor.id          = "id";
-    MClapDescriptor.name        = MDescriptor.name;
-    MClapDescriptor.vendor      = MDescriptor.author;
-    MClapDescriptor.url         = MDescriptor.url;
-    MClapDescriptor.manual_url  = "manual_url";
-    MClapDescriptor.support_url = "support_url";
-    MClapDescriptor.version     = "version";
-    MClapDescriptor.description = MDescriptor.description;
-    MClapDescriptor.keywords    = "keywords";
-    MClapDescriptor.plugin_type = CLAP_PLUGIN_AUDIO_EFFECT;
+    MDescriptor = new DESCRIPTOR();
+    MClapDescriptor = (clap_plugin_descriptor*)malloc(sizeof(clap_plugin_descriptor));
+    MClapDescriptor->clap_version = CLAP_VERSION;
+    MClapDescriptor->id          = "id";
+    MClapDescriptor->name        = MDescriptor->name;
+    MClapDescriptor->vendor      = MDescriptor->author;
+    MClapDescriptor->url         = MDescriptor->url;
+    MClapDescriptor->manual_url  = "manual_url";
+    MClapDescriptor->support_url = "support_url";
+    MClapDescriptor->version     = "version";
+    MClapDescriptor->description = MDescriptor->description;
+    MClapDescriptor->keywords    = "keywords";
+    MClapDescriptor->plugin_type = CLAP_PLUGIN_AUDIO_EFFECT;
   }
 
   //----------
 
   ~KODE_ClapPluginEntry() {
+    free(MClapDescriptor);
+    delete MDescriptor;
   }
 
 //------------------------------
@@ -64,7 +68,7 @@ public:
 
   struct clap_plugin_descriptor* getClapDescriptor(uint32_t AIndex) {
     switch (AIndex) {
-      case 0: return &MClapDescriptor; break;
+      case 0: return MClapDescriptor; break;
     }
     return nullptr;
   }
@@ -386,10 +390,10 @@ const struct clap_plugin_entry clap_plugin_entry = {
 
 //----------------------------------------------------------------------
 
-#define KODE_CLAP_PLUGIN_ENTRYPOINT(DESCRIPTOR,INSTANCE,EDITOR)             \
+#define KODE_CLAP_PLUGIN_ENTRYPOINT(D,I,E)                                  \
                                                                             \
   /*static*/                                                                \
-  KODE_ClapPluginEntry<DESCRIPTOR,INSTANCE> CLAP_PLUGIN;                    \
+  KODE_ClapPluginEntry<D,I,E> CLAP_PLUGIN;                                  \
                                                                             \
   KODE_Descriptor* kode_clap_get_descriptor() {                             \
     return CLAP_PLUGIN.getDescriptor();                                     \

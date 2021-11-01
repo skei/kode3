@@ -16,10 +16,9 @@ class KODE_Lv2Plugin {
 private:
 //------------------------------
 
-  //DESCRIPTOR        MDescriptor               = {};
-
-  char              MManifestTtlBuffer[65536] = {0};
-  char              MPluginTtlBuffer[65536]   = {0};
+  DESCRIPTOR* MDescriptor         = nullptr;
+  char*       MManifestTtlBuffer  = nullptr;
+  char*       MPluginTtlBuffer    = nullptr;
 
   LV2_Descriptor MLv2Descriptor = {
     "urn:skei.audio/plugin",
@@ -46,12 +45,18 @@ public:
 
   KODE_Lv2Plugin() {
     KODE_PRINT;
+    MDescriptor = new DESCRIPTOR();
+    MManifestTtlBuffer = (char*)malloc(65536);
+    MPluginTtlBuffer = (char*)malloc(65536);
   }
 
   //----------
 
   ~KODE_Lv2Plugin() {
     KODE_PRINT;
+    free(MManifestTtlBuffer);
+    free(MPluginTtlBuffer);
+    delete MDescriptor;
   }
 
 //------------------------------

@@ -23,7 +23,7 @@ class KODE_Vst3Plugin
 private:
 //------------------------------
 
-  DESCRIPTOR MDescriptor = {};
+  DESCRIPTOR* MDescriptor = nullptr;
 
 //------------------------------
 public:
@@ -32,12 +32,14 @@ public:
   KODE_Vst3Plugin()
   : VST3_IPluginFactory() {
     KODE_PRINT;
+    MDescriptor = new DESCRIPTOR();
   }
 
   //----------
 
   ~KODE_Vst3Plugin() {
     KODE_PRINT;
+    delete MDescriptor;
   }
 
 };
