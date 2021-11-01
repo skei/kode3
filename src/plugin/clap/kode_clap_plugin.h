@@ -6,9 +6,9 @@
 #include "plugin/clap/kode_clap.h"
 #include "plugin/clap/kode_clap_instance.h"
 
-KODE_Descriptor*        _kode_plugin_get_descriptor();
-KODE_Instance*          _kode_plugin_create_instance(KODE_Descriptor* ADescriptor);
-clap_plugin_descriptor* _kode_plugin_get_clap_descriptor(uint32_t AIndex);
+KODE_Descriptor*        kode_clap_get_descriptor();
+KODE_Instance*          kode_clap_create_instance(KODE_Descriptor* ADescriptor);
+clap_plugin_descriptor* kode_clap_get_clap_descriptor(uint32_t AIndex);
 
 //----------------------------------------------------------------------
 
@@ -25,20 +25,6 @@ private:
 //------------------------------
 public:
 //------------------------------
-
-  //const struct clap_plugin_descriptor kode_clap_descriptor = {
-  //  CLAP_VERSION,
-  //  "id",
-  //  "name",
-  //  "vendor",
-  //  "url",
-  //  "manual_url",
-  //  "support_url",
-  //  "0.0.0",
-  //  "description",
-  //  "keyword1;jeyword2",
-  //  CLAP_PLUGIN_AUDIO_EFFECT,
-  //};
 
   KODE_ClapPluginEntry() {
     MClapDescriptor.clap_version = CLAP_VERSION;
@@ -279,7 +265,7 @@ uint32_t clap_get_plugin_count_callback(void) {
 
 const clap_plugin_descriptor* clap_get_plugin_descriptor_callback(uint32_t index) {
   KODE_PRINT;
-  return _kode_plugin_get_clap_descriptor(index); //&kode_clap_descriptor;
+  return kode_clap_get_clap_descriptor(index); //&kode_clap_descriptor;
 }
 
 //----------
@@ -296,11 +282,11 @@ const clap_plugin_descriptor* clap_get_plugin_descriptor_callback(uint32_t index
 
 const clap_plugin* clap_create_plugin_callback(const clap_host *host, const char *plugin_id) {
   KODE_PRINT;
-  KODE_Descriptor*    descriptor    = _kode_plugin_get_descriptor();
-  KODE_Instance*      instance      = _kode_plugin_create_instance(descriptor);
+  KODE_Descriptor*    descriptor    = kode_clap_get_descriptor();
+  KODE_Instance*      instance      = kode_clap_create_instance(descriptor);
   KODE_ClapInstance*  clapinstance  = new KODE_ClapInstance(host,instance);       // TODO: who deletes this? and where?
   clap_plugin*        plugin        = (clap_plugin*)malloc(sizeof(clap_plugin));  // TODO: who frees this? and where?
-  plugin->desc              = _kode_plugin_get_clap_descriptor(0);
+  plugin->desc              = kode_clap_get_clap_descriptor(0);
   plugin->plugin_data       = clapinstance;
   plugin->init              = clap_instance_init_callback;
   plugin->destroy           = clap_instance_destroy_callback;
@@ -400,22 +386,22 @@ const struct clap_plugin_entry clap_plugin_entry = {
 
 //----------------------------------------------------------------------
 
-#define KODE_CLAP_PLUGIN_ENTRYPOINT(DESCRIPTOR,INSTANCE,EDITOR)                 \
-                                                                                \
-  /*static*/                                                                    \
-  KODE_ClapPluginEntry<DESCRIPTOR,INSTANCE> CLAP_PLUGIN;                        \
-                                                                                \
-  KODE_Descriptor* _kode_plugin_get_descriptor() {                              \
-    return CLAP_PLUGIN.getDescriptor();                                         \
-  }                                                                             \
-                                                                                \
-  KODE_Instance* _kode_plugin_create_instance(KODE_Descriptor* ADescriptor) {   \
-    return CLAP_PLUGIN.createInstance(ADescriptor);                             \
-  }                                                                             \
-                                                                                \
-  clap_plugin_descriptor* _kode_plugin_get_clap_descriptor(uint32_t AIndex) {   \
-    return CLAP_PLUGIN.getClapDescriptor(AIndex);                               \
-  }                                                                             \
+#define KODE_CLAP_PLUGIN_ENTRYPOINT(DESCRIPTOR,INSTANCE,EDITOR)             \
+                                                                            \
+  /*static*/                                                                \
+  KODE_ClapPluginEntry<DESCRIPTOR,INSTANCE> CLAP_PLUGIN;                    \
+                                                                            \
+  KODE_Descriptor* kode_clap_get_descriptor() {                             \
+    return CLAP_PLUGIN.getDescriptor();                                     \
+  }                                                                         \
+                                                                            \
+  KODE_Instance* kode_clap_create_instance(KODE_Descriptor* ADescriptor) {  \
+    return CLAP_PLUGIN.createInstance(ADescriptor);                         \
+  }                                                                         \
+                                                                            \
+  clap_plugin_descriptor* kode_clap_get_clap_descriptor(uint32_t AIndex) {  \
+    return CLAP_PLUGIN.getClapDescriptor(AIndex);                           \
+  }                                                                         \
 
 
 
