@@ -10,6 +10,15 @@
 
 //----------------------------------------------------------------------
 
+//class KODE_BasePlugin {
+//public:
+//  virtual KODE_Descriptor*  getDescriptor() { return nullptr; }
+//  virtual KODE_Instance*    createInstance(KODE_Descriptor* ADescriptor) { return nullptr; }
+//  virtual KODE_Editor*      createEditor(KODE_Instance* AInstance) { return nullptr; }
+//};
+
+//----------------------------------------------------------------------
+
 #ifdef KODE_PLUGIN_ALL
   #define KODE_PLUGIN_CLAP
   #define KODE_PLUGIN_DSSI
