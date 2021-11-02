@@ -13,7 +13,7 @@ class KODE_ClapInstance {
 private:
 //------------------------------
 
-  KODE_Instance*    MInstance = nullptr;
+  //KODE_Instance*    MInstance = nullptr;
   const clap_host*  MClapHost = nullptr;
 
 //------------------------------
@@ -21,21 +21,20 @@ public:
 //------------------------------
 
   /*
-    NOTE_CLAP:
-      is host_data for host usage, or for plugin usage?
-      should we stay away?
+    we must delete AInstance
   */
 
-  KODE_ClapInstance(const clap_host *host, KODE_Instance* AInstance) {
+  KODE_ClapInstance(const clap_host *host/*, KODE_Instance* AInstance*/) {
     KODE_PRINT;
     MClapHost = host;
-    MInstance = AInstance;
+    //MInstance = AInstance;
   }
 
   //----------
 
   ~KODE_ClapInstance() {
     KODE_PRINT;
+    //if (MInstance) delete MInstance;
   }
 
 //------------------------------
@@ -159,84 +158,46 @@ public: // instance
   }
 
 //------------------------------
-public:
-//------------------------------
-
-  //clap_audio_ports_count
-  //clap_audio_ports_get
-
-  //clap_audio_ports_config_count
-  //clap_audio_ports_config_get
-  //clap_audio_ports_config_select
-
-  //clap_event_filter accepts
-
-  //clap_gui_create_callback,
-  //clap_gui_destroy_callback,
-  //clap_gui_set_scale_callback,
-  //clap_gui_get_size_callback,
-  //clap_gui_can_resize_callback,
-  //clap_gui_round_size_callback,
-  //clap_gui_set_size_callback,
-  //clap_gui_show_callback,
-  //clap_gui_hide_callback,
-
-  //clap_gui_x11_attach_callback,
-
-  //clap_params_count_callback,
-  //clap_params_get_info_callback,
-  //clap_params_get_value_callback,
-  //clap_params_value_to_text_callback,
-  //clap_params_text_to_value_callback,
-  //clap_params_flush_callback
-
-  //clap_render_set_callback
-
-//------------------------------
-public:
-//------------------------------
-
-//------------------------------
 private:
 //------------------------------
 
   const clap_plugin_audio_ports MClapPluginAudioPorts = {
-    //clap_audio_ports_count
-    //clap_audio_ports_get
+    //clap_audio_ports_count_callback
+    //clap_audio_ports_get_callback
   };
 
   const clap_plugin_audio_ports_config MClapPluginAudioPortsConfig = {
-    //clap_audio_ports_config_count
-    //clap_audio_ports_config_get
-    //clap_audio_ports_config_select
+    //clap_audio_ports_config_count_callback
+    //clap_audio_ports_config_get_callback
+    //clap_audio_ports_config_select_callback
   };
 
   const clap_plugin_event_filter MClapPluginEventFilter = {
-    //clap_event_filter accepts
+    //clap_event_filter accepts_callback
   };
 
   const clap_plugin_gui MClapPluginGui = {
-    //clap_gui_create_callback,
-    //clap_gui_destroy_callback,
-    //clap_gui_set_scale_callback,
-    //clap_gui_get_size_callback,
-    //clap_gui_can_resize_callback,
-    //clap_gui_round_size_callback,
-    //clap_gui_set_size_callback,
-    //clap_gui_show_callback,
-    //clap_gui_hide_callback,
+    //clap_gui_create_callback
+    //clap_gui_destroy_callback
+    //clap_gui_set_scale_callback
+    //clap_gui_get_size_callback
+    //clap_gui_can_resize_callback
+    //clap_gui_round_size_callback
+    //clap_gui_set_size_callback
+    //clap_gui_show_callback
+    //clap_gui_hide_callback
   };
 
   const clap_plugin_gui_x11 MClapPluginGuiX11 = {
-    //clap_gui_x11_attach_callback,
+    //clap_gui_x11_attach_callback
   };
 
   const clap_plugin_params MClapPluginParams = {
-    //clap_params_count_callback,
-    //clap_params_get_info_callback,
-    //clap_params_get_value_callback,
-    //clap_params_value_to_text_callback,
-    //clap_params_text_to_value_callback,
+    //clap_params_count_callback
+    //clap_params_get_info_callback
+    //clap_params_get_value_callback
+    //clap_params_value_to_text_callback
+    //clap_params_text_to_value_callback
     //clap_params_flush_callback
   };
 
@@ -257,35 +218,109 @@ private:
 private:
 //------------------------------
 
-  //clap_audio_ports_count
-  //clap_audio_ports_get
+  static
+  void clap_audio_ports_count_callback() {
+  }
 
-  //clap_audio_ports_config_count
-  //clap_audio_ports_config_get
-  //clap_audio_ports_config_select
+  static
+  void clap_audio_ports_get() {
+  }
 
-  //clap_event_filter accepts
+  //----------
 
-  //clap_gui_create_callback,
-  //clap_gui_destroy_callback,
-  //clap_gui_set_scale_callback,
-  //clap_gui_get_size_callback,
-  //clap_gui_can_resize_callback,
-  //clap_gui_round_size_callback,
-  //clap_gui_set_size_callback,
-  //clap_gui_show_callback,
-  //clap_gui_hide_callback,
+  static
+  void clap_audio_ports_config_count_callback() {
+  }
 
-  //clap_gui_x11_attach_callback,
+  static
+  void clap_audio_ports_config_get_callback() {
+  }
 
-  //clap_params_count_callback,
-  //clap_params_get_info_callback,
-  //clap_params_get_value_callback,
-  //clap_params_value_to_text_callback,
-  //clap_params_text_to_value_callback,
-  //clap_params_flush_callback
+  static
+  void clap_audio_ports_config_select_callback() {
+  }
 
-  //clap_render_set_callback
+  //----------
+
+  static
+  void clap_event_filter() {
+  }
+
+  //----------
+
+  static
+  void clap_gui_create_callback() {
+  }
+
+  static
+  void clap_gui_destroy_callback() {
+  }
+
+  static
+  void clap_gui_set_scale_callback() {
+  }
+
+  static
+  void clap_gui_get_size_callback() {
+  }
+
+  static
+  void clap_gui_can_resize_callback() {
+  }
+
+  static
+  void clap_gui_round_size_callback() {
+  }
+
+  static
+  void clap_gui_set_size_callback() {
+  }
+
+  static
+  void clap_gui_show_callback() {
+  }
+
+  static
+  void clap_gui_hide_callback() {
+  }
+
+  //----------
+
+  static
+  void clap_gui_x11_attach_callback() {
+  }
+
+  //----------
+
+  static
+  void clap_params_count_callback() {
+  }
+
+  static
+  void clap_params_get_info_callback() {
+  }
+
+  static
+  void clap_params_get_value_callback() {
+  }
+
+  static
+  void clap_params_value_to_text_callback() {
+  }
+
+  static
+  void clap_params_text_to_value_callback() {
+  }
+
+  static
+  void clap_params_flush_callback() {
+  }
+
+  //----------
+
+  static
+  void clap_render_set_callback() {
+  }
 
   //----------
 

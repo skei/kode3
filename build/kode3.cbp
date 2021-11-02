@@ -65,6 +65,7 @@
 			<Add library="dl" />
 		</Linker>
 		<Unit filename="../src/base/debug/kode_debug.h" />
+		<Unit filename="../src/base/debug/kode_debug_stacktrace.h" />
 		<Unit filename="../src/base/types/kode_array.h" />
 		<Unit filename="../src/base/types/kode_queue.h" />
 		<Unit filename="../src/extern/clap/all.h" />

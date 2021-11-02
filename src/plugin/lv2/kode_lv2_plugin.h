@@ -16,9 +16,12 @@ class KODE_Lv2Plugin {
 private:
 //------------------------------
 
-  DESCRIPTOR* MDescriptor         = nullptr;
-  char*       MManifestTtlBuffer  = nullptr;
-  char*       MPluginTtlBuffer    = nullptr;
+  DESCRIPTOR*       MDescriptor         = nullptr;
+  char*             MManifestTtlBuffer  = nullptr;
+  char*             MPluginTtlBuffer    = nullptr;
+
+  //LV2_Descriptor*   MLv2Descriptor      = nullptr;
+  //LV2UI_Descriptor* MLv2UiDescriptor    = nullptr;
 
   LV2_Descriptor MLv2Descriptor = {
     "urn:skei.audio/plugin",
@@ -283,8 +286,9 @@ void                    kode_export_ttl(void)                 asm("export_ttl");
 
 #define KODE_LV2_PLUGIN_ENTRYPOINT(D,I,E)                         \
                                                                   \
-  /*static*/                                                      \
   KODE_Lv2Plugin<D,I,E> LV2_PLUGIN;                               \
+                                                                  \
+  /* ----- */                                                     \
                                                                   \
   __attribute__ ((visibility ("default")))                        \
   const LV2_Descriptor* kode_lv2_descriptor(uint32_t index) {     \
@@ -298,6 +302,8 @@ void                    kode_export_ttl(void)                 asm("export_ttl");
     return LV2_PLUGIN.get_lv2ui_descriptor(index);                \
   }                                                               \
                                                                   \
+  /* ----- */                                                     \
+                                                                  \
   __attribute__ ((visibility ("default")))                        \
   void kode_export_ttl(void) {                                    \
     KODE_PRINT;                                                   \
@@ -306,6 +312,6 @@ void                    kode_export_ttl(void)                 asm("export_ttl");
     delete descriptor;                                            \
   }                                                               \
 
+
 //----------------------------------------------------------------------
 #endif
-

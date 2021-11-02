@@ -154,14 +154,14 @@ AEffect* VST2_PLUGIN_API vst2_entrypoint(audioMasterCallback audioMaster) VST2_E
                                                                               \
   KODE_Vst2Plugin<D,I,E> VST2_PLUGIN;                                         \
                                                                               \
+  /* ----- */                                                                 \
+                                                                              \
   __attribute__ ((visibility ("default")))                                    \
   AEffect* VST2_PLUGIN_API vst2_entrypoint(audioMasterCallback audioMaster) { \
-    KODE_Print("\n");                                                         \
+    KODE_Print("audioMaster %p\n",audioMaster);                               \
     return VST2_PLUGIN.entrypoint(audioMaster);                               \
   }                                                                           \
 
 
 //----------------------------------------------------------------------
 #endif
-
-

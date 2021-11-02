@@ -2,19 +2,28 @@
 #define kode_exe_plugin_included
 //----------------------------------------------------------------------
 
-template <class DESCRIPTOR, class INSTANCE>
+#include "kode.h"
+#include "plugin/exe/kode_exe.h"
+//#include "plugin/exe/kode_exe_instance.h"
+
+//----------------------------------------------------------------------
+
+template <class DESCRIPTOR, class INSTANCE, class EDITOR>
 class KODE_ExePlugin
 : public KODE_EditorListener {
 
+//------------------------------
 private:
+//------------------------------
 
-    DESCRIPTOR*   descriptor  = nullptr;
-    INSTANCE*     instance    = nullptr;
-    KODE_Editor*  editor      = nullptr;
+  DESCRIPTOR*   descriptor  = nullptr;
+  INSTANCE*     instance    = nullptr;
+  KODE_Editor*  editor      = nullptr;
 
-public:
+//------------------------------
+public: // KODE_EditorListener
+//------------------------------
 
-  // KODE_EditorListener
   void parameter_changed_from_editor(uint32_t index, float value) final {
     KODE_PRINT;
   }
@@ -25,7 +34,9 @@ public:
     KODE_PRINT;
   }
 
+//------------------------------
 public:
+//------------------------------
 
   int main(int argc, char** argv) {
     KODE_PRINT;
@@ -57,16 +68,17 @@ public:
 //
 //----------------------------------------------------------------------
 
-#define KODE_EXE_PLUGIN_ENTRYPOINT(D,I,E) \
-                                          \
-  KODE_ExePlugin<D,I> EXE_PLUGIN;         \
-                                          \
-int main(int argc, char** argv) {         \
-  KODE_PRINT;                             \
-  return EXE_PLUGIN.main(argc,argv);      \
-}                                         \
+#define KODE_EXE_PLUGIN_ENTRYPOINT(D,I,E)   \
+                                            \
+  KODE_ExePlugin<D,I,E> EXE_PLUGIN;         \
+                                            \
+  /* ----- */                               \
+                                            \
+  int main(int argc, char** argv) {         \
+    KODE_PRINT;                             \
+    return EXE_PLUGIN.main(argc,argv);      \
+  }                                         \
 
 
 //----------------------------------------------------------------------
 #endif
-
