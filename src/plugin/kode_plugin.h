@@ -88,13 +88,6 @@ KODE_Editor*      _kode_create_editor(KODE_Instance* AInstance);
   #warning NO PLUGIN FORMAT DEFINED
 #endif
 
-//----------
-
-//#include "plugin/exe/kode_exe_plugin.h"
-//#include "plugin/lv2/kode_lv2_plugin.h"
-//#include "plugin/vst2/kode_vst2_plugin.h"
-//#include "plugin/vst3/kode_vst3_plugin.h"
-
 //----------------------------------------------------------------------
 //
 //
@@ -114,8 +107,6 @@ KODE_Editor*      _kode_create_editor(KODE_Instance* AInstance);
   KODE_LV2_MAIN(D,I,E);                                                                     \
   KODE_VST2_MAIN(D,I,E);                                                                    \
   KODE_VST3_MAIN(D,I,E);                                                                    \
-
-
 
 
 //----------------------------------------------------------------------
