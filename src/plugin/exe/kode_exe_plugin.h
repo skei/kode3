@@ -45,14 +45,14 @@ public:
       descriptor->name = "myPlugin";
       instance = new INSTANCE(descriptor);
       if (instance) {
-        editor = instance->createEditor(nullptr);
-        if (editor) {
-          editor->setListener(this);
-          //instance->openEditor();
-          //editor->eventLoop();
-          //instance->closeEditor();
-          instance->deleteEditor();
-        } // editor
+        //editor = instance->createEditor(nullptr);
+        //if (editor) {
+        //  editor->setListener(this);
+        //  //instance->openEditor();
+        //  //editor->eventLoop();
+        //  //instance->closeEditor();
+        //  instance->deleteEditor();
+        //} // editor
         delete instance;
       } // instamce
       delete descriptor;

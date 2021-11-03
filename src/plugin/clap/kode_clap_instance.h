@@ -125,14 +125,14 @@ public: // instance
   */
 
   const void* clap_instance_get_extension(const char *id) {
-    if (strcmp(id,CLAP_EXT_AUDIO_PORTS) == 0)         return &MClapPluginAudioPorts;
-    if (strcmp(id,CLAP_EXT_AUDIO_PORTS_CONFIG) == 0)  return &MClapPluginAudioPortsConfig;
-    if (strcmp(id,CLAP_EXT_EVENT_FILTER) == 0)        return &MClapPluginEventFilter;
-    if (strcmp(id,CLAP_EXT_GUI) == 0)                 return &MClapPluginGui;
-    if (strcmp(id,CLAP_EXT_GUI_X11) == 0)             return &MClapPluginGuiX11;
-    if (strcmp(id,CLAP_EXT_PARAMS) == 0)              return &MClapPluginParams;
-    if (strcmp(id,CLAP_EXT_STATE) == 0)               return &MClapPluginState;
-    if (strcmp(id,CLAP_EXT_TIMER_SUPPORT) == 0)       return &MClapPluginTimerSupport;
+    if (strcmp(id,CLAP_EXT_AUDIO_PORTS        ) == 0) return &MClapPluginAudioPorts;
+    if (strcmp(id,CLAP_EXT_AUDIO_PORTS_CONFIG ) == 0) return &MClapPluginAudioPortsConfig;
+    if (strcmp(id,CLAP_EXT_EVENT_FILTER       ) == 0) return &MClapPluginEventFilter;
+    if (strcmp(id,CLAP_EXT_GUI                ) == 0) return &MClapPluginGui;
+    if (strcmp(id,CLAP_EXT_GUI_X11            ) == 0) return &MClapPluginGuiX11;
+    if (strcmp(id,CLAP_EXT_PARAMS             ) == 0) return &MClapPluginParams;
+    if (strcmp(id,CLAP_EXT_STATE              ) == 0) return &MClapPluginState;
+    if (strcmp(id,CLAP_EXT_TIMER_SUPPORT      ) == 0) return &MClapPluginTimerSupport;
     return nullptr;
   }
 
@@ -197,7 +197,7 @@ private: // audio-ports-config
     [main-thread,plugin-deactivated]
   */
 
-   bool clap_audio_ports_config_select(clap_id config_id) {
+  bool clap_audio_ports_config_select(clap_id config_id) {
     return false;
   }
 
@@ -210,7 +210,7 @@ private: // event-filter
     [main-thread]
   */
 
-   bool clap_event_filter(clap_event_type event_type) {
+  bool clap_event_filter(clap_event_type event_type) {
     return false;
   }
 

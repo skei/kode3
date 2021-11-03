@@ -39,11 +39,6 @@ public:
 public:
 //------------------------------
 
-
-//------------------------------
-public:
-//------------------------------
-
   void initDescriptor() {
     MDescriptor = new DESCRIPTOR();                                                     // TODO: delete
     MClapDescriptor = (clap_plugin_descriptor*)malloc(sizeof(clap_plugin_descriptor));  // TODO: free

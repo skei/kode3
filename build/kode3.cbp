@@ -67,7 +67,9 @@
 		<Unit filename="../src/base/debug/kode_debug.h" />
 		<Unit filename="../src/base/debug/kode_debug_stacktrace.h" />
 		<Unit filename="../src/base/types/kode_array.h" />
+		<Unit filename="../src/base/types/kode_point.h" />
 		<Unit filename="../src/base/types/kode_queue.h" />
+		<Unit filename="../src/base/types/kode_rect.h" />
 		<Unit filename="../src/extern/clap/all.h" />
 		<Unit filename="../src/extern/clap/audio-buffer.h" />
 		<Unit filename="../src/extern/clap/chmap.h" />
@@ -146,6 +148,7 @@
 		<Unit filename="../src/plugin/kode_parameter.h" />
 		<Unit filename="../src/plugin/kode_plugin.h" />
 		<Unit filename="../src/plugin/kode_preset.h" />
+		<Unit filename="../src/plugin/kode_process.h" />
 		<Unit filename="../src/plugin/ladspa/kode_ladspa.h" />
 		<Unit filename="../src/plugin/ladspa/kode_ladspa_editor.h" />
 		<Unit filename="../src/plugin/ladspa/kode_ladspa_host.h" />

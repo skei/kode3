@@ -47,8 +47,8 @@ private:
 public:
 //------------------------------
 
-  KODE_Editor()
-  : KODE_Window() {
+  KODE_Editor(uint32_t AWidth, uint32_t AHeight, void* AParent=nullptr)
+  : KODE_Window(AWidth,AHeight,AParent) {
     KODE_PRINT;
   };
 
