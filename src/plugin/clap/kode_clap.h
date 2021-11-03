@@ -9,8 +9,9 @@
   replace the patrh with tour own files..
   (TODO: when clap has stabilized: consider including the files directly..
 */
+//#include "../../clap/include/clap/all.h"
 
-#include "../../clap/include/clap/all.h"
+#include "extern/clap/all.h"
 
 //----------------------------------------------------------------------
 #endif
