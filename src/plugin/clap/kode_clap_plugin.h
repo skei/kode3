@@ -30,7 +30,7 @@ public:
   /*
   */
 
-  bool clap_init(const char *plugin_path) {
+  bool clap_entry_init(const char *plugin_path) {
     MDescriptor = _kode_create_descriptor();
     MClapDescriptor = (clap_plugin_descriptor*)malloc(sizeof(clap_plugin_descriptor));
     MClapDescriptor->clap_version = CLAP_VERSION;
@@ -52,7 +52,7 @@ public:
   /*
   */
 
-  void clap_deinit(void) {
+  void clap_entry_deinit(void) {
     if (MClapDescriptor) free(MClapDescriptor);
     MClapDescriptor = nullptr;
     if (MDescriptor) delete MDescriptor;
@@ -66,7 +66,7 @@ public:
     [thread-safe]
   */
 
-  uint32_t clap_get_plugin_count() {
+  uint32_t clap_entry_get_plugin_count() {
     return 1;
   }
 
@@ -79,7 +79,7 @@ public:
     [thread-safe]
   */
 
-  const clap_plugin_descriptor* clap_get_plugin_descriptor(uint32_t index) {
+  const clap_plugin_descriptor* clap_entry_get_plugin_descriptor(uint32_t index) {
     return MClapDescriptor;
   }
 
@@ -93,7 +93,7 @@ public:
     [thread-safe]
   */
 
-  const clap_plugin* clap_create_plugin(const clap_host* host, const char* plugin_id) {
+  const clap_plugin* clap_entry_create_plugin(const clap_host* host, const char* plugin_id) {
     clap_plugin*        plugin        = (clap_plugin*)malloc(sizeof(clap_plugin));
     KODE_Instance*      instance      = _kode_create_instance(MDescriptor);  // deleted by KODE_ClapInstance destructor
     KODE_ClapInstance*  clap_instance = new KODE_ClapInstance(instance);
@@ -117,7 +117,7 @@ public:
     Get the number of invalidation source.
   */
 
-  uint32_t clap_get_invalidation_sources_count(void) {
+  uint32_t clap_entry_get_invalidation_sources_count(void) {
     return 0;
   }
 
@@ -128,7 +128,7 @@ public:
     [thread-safe]
   */
 
-  const clap_plugin_invalidation_source* clap_get_invalidation_sources(uint32_t index) {
+  const clap_plugin_invalidation_source* clap_entry_get_invalidation_sources(uint32_t index) {
     return nullptr;
   }
 
@@ -139,7 +139,7 @@ public:
     let the plugin_entry scan the set of plugins available.
   */
 
-  void clap_refresh(void) {
+  void clap_entry_refresh(void) {
   }
 
 //------------------------------
@@ -214,36 +214,36 @@ KODE_ClapPlugin KODE_GLOBAL_CLAP_PLUGIN;
 //----------------------------------------------------------------------
 
 
-static bool clap_init_callback(const char *plugin_path) {
-  return KODE_GLOBAL_CLAP_PLUGIN.clap_init(plugin_path);
+static bool clap_entry_init_callback(const char *plugin_path) {
+  return KODE_GLOBAL_CLAP_PLUGIN.clap_entry_init(plugin_path);
 }
 
-static void clap_deinit_callback() {
-  KODE_GLOBAL_CLAP_PLUGIN.clap_deinit();
+static void clap_entry_deinit_callback() {
+  KODE_GLOBAL_CLAP_PLUGIN.clap_entry_deinit();
 }
 
-static uint32_t clap_get_plugin_count_callback() {
-  return KODE_GLOBAL_CLAP_PLUGIN.clap_get_plugin_count();
+static uint32_t clap_entry_get_plugin_count_callback() {
+  return KODE_GLOBAL_CLAP_PLUGIN.clap_entry_get_plugin_count();
 }
 
-static const clap_plugin_descriptor* clap_get_plugin_descriptor_callback(uint32_t index) {
-  return KODE_GLOBAL_CLAP_PLUGIN.clap_get_plugin_descriptor(index);
+static const clap_plugin_descriptor* clap_entry_get_plugin_descriptor_callback(uint32_t index) {
+  return KODE_GLOBAL_CLAP_PLUGIN.clap_entry_get_plugin_descriptor(index);
 }
 
-static const clap_plugin* clap_create_plugin_callback(const clap_host* host, const char* plugin_id) {
-  return KODE_GLOBAL_CLAP_PLUGIN.clap_create_plugin(host,plugin_id);
+static const clap_plugin* clap_entry_create_plugin_callback(const clap_host* host, const char* plugin_id) {
+  return KODE_GLOBAL_CLAP_PLUGIN.clap_entry_create_plugin(host,plugin_id);
 }
 
-static uint32_t clap_get_invalidation_sources_count_callback(void) {
-  return KODE_GLOBAL_CLAP_PLUGIN.clap_get_invalidation_sources_count();
+static uint32_t clap_entry_get_invalidation_sources_count_callback(void) {
+  return KODE_GLOBAL_CLAP_PLUGIN.clap_entry_get_invalidation_sources_count();
 }
 
-static const clap_plugin_invalidation_source* clap_get_invalidation_sources_callback(uint32_t index) {
-  return KODE_GLOBAL_CLAP_PLUGIN.clap_get_invalidation_sources(index);
+static const clap_plugin_invalidation_source* clap_entry_get_invalidation_sources_callback(uint32_t index) {
+  return KODE_GLOBAL_CLAP_PLUGIN.clap_entry_get_invalidation_sources(index);
 }
 
-static void clap_refresh_callback(void) {
-  KODE_GLOBAL_CLAP_PLUGIN.clap_refresh();
+static void clap_entry_refresh_callback(void) {
+  KODE_GLOBAL_CLAP_PLUGIN.clap_entry_refresh();
 }
 
 //----------------------------------------------------------------------
@@ -271,14 +271,14 @@ static void clap_refresh_callback(void) {
 __attribute__((visibility("default")))
 struct clap_plugin_entry CLAP_ENTRY_STRUCT asm("clap_plugin_entry") = {
   CLAP_VERSION,
-  clap_init_callback,
-  clap_deinit_callback,
-  clap_get_plugin_count_callback,
-  clap_get_plugin_descriptor_callback,
-  clap_create_plugin_callback,
-  clap_get_invalidation_sources_count_callback,
-  clap_get_invalidation_sources_callback,
-  clap_refresh_callback
+  clap_entry_init_callback,
+  clap_entry_deinit_callback,
+  clap_entry_get_plugin_count_callback,
+  clap_entry_get_plugin_descriptor_callback,
+  clap_entry_create_plugin_callback,
+  clap_entry_get_invalidation_sources_count_callback,
+  clap_entry_get_invalidation_sources_callback,
+  clap_entry_refresh_callback
 };
 
 //#ifdef __cplusplus
