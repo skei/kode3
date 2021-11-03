@@ -1,0 +1,26 @@
+# depslib dependency file v1.0
+1635952300 source:/DISKS/sda2/code/git/kode3/build/build.cpp
+	<stdio.h>
+
+1635945309 /DISKS/sda2/code/git/kode3/src/kode.h
+	<stdint.h>
+	<array>
+	<queue>
+	<vector>
+
+1635945791 /DISKS/sda2/code/git/kode3/src/kode_plugin.h
+	"kode.h"
+	"kode_descriptor.h"
+	"kode_instance.h"
+	"kode_editor.h"
+
+1635944618 /DISKS/sda2/code/git/kode3/src/kode_descriptor.h
+	"kode.h"
+
+1635945128 /DISKS/sda2/code/git/kode3/src/kode_instance.h
+	"kode.h"
+	"kode_descriptor.h"
+
+1635944653 /DISKS/sda2/code/git/kode3/src/kode_editor.h
+	"kode.h"
+
