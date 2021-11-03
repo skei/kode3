@@ -1,7 +1,11 @@
 # depslib dependency file v1.0
-1635961358 source:/DISKS/sda2/code/git/kode3/build/build.cpp
+1635966096 source:/DISKS/sda2/code/git/kode3/build/build.cpp
 	"kode.h"
 	"kode_clap.h"
+	"kode_clap_plugin.h"
+	"kode_descriptor.h"
+	"kode_instance.h"
+	"kode_editor.h"
 
 1635960178 /DISKS/sda2/code/git/kode3/src/kode.h
 	<stdint.h>
@@ -23,16 +27,13 @@
 	"kode.h"
 	"kode_descriptor.h"
 
-1635962666 /DISKS/sda2/code/git/kode3/src/kode_editor.h
+1635966120 /DISKS/sda2/code/git/kode3/src/kode_editor.h
 	"kode.h"
-
-1635962935 /DISKS/sda2/code/git/kode3/src/kode_clap.h
-	"../../clap/include/clap/all.h"
-	"kode.h"
-	"kode_descriptor.h"
 	"kode_instance.h"
-	"kode_editor.h"
-	"kode_clap_plugin.h"
+
+1635965931 /DISKS/sda2/code/git/kode3/src/kode_clap.h
+	"kode.h"
+	"../../clap/include/clap/all.h"
 
 1635717665 /DISKS/sda2/code/git/clap/include/clap/all.h
 	"clap.h"
@@ -214,13 +215,16 @@
 1635717665 /DISKS/sda2/code/git/clap/include/clap/ext/draft/midi-mappings.h
 	"../../clap.h"
 
-1635963181 /DISKS/sda2/code/git/kode3/src/kode_clap_plugin.h
+1635966553 /DISKS/sda2/code/git/kode3/src/kode_clap_plugin.h
 	"kode_clap.h"
 	"kode_descriptor.h"
 	"kode_instance.h"
+	"kode_editor.h"
 	"kode_clap_instance.h"
 
-1635963043 /DISKS/sda2/code/git/kode3/src/kode_clap_instance.h
+1635966492 /DISKS/sda2/code/git/kode3/src/kode_clap_instance.h
 	"kode_clap.h"
+	"kode_descriptor.h"
 	"kode_instance.h"
+	"kode_editor.h"
 

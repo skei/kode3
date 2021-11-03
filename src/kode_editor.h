@@ -3,11 +3,24 @@
 //----------------------------------------------------------------------
 
 #include "kode.h"
-//#include "kode_parameter.h"
+#include "kode_instance.h"
 
 //----------------------------------------------------------------------
 
 class KODE_Editor {
+
+private:
+
+  KODE_Instance*  MInstance = nullptr;
+
+public:
+
+  KODE_Editor(KODE_Instance* AInstance) {
+  }
+
+  virtual ~KODE_Editor() {
+  }
+
 };
 
 //----------------------------------------------------------------------

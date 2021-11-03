@@ -3,7 +3,9 @@
 //----------------------------------------------------------------------
 
 #include "kode_clap.h"
+#include "kode_descriptor.h"
 #include "kode_instance.h"
+#include "kode_editor.h"
 
 //----------------------------------------------------------------------
 
@@ -42,7 +44,6 @@ public:
 
   bool clap_instance_activate(double sample_rate) {
     MInstance->on_plugin_activate();
-    //return MInstance->on_plugin_activate(sample_rate);
     return true;
   }
 
@@ -61,7 +62,7 @@ public:
 
   clap_process_status clap_instance_process(const clap_process *process) {
     MInstance->on_plugin_process();
-    return 0;//CLAP_PROCESS_CONTINUE;
+    return CLAP_PROCESS_CONTINUE;
   }
 
   const void *clap_instance_get_extension(const char *id) {

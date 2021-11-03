@@ -1,6 +1,11 @@
 
 #include "kode.h"
 #include "kode_clap.h"
+#include "kode_clap_plugin.h"
+
+#include "kode_descriptor.h"
+#include "kode_instance.h"
+#include "kode_editor.h"
 
 //----------------------------------------------------------------------
 
@@ -25,6 +30,8 @@ public:
 //----------
 
 class myEditor : public KODE_Editor {
+public:
+  myEditor(KODE_Instance* AInstance) : KODE_Editor(AInstance) {}
 };
 
 //----------------------------------------------------------------------
