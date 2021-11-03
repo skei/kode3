@@ -1,26 +1,32 @@
 
 #include "kode.h"
+#include "kode_clap.h"
 
-//#define __cplusplus >= 201103L
-
-//#include "../../clap/include/clap/clap.h"
-
-#include <stdio.h>
+//----------------------------------------------------------------------
 
 int main() {
   return 0;
 }
 
+//----------------------------------------------------------------------
+
+class myDescriptor : public KODE_Descriptor {
+};
+
 //----------
 
-/*
+class myInstance : public KODE_Instance {
 
-1) c++11
+public:
+  myInstance(KODE_Descriptor* ADescriptor) : KODE_Instance(ADescriptor) {}
 
-  if i compile with -std=c++11
-  i get this error:
-    clap/version.h, 34, ‘constexpr bool clap_version_is_compatible(const clap_version&)’
-    body of ‘constexpr’ function ‘constexpr bool clap_version_is_compatible(const clap_version&)’ not a return-statement
-  without -std=c++11, it compiles ok
+};
 
-*/
+//----------
+
+class myEditor : public KODE_Editor {
+};
+
+//----------------------------------------------------------------------
+
+KODE_CLAP_ENTRYPOINT(myDescriptor,myInstance,myEditor);
