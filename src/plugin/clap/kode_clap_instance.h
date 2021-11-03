@@ -3,9 +3,9 @@
 //----------------------------------------------------------------------
 
 #include "kode_clap.h"
-#include "kode_descriptor.h"
-#include "kode_instance.h"
-#include "kode_editor.h"
+#include "plugin/kode_descriptor.h"
+#include "plugin/kode_instance.h"
+#include "plugin/kode_editor.h"
 
 //----------------------------------------------------------------------
 

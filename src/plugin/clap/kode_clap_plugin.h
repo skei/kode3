@@ -3,9 +3,9 @@
 //----------------------------------------------------------------------
 
 #include "kode.h"
-#include "kode_clap.h"
-#include "kode_plugin.h"
-#include "kode_clap_instance.h"
+#include "plugin/kode_plugin.h"
+#include "plugin/clap/kode_clap.h"
+#include "plugin/clap/kode_clap_instance.h"
 
 //----------------------------------------------------------------------
 //
@@ -44,8 +44,10 @@ public:
   }
 
   void clap_deinit(void) {
-    free(MClapDescriptor);
-    delete MDescriptor;
+    if (MClapDescriptor) free(MClapDescriptor);
+    MClapDescriptor = nullptr;
+    if (MDescriptor) delete MDescriptor;
+    MDescriptor = nullptr;
   }
 
   uint32_t clap_get_plugin_count() {
@@ -135,6 +137,10 @@ public:
     KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
     instance->clap_instance_on_main_thread();
   }
+
+//------------------------------
+public:
+//------------------------------
 
 };
 

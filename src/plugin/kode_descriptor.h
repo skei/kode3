@@ -1,25 +1,20 @@
-#ifndef kode_editor_included
-#define kode_editor_included
+#ifndef kode_descriptor_included
+#define kode_descriptor_included
 //----------------------------------------------------------------------
 
 #include "kode.h"
-#include "kode_instance.h"
+//#include "plugin/kode_parameter.h"
 
 //----------------------------------------------------------------------
 
-class KODE_Editor {
-
-private:
-
-  KODE_Instance*  MInstance = nullptr;
+class KODE_Descriptor {
 
 public:
 
-  KODE_Editor(KODE_Instance* AInstance) {
-  }
-
-  virtual ~KODE_Editor() {
-  }
+  const char* name      = "";
+  const char* author    = "";
+  const char* url       = "";
+  const char* string_id = "";
 
 };
 

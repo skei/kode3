@@ -1,12 +1,11 @@
 
+//#define KODE_PLUGIN_EXE
+#define KODE_PLUGIN_ALL
+
+//----------
+
 #include "kode.h"
-#include "kode_plugin.h"
-
-//----------------------------------------------------------------------
-
-int main() {
-  return 0;
-}
+#include "plugin/kode_plugin.h"
 
 //----------------------------------------------------------------------
 
@@ -33,8 +32,8 @@ public:
   : KODE_Instance(ADescriptor) {
   }
 
-  //void on_plugin_init() final {}
-  //void on_plugin_destroy() final {}
+  void on_plugin_init() final {}
+  void on_plugin_destroy() final {}
 
 };
 
@@ -53,4 +52,4 @@ public:
 
 //----------------------------------------------------------------------
 
-KODE_MAIN(myDescriptor,myInstance,myEditor);
+KODE_MAIN(myDescriptor,myInstance,myEditor)

@@ -3,7 +3,7 @@
 //----------------------------------------------------------------------
 
 #include "kode.h"
-#include "kode_descriptor.h"
+#include "plugin/kode_descriptor.h"
 
 
 class KODE_Instance {
