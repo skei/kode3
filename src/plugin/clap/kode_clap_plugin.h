@@ -26,6 +26,9 @@ private:
 public:
 //------------------------------
 
+  /*
+  */
+
   bool clap_init(const char *plugin_path) {
     MDescriptor = _kode_create_descriptor();
     MClapDescriptor = (clap_plugin_descriptor*)malloc(sizeof(clap_plugin_descriptor));
@@ -43,6 +46,11 @@ public:
     return true;
   }
 
+  //----------
+
+  /*
+  */
+
   void clap_deinit(void) {
     if (MClapDescriptor) free(MClapDescriptor);
     MClapDescriptor = nullptr;
@@ -50,13 +58,39 @@ public:
     MDescriptor = nullptr;
   }
 
+  //----------
+
+  /*
+    Get the number of plugins available.
+    [thread-safe]
+  */
+
   uint32_t clap_get_plugin_count() {
     return 1;
   }
 
+  //----------
+
+  /*
+    Retrieves a plugin descriptor by its index.
+    Returns null in case of error.
+    The descriptor does not need to be freed.
+    [thread-safe]
+  */
+
   const clap_plugin_descriptor* clap_get_plugin_descriptor(uint32_t index) {
     return MClapDescriptor;
   }
+
+  //----------
+
+  /*
+    Create a clap_plugin by its plugin_id.
+    The returned pointer must be freed by calling plugin->destroy(plugin);
+    The plugin is not allowed to use the host callbacks in the create method.
+    Returns null in case of error.
+    [thread-safe]
+  */
 
   const clap_plugin* clap_create_plugin(const clap_host* host, const char* plugin_id) {
     clap_plugin*        plugin        = (clap_plugin*)malloc(sizeof(clap_plugin));
@@ -76,13 +110,33 @@ public:
     return plugin;
   }
 
+  //----------
+
+  /*
+    Get the number of invalidation source.
+  */
+
   uint32_t clap_get_invalidation_sources_count(void) {
     return 0;
   }
 
+  //----------
+
+  /*
+    Get the invalidation source by its index.
+    [thread-safe]
+  */
+
   const clap_plugin_invalidation_source* clap_get_invalidation_sources(uint32_t index) {
     return nullptr;
   }
+
+  //----------
+
+  /*
+    In case the host detected a invalidation event, it can call refresh() to
+    let the plugin_entry scan the set of plugins available.
+  */
 
   void clap_refresh(void) {
   }
@@ -190,6 +244,19 @@ static const clap_plugin_invalidation_source* clap_get_invalidation_sources_call
 static void clap_refresh_callback(void) {
   KODE_GLOBAL_CLAP_PLUGIN.clap_refresh();
 }
+
+//----------------------------------------------------------------------
+
+/*
+  This interface is the entry point of the dynamic library.
+  There is an invalidation mechanism for the set of plugins which is based on
+  files.
+  The host can watch the plugin DSO's mtime and a set of files's mtime provided
+  by get_clap_invalidation_source().
+  The set of plugins must not change, except during a call to refresh() by the
+  host.
+  Every methods must be thread-safe.
+*/
 
 //----------------------------------------------------------------------
 
