@@ -1,9 +1,9 @@
 # depslib dependency file v1.0
-1635957738 source:/DISKS/sda2/code/git/kode3/build/build.cpp
+1635961358 source:/DISKS/sda2/code/git/kode3/build/build.cpp
 	"kode.h"
 	"kode_clap.h"
 
-1635952382 /DISKS/sda2/code/git/kode3/src/kode.h
+1635960178 /DISKS/sda2/code/git/kode3/src/kode.h
 	<stdint.h>
 	<stdio.h>
 	<array>
@@ -16,29 +16,23 @@
 	"kode_instance.h"
 	"kode_editor.h"
 
-1635944618 /DISKS/sda2/code/git/kode3/src/kode_descriptor.h
+1635962601 /DISKS/sda2/code/git/kode3/src/kode_descriptor.h
 	"kode.h"
 
-1635945128 /DISKS/sda2/code/git/kode3/src/kode_instance.h
+1635962637 /DISKS/sda2/code/git/kode3/src/kode_instance.h
 	"kode.h"
 	"kode_descriptor.h"
 
-1635944653 /DISKS/sda2/code/git/kode3/src/kode_editor.h
+1635962666 /DISKS/sda2/code/git/kode3/src/kode_editor.h
 	"kode.h"
 
-1635957869 /DISKS/sda2/code/git/kode3/src/kode_clap.h
-	"kode.h"
+1635962935 /DISKS/sda2/code/git/kode3/src/kode_clap.h
 	"../../clap/include/clap/all.h"
-	<clap/all.h>
-	<cstring>
-	<exception>
-	<functional>
-	<sstream>
-	<vector>
-	"plugs/dc-offset/dc-offset.hh"
-	"plugs/gain/gain.hh"
-	"plugs/transport/transport-info.hh"
-	"path-provider.hh"
+	"kode.h"
+	"kode_descriptor.h"
+	"kode_instance.h"
+	"kode_editor.h"
+	"kode_clap_plugin.h"
 
 1635717665 /DISKS/sda2/code/git/clap/include/clap/all.h
 	"clap.h"
@@ -219,4 +213,14 @@
 
 1635717665 /DISKS/sda2/code/git/clap/include/clap/ext/draft/midi-mappings.h
 	"../../clap.h"
+
+1635963181 /DISKS/sda2/code/git/kode3/src/kode_clap_plugin.h
+	"kode_clap.h"
+	"kode_descriptor.h"
+	"kode_instance.h"
+	"kode_clap_instance.h"
+
+1635963043 /DISKS/sda2/code/git/kode3/src/kode_clap_instance.h
+	"kode_clap.h"
+	"kode_instance.h"
 

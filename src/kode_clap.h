@@ -2,17 +2,15 @@
 #define kode_clap_included
 //----------------------------------------------------------------------
 
-#include "kode.h"
-#include "kode_plugin.h"
+#include "../../clap/include/clap/all.h"
 
-// ugly hack!
-KODE_Descriptor*  _kode_clap_create_descriptor();
-KODE_Instance*    _kode_clap_create_instance(KODE_Descriptor* ADescriptor);
+#include "kode.h"
+#include "kode_descriptor.h"
+#include "kode_instance.h"
+#include "kode_editor.h"
 
 #include "kode_clap_plugin.h"
 //#include "kode_clap_instance.h"
-
-//#include "../../clap/include/clap/all.h"
 
 //----------------------------------------------------------------------
 //

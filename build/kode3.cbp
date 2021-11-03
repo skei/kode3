@@ -30,7 +30,7 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-std=c++11" />
+			<Add option="-std=c++14" />
 			<Add directory="../src" />
 		</Compiler>
 		<Unit filename="../../clap/include/clap/all.h" />
@@ -77,6 +77,12 @@
 		<Unit filename="../../clap/include/clap/string-sizes.h" />
 		<Unit filename="../../clap/include/clap/version.h" />
 		<Unit filename="../src/kode.h" />
+		<Unit filename="../src/kode_clap.h" />
+		<Unit filename="../src/kode_clap_instance.h" />
+		<Unit filename="../src/kode_clap_plugin.h" />
+		<Unit filename="../src/kode_descriptor.h" />
+		<Unit filename="../src/kode_editor.h" />
+		<Unit filename="../src/kode_instance.h" />
 		<Unit filename="build.cpp" />
 		<Extensions />
 	</Project>

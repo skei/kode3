@@ -3,10 +3,9 @@
 //----------------------------------------------------------------------
 
 #include "kode_clap.h"
-#include "kode_plugin.h"
+#include "kode_instance.h"
 
-#include "../../clap/include/clap/all.h"
-
+//----------------------------------------------------------------------
 
 class KODE_ClapInstance {
 

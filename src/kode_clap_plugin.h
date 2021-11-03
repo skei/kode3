@@ -3,10 +3,15 @@
 //----------------------------------------------------------------------
 
 #include "kode_clap.h"
-#include "kode_plugin.h"
+#include "kode_descriptor.h"
+#include "kode_instance.h"
 #include "kode_clap_instance.h"
 
-#include "../../clap/include/clap/all.h"
+// (see kode_clap.h)
+KODE_Descriptor*  _kode_clap_create_descriptor();
+KODE_Instance*    _kode_clap_create_instance(KODE_Descriptor* ADescriptor);
+
+//----------------------------------------------------------------------
 
 class KODE_ClapPlugin {
 
@@ -52,11 +57,9 @@ public:
   }
 
   const clap_plugin* clap_create_plugin(const clap_host* host, const char* plugin_id) {
-
     clap_plugin*        plugin        = (clap_plugin*)malloc(sizeof(clap_plugin));
     KODE_Instance*      instance      = _kode_clap_create_instance(MDescriptor);  // deleted bu KODE_ClapInstance destructor
     KODE_ClapInstance*  clap_instance = new KODE_ClapInstance(instance);
-
     plugin->desc              = MClapDescriptor;
     plugin->plugin_data       = clap_instance;
     plugin->init              = clap_instance_init_callback;
@@ -87,37 +90,48 @@ public:
 //------------------------------
 
   static bool clap_instance_init_callback(const struct clap_plugin *plugin) {
-    return false;
+    KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
+    return instance->clap_instance_init();
   }
 
   static void clap_instance_destroy_callback(const struct clap_plugin *plugin) {
-    delete (KODE_ClapInstance*)plugin->plugin_data;
-    //free(plugin);
+    KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
+    instance->clap_instance_destroy();
   }
 
   static bool clap_instance_activate_callback(const struct clap_plugin *plugin, double sample_rate) {
-    return false;
+    KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
+    return instance->clap_instance_activate(sample_rate);
   }
 
   static void clap_instance_deactivate_callback(const struct clap_plugin *plugin) {
+    KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
+    instance->clap_instance_deactivate();
   }
 
   static bool clap_instance_start_processing_callback(const struct clap_plugin *plugin) {
-    return false;
+    KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
+    return instance->clap_instance_start_processing();
   }
 
   static void clap_instance_stop_processing_callback(const struct clap_plugin *plugin) {
+    KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
+    instance->clap_instance_stop_processing();
   }
 
   static clap_process_status clap_instance_process_callback(const struct clap_plugin *plugin, const clap_process *process) {
-    return CLAP_PROCESS_CONTINUE;
+    KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
+    return instance->clap_instance_process(process);
   }
 
   static const void *clap_instance_get_extension_callback(const struct clap_plugin *plugin, const char *id) {
-    return nullptr;
+    KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
+    return instance->clap_instance_get_extension(id);
   }
 
   static void clap_instance_on_main_thread_callback(const struct clap_plugin *plugin) {
+    KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
+    instance->clap_instance_on_main_thread();
   }
 
 };
