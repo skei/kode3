@@ -5,6 +5,7 @@
 #include "kode.h"
 #include "plugin/kode_plugin.h"
 #include "plugin/clap/kode_clap.h"
+#include "plugin/clap/kode_clap_host.h"
 #include "plugin/clap/kode_clap_instance.h"
 
 //----------------------------------------------------------------------
