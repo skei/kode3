@@ -1,11 +1,6 @@
 
 #include "kode.h"
-#include "kode_clap.h"
-#include "kode_clap_plugin.h"
-
-#include "kode_descriptor.h"
-#include "kode_instance.h"
-#include "kode_editor.h"
+#include "kode_plugin.h"
 
 //----------------------------------------------------------------------
 
@@ -15,25 +10,47 @@ int main() {
 
 //----------------------------------------------------------------------
 
-class myDescriptor : public KODE_Descriptor {
-};
-
-//----------
-
-class myInstance : public KODE_Instance {
+class myDescriptor
+: public KODE_Descriptor {
 
 public:
-  myInstance(KODE_Descriptor* ADescriptor) : KODE_Instance(ADescriptor) {}
 
-};
+  myDescriptor() {
+    name    = "myPlugin";
+    author  = "skei.audio";
+  }
 
-//----------
-
-class myEditor : public KODE_Editor {
-public:
-  myEditor(KODE_Instance* AInstance) : KODE_Editor(AInstance) {}
 };
 
 //----------------------------------------------------------------------
 
-KODE_CLAP_ENTRYPOINT(myDescriptor,myInstance,myEditor);
+class myInstance
+: public KODE_Instance {
+
+public:
+
+  myInstance(KODE_Descriptor* ADescriptor)
+  : KODE_Instance(ADescriptor) {
+  }
+
+  //void on_plugin_init() final {}
+  //void on_plugin_destroy() final {}
+
+};
+
+//----------------------------------------------------------------------
+
+class myEditor
+: public KODE_Editor {
+
+public:
+
+  myEditor(KODE_Instance* AInstance)
+  : KODE_Editor(AInstance) {
+  }
+
+};
+
+//----------------------------------------------------------------------
+
+KODE_MAIN(myDescriptor,myInstance,myEditor);
