@@ -2,6 +2,10 @@
 //#define KODE_PLUGIN_EXE
 #define KODE_PLUGIN_ALL
 
+#define KODE_DEBUG_PRINT_SOCKET
+// nc -U -l -k /tmp/kode.socket
+
+
 //----------
 
 #include "kode.h"
@@ -33,8 +37,6 @@ public:
   myInstance(KODE_Descriptor* ADescriptor)
   : KODE_Instance(ADescriptor) {
     KODE_HostedClapPlugin plugin;
-    //plugin.test();
-
   }
 
   void on_plugin_init() final {}

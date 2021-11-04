@@ -13,6 +13,8 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-DKODE_EXE" />
+					<Add option="-DKODE_DEBUG" />
 				</Compiler>
 			</Target>
 			<Target title="exe release">
@@ -22,6 +24,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-DKODE_EXE" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -35,6 +38,8 @@
 				<Compiler>
 					<Add option="-fPIC" />
 					<Add option="-g" />
+					<Add option="-DKODE_LIB" />
+					<Add option="-DKODE_DEBUG" />
 				</Compiler>
 			</Target>
 			<Target title="plugin release">
@@ -45,6 +50,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-fPIC" />
+					<Add option="-DKODE_LIB" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -159,6 +165,7 @@
 		<Unit filename="../src/plugin/lv2/kode_lv2_utils.h" />
 		<Unit filename="../src/plugin/vst2/kode_hosted_vst2_plugin.h" />
 		<Unit filename="../src/plugin/vst2/kode_vst2.h" />
+		<Unit filename="../src/plugin/vst2/kode_vst2_base.h" />
 		<Unit filename="../src/plugin/vst2/kode_vst2_host.h" />
 		<Unit filename="../src/plugin/vst2/kode_vst2_instance.h" />
 		<Unit filename="../src/plugin/vst2/kode_vst2_plugin.h" />
