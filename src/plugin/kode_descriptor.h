@@ -55,14 +55,17 @@ class KODE_Descriptor {
 public:
 //------------------------------
 
-  const char*           name        = "name";
-  const char*           author      = "author";
-  uint32_t              version     = 0;
-  uint32_t              short_id    = 0;
-  const char*           email       = "email";
-  const char*           url         = "url";
-  const char*           description = "description";
-  const char*           keywords    = "keywords";
+  const char*           name          = "name";
+  const char*           author        = "author";
+  uint32_t              version       = 0;
+  uint32_t              short_id      = 0;
+  const char*           email         = "email";
+  const char*           url           = "url";
+  const char*           description   = "description";
+  const char*           keywords      = "keywords";
+
+  uint32_t              editorWidth   = 640;  // default width
+  uint32_t              editorHeight  = 480;  // default height
 
 //int32_t             plugin_type = 0;
 //const char*         id          = "skei.audio/kode_debug/0.0.0";

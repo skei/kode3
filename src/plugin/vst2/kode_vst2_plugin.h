@@ -47,11 +47,11 @@ private: // vst2 callbacks
   VstIntPtr vst2_dispatcher_callback(AEffect* effect, VstInt32 opcode, VstInt32 index, VstIntPtr value, void* ptr, float opt) {
     KODE_Print("\n");
     VstIntPtr result = 0;
-//KODE_Vst2Instance* vst2_instance = (KODE_Vst2Instance*)effect->object;
-    //result = vst2_instance->vst2_dispatcher(opcode,index,value,ptr,opt);
-    //if (opcode==effClose) {
-    //  delete vst2_instance; // (KODE_Vst2Instance*)effect->object;
-    //}
+    KODE_Vst2Instance* vst2_instance = (KODE_Vst2Instance*)effect->object;
+    result = vst2_instance->vst2_dispatcher(opcode,index,value,ptr,opt);
+    if (opcode==effClose) {
+      delete (KODE_Vst2Instance*)vst2_instance;
+    }
     return result;
   }
 
@@ -60,8 +60,8 @@ private: // vst2 callbacks
   static
   void vst2_setParameter_callback(AEffect* effect, VstInt32 index, float parameter) {
     KODE_Print("\n");
-    //KODE_Vst2Instance* vst2_instance = (KODE_Vst2Instance*)effect->object;
-    //vst2_instance->vst2_setParameter(index,parameter);
+    KODE_Vst2Instance* vst2_instance = (KODE_Vst2Instance*)effect->object;
+    vst2_instance->vst2_setParameter(index,parameter);
   }
 
   //----------
@@ -69,25 +69,24 @@ private: // vst2 callbacks
   static
   float vst2_getParameter_callback(AEffect* effect, VstInt32 index) {
     KODE_Print("\n");
-    //KODE_Vst2Instance* vst2_instance = (KODE_Vst2Instance*)effect->object;
-    //return vst2_instance->vst2_getParameter(index);
-    return 0.0;
+    KODE_Vst2Instance* vst2_instance = (KODE_Vst2Instance*)effect->object;
+    return vst2_instance->vst2_getParameter(index);
   }
 
   //----------
 
   static
   void vst2_process_callback(AEffect* effect, float** inputs, float** outputs, VstInt32 sampleFrames) {
-    //KODE_Vst2Instance* vst2_instance = (KODE_Vst2Instance*)effect->object;
-    //vst2_instance->vst2_process(inputs,outputs,sampleFrames);
+    KODE_Vst2Instance* vst2_instance = (KODE_Vst2Instance*)effect->object;
+    vst2_instance->vst2_process(inputs,outputs,sampleFrames);
   }
 
   //----------
 
   static
   void vst2_processDouble_callback(AEffect* effect, double** inputs, double** outputs, VstInt32 sampleFrames) {
-    //KODE_Vst2Instance* vst2_instance = (KODE_Vst2Instance*)effect->object;
-    //vst2_instance->vst2_processDouble(inputs,outputs,sampleFrames);
+    KODE_Vst2Instance* vst2_instance = (KODE_Vst2Instance*)effect->object;
+    vst2_instance->vst2_processDouble(inputs,outputs,sampleFrames);
   }
 
 //------------------------------
@@ -97,10 +96,10 @@ public:
   AEffect* entrypoint(audioMasterCallback audioMaster) {
     KODE_Print("\n");
 
-    if (!MDescriptor) MDescriptor = new DESCRIPTOR();
+    if (!MDescriptor) MDescriptor     = new DESCRIPTOR();                             // deleted in: ~KODE_Instance()
+    KODE_Instance* instance           = new INSTANCE(MDescriptor);                    // deleted in ~KODE_Vst2Instance()
+    KODE_Vst2Instance* vst2_instance  = new KODE_Vst2Instance(instance,audioMaster);  // deleted in:
 
-    KODE_Instance* instance = new INSTANCE(MDescriptor);
-    KODE_Vst2Instance* vst2_instance = new KODE_Vst2Instance(instance,audioMaster);
 //    instance->setListener(vst2_instance);
 
     instance->on_plugin_init();

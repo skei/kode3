@@ -65,7 +65,7 @@ public:
   KODE_Vst2Instance(KODE_Instance* AInstance, audioMasterCallback AAudioMaster) {
     MAudioMaster = AAudioMaster;
     MInstance = AInstance;
-//    MDescriptor = MInstance->getDescriptor();
+    MDescriptor = MInstance->getDescriptor();
     //memset(&MVstEvents,0,sizeof(KODE_VstEvents));
     memset(&MVstMidiSendEvents,0,sizeof(MVstMidiSendEvents));
     for (uint32_t i=0; i<KODE_PLUGIN_MAX_MIDI_SEND; i++) {
@@ -76,7 +76,7 @@ public:
   //----------
 
   virtual ~KODE_Vst2Instance() {
-//    if (MInstance) delete MInstance;
+    if (MInstance) delete MInstance;
   }
 
 //------------------------------
@@ -176,13 +176,13 @@ public:
 
 
   void vst2_setParameter(VstInt32 index, float parameter) {
-//    //MInstance->updateProcessValue(index,parameter);
-//    //MInstance->updateEditorValue(index,parameter);
+    //MInstance->updateProcessValue(index,parameter);
+    //MInstance->updateEditorValue(index,parameter);
 //    MInstance->setParamValue(index,parameter);
 //    MInstance->queueParamToProcess(index);
-//    #ifndef KODE_NO_GUI
+    #ifndef KODE_NO_GUI
 //      if (MIsEditorOpen) MInstance->queueParamToEditor(index);
-//    #endif // KODE_NO_GUI
+    #endif // KODE_NO_GUI
   }
 
   //----------
@@ -200,7 +200,7 @@ public:
   //----------
 
   void vst2_process(float** inputs, float** outputs, VstInt32 sampleFrames) {
-//    updateParametersInProcess();
+    updateParametersInProcess();
 //    host_updateTime();
 //    KODE_ProcessContext context;// = {0};
 //    uint32_t i;
@@ -245,10 +245,10 @@ public:
       */
 
       case effOpen: // 0
-        ////KODE_Vst2Trace("vst2: dispatcher/effOpen\n");
+        //KODE_Vst2Trace("vst2: dispatcher/effOpen\n");
         MIsOpen = true;
-//        //updateHostInfo();
-//        //MInstance->on_open();
+        //updateHostInfo();
+        //MInstance->on_open();
 //        MInstance->on_initialize();
         break;
 
@@ -260,8 +260,8 @@ public:
       */
 
       case effClose: // 1
-//        //KODE_Vst2Trace("vst2: dispatcher/effClose\n");
-//        MIsOpen = false;
+        //KODE_Vst2Trace("vst2: dispatcher/effClose\n");
+        MIsOpen = false;
 //        MInstance->on_terminate();
 //        MInstance->on_close();
         break;
@@ -269,12 +269,12 @@ public:
       //----------
 
       case effSetProgram: { // 2
-//        //KODE_Vst2Trace("vst2: dispatcher/effSetProgram %i\n",(int)value);
-//        uint32_t program = (uint32_t)value;
-//        //if (program != MCurrentProgram) {
-//        //  on_programChange(program);
-//          MCurrentProgram = program;
-//        //}
+        //KODE_Vst2Trace("vst2: dispatcher/effSetProgram %i\n",(int)value);
+        uint32_t program = (uint32_t)value;
+        //if (program != MCurrentProgram) {
+        //  on_programChange(program);
+          MCurrentProgram = program;
+        //}
         break;
       }
 
@@ -352,13 +352,13 @@ public:
 
       case effGetParamDisplay: { // 7
         //KODE_Vst2Trace("vst2: dispatcher/effGetParamDisplay %i\n",index);
-//        KODE_Parameter* pa = MDescriptor->parameters[index];
-//        float v = MInstance->getParamValue(index);
-//        char str[32];
-//        pa->getDisplayText(v,str);
-//        strcpy((char*)ptr,(char*)str);
-//        return 1;
-        break;
+        KODE_Parameter* pa = MDescriptor->parameters[index];
+        float v = MInstance->getParameterValue(index);
+        char str[32];
+        pa->getDisplayText(v,str);
+        strcpy((char*)ptr,(char*)str);
+        return 1;
+        //break;
       }
 
       //----------
@@ -388,7 +388,7 @@ public:
 
       case effSetSampleRate: // 10
         //KODE_Vst2Trace("vst2: dispatcher/effSetSampleRate %.3f\n",opt);
-//        MSampleRate = opt;
+        MSampleRate = opt;
 //        MInstance->on_sampleRate(MSampleRate);
         break;
 
@@ -402,7 +402,7 @@ public:
 
       case effSetBlockSize: // 11
         //KODE_Vst2Trace("vst2: dispatcher/effSetBlockSize %i\n",(int)value);
-//        MMaxBlockSize = (VstInt32)value;
+        MMaxBlockSize = (VstInt32)value;
         break;
 
       //----------
@@ -470,10 +470,10 @@ public:
       case effEditGetRect: // 13
         //KODE_Vst2Trace("vst2: dispatcher/effEditGetRect\n");
         if (MDescriptor->options.has_editor) {
-//          uint32_t w = MDescriptor->getEditorDefaultWidth();
-//          uint32_t h = MDescriptor->getEditorDefaultHeight();
-//          //if (w == 0) w = MInstance->getDefaultEditorWidth();
-//          //if (h == 0) h = MInstance->getDefaultEditorHeight();
+          uint32_t w = MDescriptor->editorWidth;
+          uint32_t h = MDescriptor->editorHeight;
+          //if (w == 0) w = MInstance->getDefaultEditorWidth();
+          //if (h == 0) h = MInstance->getDefaultEditorHeight();
           MVstRect.left     = 0;
           MVstRect.top      = 0;
           MVstRect.right    = 640; //w;
@@ -495,17 +495,15 @@ public:
         //KODE_Vst2Trace("vst2: dispatcher/effEditOpen\n");
         #ifndef KODE_NO_GUI
         if (MDescriptor->options.has_editor) {
-//          if (!MIsEditorOpen) {
-//            MIsEditorOpen = true;
-//            //MEditor = (KODE_Editor*)MInstance->on_openEditor(ptr);
+          if (!MIsEditorOpen) {
+            MIsEditorOpen = true;
+            //MEditor = (KODE_Editor*)MInstance->on_openEditor(ptr);
 //            MEditor = MInstance->openEditor(ptr);
-//            //MInstance->copyParameterValuesToEditor(MEditor);
-//
-//            // MEditor->on_realign(true);
-//
+            //MInstance->copyParameterValuesToEditor(MEditor);
+            // MEditor->on_realign(true);
 //            MEditor->open();
-//            return 1;
-//          }
+            return 1;
+          }
         }
         #endif // KODE_NO_GUI
         break;
@@ -519,16 +517,16 @@ public:
         //KODE_Vst2Trace("vst2: dispatcher/effEditClose\n");
         #ifndef KODE_NO_GUI
         if (MDescriptor->options.has_editor) {
-//          if (MIsEditorOpen) {
-//            MIsEditorOpen = false;
-//            if (MEditor) {
+          if (MIsEditorOpen) {
+            MIsEditorOpen = false;
+            if (MEditor) {
 //              MEditor->close();
-//              //MInstance->on_closeEditor(MEditor);
+              //MInstance->on_closeEditor(MEditor);
 //              MInstance->closeEditor(MEditor);
-//              MEditor = nullptr;
-//              return 1;
-//            }
-//          }
+              MEditor = nullptr;
+              return 1;
+            }
+          }
         }
         #endif // KODE_NO_GUI
         break;
@@ -550,11 +548,11 @@ public:
         //KODE_Vst2Trace("vst2: dispatcher/effEditIdle\n");
         #ifndef KODE_NO_GUI
         if (MDescriptor->options.has_editor) {
-//          if (MIsEditorOpen) {
-//            //KODE_Assert(MEditor);
+          if (MIsEditorOpen) {
+            //KODE_Assert(MEditor);
 //            MInstance->on_updateEditor(MEditor);
-//            updateEditorInIdle();
-//          }
+            updateEditorInIdle();
+          }
         }
         #endif // KODE_NO_GUI
         break;
@@ -609,16 +607,16 @@ public:
         //KODE_Vst2Trace("vst2: dispatcher/effGetChunk %i\n",index);
         //if (index==0) return MInstance->on_saveBank((void**)ptr);
         //else return MInstance->on_saveProgram((void**)ptr);
-//        {
-//          void* buffer = KODE_NULL;
-//          uint32_t size = MInstance->on_saveState(&buffer,0);
-//          if ((size == 0) && (buffer == KODE_NULL)) {
-//            buffer = MInstance->getParamValues();
-//            size = MDescriptor->getNumParameters() * sizeof(float);
-//          }
-//          *(void**)ptr = buffer;
-//          return size;
-//        }
+        {
+          void* buffer = nullptr;
+          uint32_t size = MInstance->on_plugin_save_state(&buffer,0);
+          if ((size == 0) && (buffer == nullptr)) {
+            buffer = MInstance->getParameterValueBuffer();
+            size = MDescriptor->parameters.size() * sizeof(float);
+          }
+          *(void**)ptr = buffer;
+          return size;
+        }
         break;
 
       //----------
@@ -639,17 +637,17 @@ public:
 
       case effSetChunk: // 24
         //KODE_Vst2Trace("vst2: dispatcher/effSetChunk %i %i\n",index,(int)value);
-//        {
-//          //if (index==0) return MInstance->on_loadBank(ptr,value); // was not retrurn
-//          //else  /*if (index==1)*/ return MInstance->on_loadProgram(ptr,value);
-//          float* buffer = (float*)ptr;
-//          uint32_t num_params = MDescriptor->getNumParameters();
-//          for (uint32_t i=0; i<num_params; i++) {
-//            float v = buffer[i];
-//            MInstance->setParamValue(i,v);
-//          }
+        {
+          //if (index==0) return MInstance->on_loadBank(ptr,value); // was not retrurn
+          //else  /*if (index==1)*/ return MInstance->on_loadProgram(ptr,value);
+          float* buffer = (float*)ptr;
+          uint32_t num_params = MDescriptor->parameters.size();;
+          for (uint32_t i=0; i<num_params; i++) {
+            float v = buffer[i];
+            MInstance->setParameterValue(i,v);
+          }
 //          MInstance->updateAllParameters();
-//        }
+        }
         break;
 
       //case effGetChunk: v = getChunk ((void**)ptr, index ? true : false); break;
@@ -685,17 +683,17 @@ public:
       case effProcessEvents: { // 25
         //KODE_Vst2Trace("vst2: dispatcher/effProcessEvents\n");
         if (MDescriptor->options.can_receive_midi) {
-//          VstEvents* ev = (VstEvents*)ptr;
-//          int num_events = ev->numEvents;
-//          for (int32_t i=0; i<num_events; i++) {
-//            VstMidiEvent* event = (VstMidiEvent*)ev->events[i];
-//            if (event->type == kVstMidiType) {
-//
-//              // todo: buffer, handle all in process..
+          VstEvents* ev = (VstEvents*)ptr;
+          int num_events = ev->numEvents;
+          for (int32_t i=0; i<num_events; i++) {
+            VstMidiEvent* event = (VstMidiEvent*)ev->events[i];
+            if (event->type == kVstMidiType) {
+
+              // todo: buffer, handle all in process..
 //              MInstance->on_midiInput(event->deltaFrames,event->midiData[0],event->midiData[1],event->midiData[2]);
-//
-//            }
-//          }
+
+            }
+          }
         }
         // todo: sort?
         return 1;
@@ -713,8 +711,8 @@ public:
       case effCanBeAutomated: { // 26
         //KODE_Vst2Trace("vst2: dispatcher/effCanBeAutomated %i\n",index);
         uint32_t res = 0;
-//        KODE_Parameter* param = MDescriptor->getParameter(index);
-//        if (param->hasFlag(KODE_PARAMETER_AUTOMATE)) res = 1;
+        KODE_Parameter* param = MDescriptor->parameters[index];
+        if (param->options.can_automate) res = 1;
         return res;
       }
 
@@ -1456,348 +1454,8 @@ public:
 };
 
 //----------------------------------------------------------------------
-
-
-
-
-
-
-//----------------------------------------------------------------------
 #endif
 
 
 
 
-#if 0
-
-
-
-
-
-
-
-
-//------------------------------
-private: // host
-//------------------------------
-
-  //bool host_processEvents(VstEvents* events) {
-  //  if (MVstMaster) {
-  //    if ((VstInt32)MVstMaster(&MVstEffect,audioMasterProcessEvents,0,0,events,0) == 1) return true;
-  //  }
-  //  return false;
-  //}
-
-  void host_flushMidi() {
-    if (MAudioMaster) {
-      MAudioMaster(&MAEffect,audioMasterProcessEvents,0,0,(VstEvents*)&MVstEvents,0);
-      MVstEvents.numEvents = 0;
-    }
-  }
-
-  //----------
-
-  //bool host_sizeWindow(KODE_int32 AWidth, KODE_int32 AHeight) {
-  //  if (MVstMaster) {
-  //    if ((VstInt32)MVstMaster(&MVstEffect,audioMasterSizeWindow,AWidth,AHeight,KODE_NULL,0) == 1) return true;
-  //  }
-  //  return false;
-  //}
-
-  void host_resizeEditor(uint32_t AWidth, uint32_t AHeight) {
-    if (MAudioMaster) {
-      MAudioMaster(&MAEffect,audioMasterSizeWindow,AWidth,AHeight,0,0);
-    }
-  }
-
-  //----------
-
-  //bool host_canDo(const char* AText) {
-  //  if (MVstMaster) {
-  //    if ( (VstInt32)MVstMaster(&MVstEffect,audioMasterCanDo,0,0,(void*)AText,0) == 1) return true;
-  //  }
-  //  return false;
-  //}
-
-  //VstInt32 host_currentId(void) {
-  //  if (MVstMaster) {
-  //    return (VstInt32)MVstMaster(&MVstEffect,audioMasterCurrentId,0,0,KODE_NULL,0);
-  //  }
-  //  return 0;
-  //}
-
-  void host_updateInfo(void) {
-
-    /*
-
-    MHostCanDo = khc_none;
-    if (host_canDo("acceptIOChanges"))                MHostCanDo += khc_acceptIOChanges;
-  //if (host_canDo("asyncProcessing"))                MHostCanDo += khc_asyncProcessing;
-    if (host_canDo("closeFileSelector"))              MHostCanDo += khc_closeFileSelector;
-  //if (host_canDo("editFile"))                       MHostCanDo += khc_editFile;
-  //if (host_canDo("getChunkFile"))                   MHostCanDo += khc_getChunkFile;
-  //if (host_canDo("midiProgramNames"))               MHostCanDo += khc_midiProgramNames;
-  //if (host_canDo("NIMKPIVendorSpecificCallbacks"))  MHostCanDo += khc_nimkpi;
-    if (host_canDo("offline"))                        MHostCanDo += khc_offline;
-    if (host_canDo("openFileSelector"))               MHostCanDo += khc_openFileSelector;
-    if (host_canDo("receiveVstEvents"))               MHostCanDo += khc_receiveVstEvents;
-    if (host_canDo("receiveVstMidiEvent"))            MHostCanDo += khc_receiveVstMidiEvent;
-  //if (host_canDo("receiveVstTimeInfo"))             MHostCanDo += khc_receiveVstTimeInfo;
-    if (host_canDo("reportConnectionChanges"))        MHostCanDo += khc_reportConnectionChanges;
-    if (host_canDo("sendVstEvents"))                  MHostCanDo += khc_sendVstEvents;
-    if (host_canDo("sendVstMidiEvent"))               MHostCanDo += khc_sendVstMidiEvent;
-    if (host_canDo("sendVstMidiEventFlagIsRealtime")) MHostCanDo += khc_sendVstMidiEventFlagIsRealtime;
-    if (host_canDo("sendVstTimeInfo"))                MHostCanDo += khc_sendVstTimeInfo;
-    if (host_canDo("shellCategory"))                  MHostCanDo += khc_shellCategory;
-  //if (host_canDo("shellCategorycurID"))             MHostCanDo += khc_shellCategoryCurId;
-    if (host_canDo("sizeWindow"))                     MHostCanDo += khc_sizeWindow;
-    if (host_canDo("startStopProcess"))               MHostCanDo += khc_startStopProcess;
-  //if (host_canDo("supplyIdle"))                     MHostCanDo += khc_supplyIdle;
-  //if (host_canDo("supportShell"))                   MHostCanDo += khc_supportShell;
-
-    MHostId = khi_unknown;
-    char buffer[256];
-    buffer[0] = 0;
-    host_getProductString(buffer);
-  //if (KStrcmp("AudioMulch",buffer) == 0)              MHostId = khi_audiomulch;       // http://www.audiomulch.com/mulchnotes/mulchnote_2.htm
-    if (KODE_Strcmp("Bitwig Studio",buffer) == 0)       MHostId = khi_bitwig;
-    if (KODE_Strcmp("Carla",buffer) == 0)               MHostId = khi_carla;
-    if (KODE_Strcmp("Carla_Discovery",buffer) == 0)     MHostId = khi_carla_discovery;  // 'Carla_Discovery' during scanning..
-  //if (KStrcmp("DSSI-VST Plugin",buffer) == 0)         MHostId = khi_dssi_plugin;      // https://github.com/falkTX/dssi-vst/blob/master/dssi-vst-server.cpp
-  //if (KStrcmp("DSSI-VST Scanner",buffer) == 0)        MHostId = khi_dssi_scanner;     // https://github.com/falkTX/dssi-vst/blob/master/dssi-vst-scanner.cpp
-  //if (KStrcmp("DSSI VST Wrapper Plugin",buffer) == 0) MHostId = khi_linvst;           // https://github.com/osxmidi/LinVst/blob/master/lin-vst-server.cpp
-    if (KODE_Strcmp("energyXT",buffer) == 0)            MHostId = khi_energyxt;
-    if (KODE_Strcmp("Fruity Wrapper",buffer) == 0)      MHostId = khi_fruity;
-    if (KODE_Strcmp("Live",buffer) == 0)                MHostId = khi_live;
-    if (KODE_Strcmp("Multi Host 4 Linux",buffer) == 0)  MHostId = khi_jost;
-    if (KODE_Strcmp("Qtractor",buffer) == 0)            MHostId = khi_qtractor;
-    if (KODE_Strcmp("REAPER",buffer) == 0)              MHostId = khi_reaper;
-  //if (KStrcmp("Tracktion",buffer) == 0)               MHostId = khi_tracktion;        // https://github.com/osxmidi/LinVst/blob/master/linvst.cpp
-  //if (KStrcmp("Waveform",buffer) == 0)                MHostId = khi_waveform;
-
-    MHostVersion = host_getVendorVersion();
-    MHostVstVer = host_version();
-
-    //KODE_HostInfo* host_info;
-    MAudioMaster(MAEffect,audioMasterGetVendorString,0,0,MHostInfo.vendor,0);
-    MAudioMaster(MAEffect,audioMasterGetProductString,0,0,MHostInfo.product,0);
-    MHostInfo.version   = MAudioMaster(MAEffect,audioMasterGetVendorVersion,0,0,0,0);
-    MHostInfo.language  = MAudioMaster(MAEffect,audioMasterGetLanguage,0,0,0,0);
-    char* path = (char*)MAudioMaster(MAEffect,audioMasterGetDirectory,0,0,0,0);
-    strcpy(MHostInfo.directory,path);
-    //if (MAudioMaster(&MAEffect,audioMasterCanDo,0,0,(char*)"acceptIOChanges",0) == 1) MHostInfo.canDo += khc_acceptIoChange;
-
-    */
-
-  }
-
-  //----------
-
-  //void host_automate(VstInt32 AIndex, float AValue) {
-  //  if (MVstMaster) {
-  //    //KODE_VST2TRACE;
-  //    MVstMaster(&MVstEffect,audioMasterAutomate,AIndex,0,KODE_NULL,AValue);
-  //  }
-  //}
-
-  //bool host_beginEdit(VstInt32 AIndex) {
-  //  if (MVstMaster) {
-  //    if ( (VstInt32)MVstMaster(&MVstEffect,audioMasterBeginEdit,AIndex,0,KODE_NULL,0) == 1) return true;
-  //  }
-  //  return false;
-  //}
-
-  //bool host_endEdit(VstInt32 AIndex) {
-  //  if (MVstMaster) {
-  //    if ((VstInt32)MVstMaster(&MVstEffect,audioMasterEndEdit,AIndex,0,KODE_NULL,0) == 1) return true;
-  //  }
-  //  return false;
-  //}
-
-
-  void host_updateParameter(uint32_t AIndex, float AValue) {
-    if (MAudioMaster) {
-      MAudioMaster(&MAEffect,audioMasterBeginEdit,AIndex,0,0,0);
-      MAudioMaster(&MAEffect,audioMasterAutomate,AIndex,0,0,AValue);
-      MAudioMaster(&MAEffect,audioMasterEndEdit,AIndex,0,0,0);
-    }
-  }
-
-  //----------
-
-  /*
-    samplePos:          Current Position. It must always be valid, and should
-                        not cost a lot to ask for. The sample position is ahead
-                        of the time displayed to the user. In sequencer stop
-                        mode, its value does not change. A 32 bit integer is
-                        too small for sample positions, and it's a double to
-                        make it easier to convert between ppq and samples.
-    ppqPos:             At tempo 120, 1 quarter makes 1/2 second, so 2.0 ppq
-                        translates to 48000 samples at 48kHz sample rate.
-                        .25 ppq is one sixteenth note then. if you need
-                        something like 480ppq, you simply multiply ppq by that
-                        scaler.
-    barStartPos:        Say we're at bars/beats readout 3.3.3. That's 2 bars +
-                        2 q + 2 sixteenth, makes 2 * 4 + 2 + .25 = 10.25 ppq.
-                        at tempo 120, that's 10.25 * .5 = 5.125 seconds, times
-                        48000 = 246000 samples.
-    samplesToNextClock: MIDI Clock Resolution (24 per Quarter Note), can be
-                        negative the distance to the next midi clock (24 ppq,
-                        pulses per quarter) in samples. unless samplePos falls
-                        precicely on a midi clock, this will either be negative
-                        such that the previous MIDI clock is addressed, or
-                        positive when referencing the following (future) MIDI
-                        clock.
-  */
-
-  /*
-    struct VstTimeInfo {
-      double samplePos;             // current Position in audio samples (always valid)
-      double sampleRate;            // current Sample Rate in Herz (always valid)
-      double nanoSeconds;           // System Time in nanoseconds (10^-9 second)
-      double ppqPos;                // Musical Position, in Quarter Note (1.0 equals 1 Quarter Note)
-      double tempo;                 // current Tempo in BPM (Beats Per Minute)
-      double barStartPos;           // last Bar Start Position, in Quarter Note
-      double cycleStartPos;         // Cycle Start (left locator), in Quarter Note
-      double cycleEndPos;           // Cycle End (right locator), in Quarter Note
-      VstInt32 timeSigNumerator;    // Time Signature Numerator (e.g. 3 for 3/4)
-      VstInt32 timeSigDenominator;  // Time Signature Denominator (e.g. 4 for 3/4)
-      VstInt32 smpteOffset;         // SMPTE offset (in SMPTE subframes (bits; 1/80 of a frame)). The current SMPTE position can be calculated using #samplePos, #sampleRate, and #smpteFrameRate.
-      VstInt32 smpteFrameRate;      // @see VstSmpteFrameRate
-      VstInt32 samplesToNextClock;  // MIDI Clock Resolution (24 Per Quarter Note), can be negative (nearest clock)
-      VstInt32 flags;               // @see VstTimeInfoFlags
-    };
-
-    enum VstTimeInfoFlags {
-
-      kVstTransportChanged      = 1,        // indicates that play, cycle or record state has changed
-      kVstTransportPlaying      = 1 << 1,   // set if Host sequencer is currently playing
-      kVstTransportCycleActive  = 1 << 2,   // set if Host sequencer is in cycle mode
-      kVstTransportRecording    = 1 << 3,   // set if Host sequencer is in record mode
-      kVstAutomationWriting     = 1 << 6,   // set if automation write mode active (record parameter changes)
-      kVstAutomationReading     = 1 << 7,   // set if automation read mode active (play parameter changes)
-
-      kVstNanosValid            = 1 << 8,   // VstTimeInfo::nanoSeconds valid
-      kVstPpqPosValid           = 1 << 9,   // VstTimeInfo::ppqPos valid
-      kVstTempoValid            = 1 << 10,  // VstTimeInfo::tempo valid
-      kVstBarsValid             = 1 << 11,  // VstTimeInfo::barStartPos valid
-      kVstCyclePosValid         = 1 << 12,  // VstTimeInfo::cycleStartPos and VstTimeInfo::cycleEndPos valid
-      kVstTimeSigValid          = 1 << 13,  // VstTimeInfo::timeSigNumerator and VstTimeInfo::timeSigDenominator valid
-      kVstSmpteValid            = 1 << 14,  // VstTimeInfo::smpteOffset and VstTimeInfo::smpteFrameRate valid
-      kVstClockValid            = 1 << 15   // VstTimeInfo::samplesToNextClock valid
-    };
-  */
-
-  void host_updateTime() {
-    VstIntPtr mask = 0xffff;
-    VstIntPtr result = MAudioMaster(&MAEffect,audioMasterGetTime,0,mask,0,0);
-    VstTimeInfo* timeinfo = (VstTimeInfo*)result;
-    if (timeinfo) {
-      MTempo          = timeinfo->tempo;
-      MTimeSigNum     = timeinfo->timeSigNumerator;
-      MTimeSigDenom   = timeinfo->timeSigDenominator;
-      MSamplePos      = timeinfo->samplePos;
-      MBeatPos        = timeinfo->ppqPos;
-
-      //MNanoSeconds    = timeinfo->nanoSeconds;
-      //MSampleRate     = timeinfo->sampleRate;
-      //MPPQBarStart    = timeinfo->barStartPos;
-      //MPPOCycleStart  = timeinfo->cycleStartPos;
-      //MPPQCycleEnd    = timeinfo->cycleEndPos;
-      //MPlayState      = timeinfo->flags & 127;
-
-      //if (timeinfo->flags & kVstTransportChanged) {
-        MPlayState = KODE_PLUGIN_PLAYSTATE_NONE;
-
-        if (timeinfo->flags & kVstTransportPlaying)     MPlayState |= KODE_PLUGIN_PLAYSTATE_PLAYING;
-        if (timeinfo->flags & kVstTransportRecording)   MPlayState |= KODE_PLUGIN_PLAYSTATE_RECORDING;
-        if (timeinfo->flags & kVstTransportCycleActive) MPlayState |= KODE_PLUGIN_PLAYSTATE_LOOPING;
-
-        MPrevPlayState = MPlayState;
-
-      //}
-
-    }
-  }
-
-  //----------
-  //----------
-  //----------
-
-  uint32_t host_getAutomationState() {
-    return MAudioMaster(&MAEffect,audioMasterGetAutomationState,0,0,0,0);
-  }
-
-  //----------
-
-  uint32_t host_getBlockSize() {
-    return MAudioMaster(&MAEffect,audioMasterGetBlockSize,0,0,0,0);
-  }
-
-  //----------
-
-  uint32_t host_getInputLatency() {
-    return MAudioMaster(&MAEffect,audioMasterGetInputLatency,0,0,0,0);
-  }
-
-  //----------
-
-  uint32_t host_getOutputLatency() {
-    return MAudioMaster(&MAEffect,audioMasterGetOutputLatency,0,0,0,0);
-  }
-
-  //----------
-
-  uint32_t host_getProcessLevel() {
-    return MAudioMaster(&MAEffect,audioMasterGetCurrentProcessLevel,0,0,0,0);
-  }
-
-  //----------
-
-  uint32_t host_getSampleRate() {
-    return MAudioMaster(&MAEffect,audioMasterGetSampleRate,0,0,0,0);
-  }
-
-  //----------
-
-  void host_idle(void) {
-    if (MAudioMaster) MAudioMaster(&MAEffect,audioMasterIdle,0,0,KODE_NULL,0);
-  }
-
-  //----------
-
-  bool host_ioChanged() {
-    if (MAudioMaster(&MAEffect,audioMasterIOChanged,0,0,0,0) == 1) return true;
-    return false;
-  }
-
-  //----------
-
-  void host_updateDisplay() {
-    MAudioMaster(&MAEffect,audioMasterUpdateDisplay,0,0,0,0);
-  }
-
-  //----------
-
-  VstInt32 host_version(void) {
-    VstInt32 result = 1;
-    if (MAudioMaster) result = (VstInt32)MAudioMaster(&MAEffect,audioMasterVersion,0,0,KODE_NULL,0);
-    if (result==0) result = 1; // old (!version)
-    return result;
-  }
-
-  //----------
-
-  //audioMasterOfflineStart,              // [index]: numNewAudioFiles [value]: numAudioFiles [ptr]: #VstAudioFile*  @see AudioEffectX::offlineStart
-  //audioMasterOfflineRead,               // [index]: bool readSource [value]: #VstOfflineOption* @see VstOfflineOption [ptr]: #VstOfflineTask*  @see VstOfflineTask @see AudioEffectX::offlineRead
-  //audioMasterOfflineWrite,              // @see audioMasterOfflineRead @see AudioEffectX::offlineRead
-  //audioMasterOfflineGetCurrentPass,     // @see AudioEffectX::offlineGetCurrentPass
-  //audioMasterOfflineGetCurrentMetaPass, // @see AudioEffectX::offlineGetCurrentMetaPass
-  //audioMasterOpenFileSelector,          // [ptr]: VstFileSelect* [return value]: 1 if supported  @see AudioEffectX::openFileSelector
-  //audioMasterCloseFileSelector,         // [ptr]: VstFileSelect*  @see AudioEffectX::closeFileSelector
-  //audioMasterVendorSpecific,            // no definition, vendor specific handling  @see AudioEffectX::hostVendorSpecific
-
-};
-
-
-#endif // 0
