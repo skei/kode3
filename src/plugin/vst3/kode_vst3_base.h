@@ -7,14 +7,14 @@
 //
 //----------------------------------------------------------------------
 
-#ifdef __gnu_linux__
+  #ifdef __gnu_linux__
   #define VST3_COM_COMPATIBLE 0
-  #define VST3_PLUGIN_API
+  #define VST3_API
 #endif
 
 #ifdef _WIN32
   #define VST3_COM_COMPATIBLE 1
-  #define VST3_PLUGIN_API __stdcall
+  #define VST3_API __stdcall
 #endif
 
 //----------
@@ -306,7 +306,7 @@ namespace VST3_PlugType {
 
 //#define strncpy8 strncpy
 
-char* kode_strncpy8(char* destination, const char* source, size_t maxnum) {
+char* vst3_strncpy8(char* destination, const char* source, size_t maxnum) {
   //memset(destination,0,maxnum);
   destination[maxnum-1] = 0;
   strncpy(destination,source,maxnum-1);
@@ -414,8 +414,8 @@ struct VST3_PClassInfo {
 //  VST3_PClassInfo(const VST3_Id _cid, int32_t _cardinality, const char* _category, const char* _name) {
 //    memset(this,0,sizeof(VST3_PClassInfo));
 //    memcpy(cid,_cid,sizeof(VST3_Id));
-//    if (_category) kode_strncpy8(category,_category,vst3_CategorySize);
-//    if (_name) kode_strncpy8(name,_name,vst3_NameSize);
+//    if (_category) vst3_strncpy8(category,_category,vst3_CategorySize);
+//    if (_name) vst3_strncpy8(name,_name,vst3_NameSize);
 //    cardinality = _cardinality;
 //  }
 //  //#if SMTG_CPP11
@@ -446,13 +446,13 @@ struct VST3_PClassInfo2 {
 //      memset (this, 0, sizeof (VST3_PClassInfo2));
 //      memcpy (cid, _cid, sizeof (VST3_Id));
 //      cardinality = _cardinality;
-//      if (_category) kode_strncpy8 (category, _category, VST3_PClassInfo::vst3_CategorySize);
-//      if (_name) kode_strncpy8 (name, _name, VST3_PClassInfo::vst3_NameSize);
+//      if (_category) vst3_strncpy8 (category, _category, VST3_PClassInfo::vst3_CategorySize);
+//      if (_name) vst3_strncpy8 (name, _name, VST3_PClassInfo::vst3_NameSize);
 //      classFlags = static_cast<uint32_t> (_classFlags);
-//      if (_subCategories) kode_strncpy8 (subCategories, _subCategories, vst3_SubCategoriesSize);
-//      if (_vendor) kode_strncpy8 (vendor, _vendor, vst3_VendorSize);
-//      if (_version) kode_strncpy8 (version, _version, vst3_VersionSize);
-//      if (_sdkVersion) kode_strncpy8 (sdkVersion, _sdkVersion, vst3_VersionSize);
+//      if (_subCategories) vst3_strncpy8 (subCategories, _subCategories, vst3_SubCategoriesSize);
+//      if (_vendor) vst3_strncpy8 (vendor, _vendor, vst3_VendorSize);
+//      if (_version) vst3_strncpy8 (version, _version, vst3_VersionSize);
+//      if (_sdkVersion) vst3_strncpy8 (sdkVersion, _sdkVersion, vst3_VersionSize);
 //    }
 //  //#if SMTG_CPP11
 //	constexpr VST3_PClassInfo2()
@@ -481,10 +481,10 @@ struct VST3_PClassInfoW {
     memset (this, 0, sizeof (PClassInfoW));
     memcpy (cid, _cid, sizeof (VST3_Id));
     cardinality = _cardinality;
-    if (_category) kode_strncpy8 (category, _category, PClassInfo::vst3_CategorySize);
+    if (_category) vst3_strncpy8 (category, _category, PClassInfo::vst3_CategorySize);
     if (_name) strncpy16 (name, _name, PClassInfo::vst3_NameSize);
     classFlags = static_cast<uint32> (_classFlags);
-    if (_subCategories) kode_strncpy8 (subCategories, _subCategories, vst3_SubCategoriesSize);
+    if (_subCategories) vst3_strncpy8 (subCategories, _subCategories, vst3_SubCategoriesSize);
     if (_vendor) strncpy16 (vendor, _vendor, vst3_VendorSize);
     if (_version) strncpy16 (version, _version, vst3_VersionSize);
     if (_sdkVersion) strncpy16 (sdkVersion, _sdkVersion, vst3_VersionSize);
@@ -508,10 +508,10 @@ struct VST3_PClassInfoW {
   void fromAscii (const PClassInfo2& ci2) {
     //memcpy (cid, ci2.cid, sizeof (VST3_Id));
     //cardinality = ci2.cardinality;
-    //kode_strncpy8 (category, ci2.category, PClassInfo::vst3_CategorySize);
+    //vst3_strncpy8 (category, ci2.category, PClassInfo::vst3_CategorySize);
     //str8ToStr16 (name, ci2.name, PClassInfo::vst3_NameSize);
     //classFlags = ci2.classFlags;
-    //kode_strncpy8 (subCategories, ci2.subCategories, vst3_SubCategoriesSize);
+    //vst3_strncpy8 (subCategories, ci2.subCategories, vst3_SubCategoriesSize);
     //str8ToStr16(vendor, ci2.vendor, vst3_VendorSize);
     //str8ToStr16(version, ci2.version, vst3_VersionSize);
     //str8ToStr16(sdkVersion, ci2.sdkVersion, vst3_VersionSize);
@@ -541,9 +541,9 @@ struct VST3_PFactoryInfo {
   char    email[vst3_EmailSize];
   int32_t flags;
 //  VST3_PFactoryInfo(const char* _vendor, const char* _url, const char* _email, int32_t _flags) {
-//    kode_strncpy8(vendor,_vendor,vst3_NameSize);
-//    kode_strncpy8(url,_url,vst3_URLSize);
-//    kode_strncpy8(email,_email,vst3_EmailSize);
+//    vst3_strncpy8(vendor,_vendor,vst3_NameSize);
+//    vst3_strncpy8(url,_url,vst3_URLSize);
+//    vst3_strncpy8(email,_email,vst3_EmailSize);
 //    flags = _flags;
 //    //#ifdef UNICODE
 //    //  flags |= vst3_Unicode;
@@ -757,9 +757,9 @@ struct VST3_Event {
 
 class VST3_FUnknown {
 public:
-	virtual int32_t   VST3_PLUGIN_API queryInterface (const VST3_Id _iid, void** obj) = 0;
-	virtual uint32_t  VST3_PLUGIN_API addRef () = 0;
-	virtual uint32_t  VST3_PLUGIN_API release () = 0;
+	virtual int32_t   VST3_API queryInterface (const VST3_Id _iid, void** obj) = 0;
+	virtual uint32_t  VST3_API addRef () = 0;
+	virtual uint32_t  VST3_API release () = 0;
 	//
 	static const VST3_Id iid;
 };
@@ -777,10 +777,10 @@ public:
     vst3_IBSeekEnd
   };
   //
-  virtual int32_t VST3_PLUGIN_API read(void* buffer, int32_t numBytes, int32_t* numBytesRead = 0) = 0;
-  virtual int32_t VST3_PLUGIN_API write(void* buffer, int32_t numBytes, int32_t* numBytesWritten = 0) = 0;
-  virtual int32_t VST3_PLUGIN_API seek(int64_t pos, int32_t mode, int64_t* result = 0) = 0;
-  virtual int32_t VST3_PLUGIN_API tell(int64_t* pos) = 0;
+  virtual int32_t VST3_API read(void* buffer, int32_t numBytes, int32_t* numBytesRead = 0) = 0;
+  virtual int32_t VST3_API write(void* buffer, int32_t numBytes, int32_t* numBytesWritten = 0) = 0;
+  virtual int32_t VST3_API seek(int64_t pos, int32_t mode, int64_t* result = 0) = 0;
+  virtual int32_t VST3_API tell(int64_t* pos) = 0;
 	//
   static const VST3_Id iid;
 };
@@ -792,10 +792,10 @@ VST3_DECLARE_CLASS_IID(VST3_IBStream,0xC3BF6EA2,0x30994752,0x9B6BF990,0x1EE33E9B
 class VST3_IPluginFactory
 : public VST3_FUnknown {
 public:
-  virtual int32_t  VST3_PLUGIN_API getFactoryInfo(VST3_PFactoryInfo* info) = 0;
-  virtual int32_t  VST3_PLUGIN_API countClasses() = 0;
-  virtual int32_t  VST3_PLUGIN_API getClassInfo (int32_t index, VST3_PClassInfo* info) = 0;
-  virtual int32_t  VST3_PLUGIN_API createInstance(const char* cid, const char* _iid, void** obj) = 0;
+  virtual int32_t  VST3_API getFactoryInfo(VST3_PFactoryInfo* info) = 0;
+  virtual int32_t  VST3_API countClasses() = 0;
+  virtual int32_t  VST3_API getClassInfo (int32_t index, VST3_PClassInfo* info) = 0;
+  virtual int32_t  VST3_API createInstance(const char* cid, const char* _iid, void** obj) = 0;
 	//
   static const VST3_Id iid;
 };
@@ -807,7 +807,7 @@ VST3_DECLARE_CLASS_IID(VST3_IPluginFactory, 0x7A4D811C, 0x52114A1F, 0xAED9D2EE, 
 class VST3_IPluginFactory2
 : public VST3_IPluginFactory {
 public:
-	virtual int32_t VST3_PLUGIN_API getClassInfo2 (int32_t index, VST3_PClassInfo2* info) = 0;
+	virtual int32_t VST3_API getClassInfo2 (int32_t index, VST3_PClassInfo2* info) = 0;
 	//
 	static const VST3_Id iid;
 };
@@ -819,8 +819,8 @@ VST3_DECLARE_CLASS_IID (VST3_IPluginFactory2, 0x0007B650, 0xF24B4C0B, 0xA464EDB9
 class VST3_IPluginFactory3
 : public VST3_IPluginFactory2 {
 public:
-	virtual int32_t VST3_PLUGIN_API getClassInfoUnicode(int32_t index, VST3_PClassInfoW* info) = 0;
-	virtual int32_t VST3_PLUGIN_API setHostContext(VST3_FUnknown* context) = 0;
+	virtual int32_t VST3_API getClassInfoUnicode(int32_t index, VST3_PClassInfoW* info) = 0;
+	virtual int32_t VST3_API setHostContext(VST3_FUnknown* context) = 0;
 	//
 	static const VST3_Id iid;
 };
@@ -832,8 +832,8 @@ VST3_DECLARE_CLASS_IID (VST3_IPluginFactory3, 0x4555A2AB, 0xC1234E57, 0x9B122910
 class VST3_IPluginBase
 : public VST3_FUnknown {
 public:
-  virtual int32_t  VST3_PLUGIN_API initialize(VST3_FUnknown* context) = 0;
-  virtual int32_t  VST3_PLUGIN_API terminate() = 0;
+  virtual int32_t  VST3_API initialize(VST3_FUnknown* context) = 0;
+  virtual int32_t  VST3_API terminate() = 0;
 	//
   static const VST3_Id iid;
 };
@@ -845,15 +845,15 @@ VST3_DECLARE_CLASS_IID(VST3_IPluginBase,0x22888DDB,0x156E45AE,0x8358B348,0x08190
 class VST3_IComponent
 : public VST3_IPluginBase {
 public:
-  virtual int32_t  VST3_PLUGIN_API getControllerClassId(VST3_Id classId) = 0;
-  virtual int32_t  VST3_PLUGIN_API setIoMode(int32_t mode) = 0;
-  virtual int32_t  VST3_PLUGIN_API getBusCount(int32_t type, int32_t dir) = 0;
-  virtual int32_t  VST3_PLUGIN_API getBusInfo(int32_t type, int32_t dir, int32_t index, VST3_BusInfo& bus) = 0;
-  virtual int32_t  VST3_PLUGIN_API getRoutingInfo(VST3_RoutingInfo& inInfo, VST3_RoutingInfo& outInfo) = 0;
-  virtual int32_t  VST3_PLUGIN_API activateBus(int32_t type, int32_t dir, int32_t index, uint8_t state) = 0;
-  virtual int32_t  VST3_PLUGIN_API setActive(uint8_t state) = 0;
-  virtual int32_t  VST3_PLUGIN_API setState(VST3_IBStream* state) = 0;
-  virtual int32_t  VST3_PLUGIN_API getState(VST3_IBStream* state) = 0;
+  virtual int32_t  VST3_API getControllerClassId(VST3_Id classId) = 0;
+  virtual int32_t  VST3_API setIoMode(int32_t mode) = 0;
+  virtual int32_t  VST3_API getBusCount(int32_t type, int32_t dir) = 0;
+  virtual int32_t  VST3_API getBusInfo(int32_t type, int32_t dir, int32_t index, VST3_BusInfo& bus) = 0;
+  virtual int32_t  VST3_API getRoutingInfo(VST3_RoutingInfo& inInfo, VST3_RoutingInfo& outInfo) = 0;
+  virtual int32_t  VST3_API activateBus(int32_t type, int32_t dir, int32_t index, uint8_t state) = 0;
+  virtual int32_t  VST3_API setActive(uint8_t state) = 0;
+  virtual int32_t  VST3_API setState(VST3_IBStream* state) = 0;
+  virtual int32_t  VST3_API getState(VST3_IBStream* state) = 0;
 	//
   static const VST3_Id iid;
 };
@@ -865,14 +865,14 @@ VST3_DECLARE_CLASS_IID(VST3_IComponent,0xE831FF31,0xF2D54301,0x928EBBEE,0x256978
 class VST3_IAudioProcessor
 : public VST3_FUnknown {
 public:
-  virtual int32_t  VST3_PLUGIN_API setBusArrangements(uint64_t* inputs, int32_t numIns, uint64_t* outputs, int32_t numOuts) = 0;
-  virtual int32_t  VST3_PLUGIN_API getBusArrangement(int32_t dir, int32_t index, uint64_t& arr) = 0;
-  virtual int32_t  VST3_PLUGIN_API canProcessSampleSize(int32_t symbolicSampleSize) = 0;
-  virtual uint32_t VST3_PLUGIN_API getLatencySamples() = 0;
-  virtual int32_t  VST3_PLUGIN_API setupProcessing(VST3_ProcessSetup& setup) = 0;
-  virtual int32_t  VST3_PLUGIN_API setProcessing(uint8_t state) = 0;
-  virtual int32_t  VST3_PLUGIN_API process(VST3_ProcessData& data) = 0;
-  virtual uint32_t VST3_PLUGIN_API getTailSamples() = 0;
+  virtual int32_t  VST3_API setBusArrangements(uint64_t* inputs, int32_t numIns, uint64_t* outputs, int32_t numOuts) = 0;
+  virtual int32_t  VST3_API getBusArrangement(int32_t dir, int32_t index, uint64_t& arr) = 0;
+  virtual int32_t  VST3_API canProcessSampleSize(int32_t symbolicSampleSize) = 0;
+  virtual uint32_t VST3_API getLatencySamples() = 0;
+  virtual int32_t  VST3_API setupProcessing(VST3_ProcessSetup& setup) = 0;
+  virtual int32_t  VST3_API setProcessing(uint8_t state) = 0;
+  virtual int32_t  VST3_API process(VST3_ProcessData& data) = 0;
+  virtual uint32_t VST3_API getTailSamples() = 0;
 	//
   static const VST3_Id iid;
 };
@@ -884,18 +884,18 @@ VST3_DECLARE_CLASS_IID(VST3_IAudioProcessor,0x42043F99,0xB7DA453C,0xA569E79D,0x9
 class VST3_IUnitInfo
 : public VST3_FUnknown {
 public:
-	virtual int32_t VST3_PLUGIN_API getUnitCount() = 0;
-	virtual int32_t VST3_PLUGIN_API getUnitInfo(int32_t unitIndex, VST3_UnitInfo& info /*out*/) = 0;
-	virtual int32_t VST3_PLUGIN_API getProgramListCount() = 0;
-	virtual int32_t VST3_PLUGIN_API getProgramListInfo(int32_t listIndex, VST3_ProgramListInfo& info /*out*/) = 0;
-	virtual int32_t VST3_PLUGIN_API getProgramName(int32_t listId, int32_t programIndex, VST3_String name /*out*/) = 0;
-	virtual int32_t VST3_PLUGIN_API getProgramInfo(int32_t listId, int32_t programIndex, const char* attributeId /*in*/, VST3_String attributeValue /*out*/) = 0;
-	virtual int32_t VST3_PLUGIN_API hasProgramPitchNames(int32_t listId, int32_t programIndex) = 0;
-	virtual int32_t VST3_PLUGIN_API getProgramPitchName(int32_t listId, int32_t programIndex, int16_t midiPitch, VST3_String name /*out*/) = 0;
-	virtual int32_t VST3_PLUGIN_API getSelectedUnit() = 0;
-	virtual int32_t VST3_PLUGIN_API selectUnit(int32_t unitId) = 0;
-	virtual int32_t VST3_PLUGIN_API getUnitByBus(int32_t type, int32_t dir, int32_t busIndex, int32_t channel, int32_t& unitId /*out*/) = 0;
-	virtual int32_t VST3_PLUGIN_API setUnitProgramData(int32_t listOrUnitId, int32_t programIndex, VST3_IBStream* data) = 0;
+	virtual int32_t VST3_API getUnitCount() = 0;
+	virtual int32_t VST3_API getUnitInfo(int32_t unitIndex, VST3_UnitInfo& info /*out*/) = 0;
+	virtual int32_t VST3_API getProgramListCount() = 0;
+	virtual int32_t VST3_API getProgramListInfo(int32_t listIndex, VST3_ProgramListInfo& info /*out*/) = 0;
+	virtual int32_t VST3_API getProgramName(int32_t listId, int32_t programIndex, VST3_String name /*out*/) = 0;
+	virtual int32_t VST3_API getProgramInfo(int32_t listId, int32_t programIndex, const char* attributeId /*in*/, VST3_String attributeValue /*out*/) = 0;
+	virtual int32_t VST3_API hasProgramPitchNames(int32_t listId, int32_t programIndex) = 0;
+	virtual int32_t VST3_API getProgramPitchName(int32_t listId, int32_t programIndex, int16_t midiPitch, VST3_String name /*out*/) = 0;
+	virtual int32_t VST3_API getSelectedUnit() = 0;
+	virtual int32_t VST3_API selectUnit(int32_t unitId) = 0;
+	virtual int32_t VST3_API getUnitByBus(int32_t type, int32_t dir, int32_t busIndex, int32_t channel, int32_t& unitId /*out*/) = 0;
+	virtual int32_t VST3_API setUnitProgramData(int32_t listOrUnitId, int32_t programIndex, VST3_IBStream* data) = 0;
 	//
 	static const VST3_Id iid;
 };
@@ -907,14 +907,14 @@ VST3_DECLARE_CLASS_IID (VST3_IUnitInfo, 0x3D4BD6B5, 0x913A4FD2, 0xA886E768, 0xA5
 class VST3_IAttributeList
 : public VST3_FUnknown {
 public:
-	virtual int32_t VST3_PLUGIN_API setInt(const char* id, int64_t value) = 0;
-	virtual int32_t VST3_PLUGIN_API getInt(const char* id, int64_t& value) = 0;
-	virtual int32_t VST3_PLUGIN_API setFloat(const char* id, double value) = 0;
-	virtual int32_t VST3_PLUGIN_API getFloat(const char* id, double& value) = 0;
-	virtual int32_t VST3_PLUGIN_API setString(const char* id, const char16_t* string) = 0;
-	virtual int32_t VST3_PLUGIN_API getString(const char* id, char16_t* string, uint32_t size) = 0;
-	virtual int32_t VST3_PLUGIN_API setBinary(const char* id, const void* data, uint32_t size) = 0;
-	virtual int32_t VST3_PLUGIN_API getBinary(const char* id, const void*& data, uint32_t& size) = 0;
+	virtual int32_t VST3_API setInt(const char* id, int64_t value) = 0;
+	virtual int32_t VST3_API getInt(const char* id, int64_t& value) = 0;
+	virtual int32_t VST3_API setFloat(const char* id, double value) = 0;
+	virtual int32_t VST3_API getFloat(const char* id, double& value) = 0;
+	virtual int32_t VST3_API setString(const char* id, const char16_t* string) = 0;
+	virtual int32_t VST3_API getString(const char* id, char16_t* string, uint32_t size) = 0;
+	virtual int32_t VST3_API setBinary(const char* id, const void* data, uint32_t size) = 0;
+	virtual int32_t VST3_API getBinary(const char* id, const void*& data, uint32_t& size) = 0;
 	//
 	static const VST3_Id iid;
 };
@@ -926,9 +926,9 @@ VST3_DECLARE_CLASS_IID (VST3_IAttributeList, 0x1E5F0AEB, 0xCC7F4533, 0xA2544011,
 class VST3_IMessage
 : public VST3_FUnknown {
 public:
-	virtual const char*               VST3_PLUGIN_API getMessageID () = 0;
-	virtual void                      VST3_PLUGIN_API setMessageID (const char* id /*in*/) = 0;
-	virtual VST3_IAttributeList*  VST3_PLUGIN_API getAttributes () = 0;
+	virtual const char*               VST3_API getMessageID () = 0;
+	virtual void                      VST3_API setMessageID (const char* id /*in*/) = 0;
+	virtual VST3_IAttributeList*  VST3_API getAttributes () = 0;
 	//
 	static const VST3_Id iid;
 };
@@ -940,9 +940,9 @@ VST3_DECLARE_CLASS_IID (VST3_IMessage, 0x936F033B, 0xC6C047DB, 0xBB0882F8, 0x13C
 class VST3_IConnectionPoint
 : public VST3_FUnknown {
 public:
-	virtual int32_t VST3_PLUGIN_API connect(VST3_IConnectionPoint* other) = 0;
-	virtual int32_t VST3_PLUGIN_API disconnect(VST3_IConnectionPoint* other) = 0;
-	virtual int32_t VST3_PLUGIN_API notify(VST3_IMessage* message) = 0;
+	virtual int32_t VST3_API connect(VST3_IConnectionPoint* other) = 0;
+	virtual int32_t VST3_API disconnect(VST3_IConnectionPoint* other) = 0;
+	virtual int32_t VST3_API notify(VST3_IMessage* message) = 0;
 	//
 	static const VST3_Id iid;
 };
@@ -954,7 +954,7 @@ VST3_DECLARE_CLASS_IID (VST3_IConnectionPoint, 0x70A4156F, 0x6E6E4026, 0x989148B
 class VST3_IMidiMapping
 : public VST3_FUnknown {
 public:
-	virtual int32_t VST3_PLUGIN_API getMidiControllerAssignment (int32_t busIndex, int16_t channel, int16_t midiControllerNumber, uint32_t& id/*out*/) = 0;
+	virtual int32_t VST3_API getMidiControllerAssignment (int32_t busIndex, int16_t channel, int16_t midiControllerNumber, uint32_t& id/*out*/) = 0;
 	//
 	static const VST3_Id iid;
 };
@@ -966,8 +966,8 @@ VST3_DECLARE_CLASS_IID (VST3_IMidiMapping, 0xDF0FF9F7, 0x49B74669, 0xB63AB732, 0
 class VST3_IKeyswitchController
 : public VST3_FUnknown {
 public:
-	virtual int32_t VST3_PLUGIN_API getKeyswitchCount (int32_t busIndex, int16_t channel) = 0;
-	virtual int32_t VST3_PLUGIN_API getKeyswitchInfo (int32_t busIndex, int16_t channel, int32_t keySwitchIndex, VST3_KeyswitchInfo& info /*out*/) = 0;
+	virtual int32_t VST3_API getKeyswitchCount (int32_t busIndex, int16_t channel) = 0;
+	virtual int32_t VST3_API getKeyswitchInfo (int32_t busIndex, int16_t channel, int32_t keySwitchIndex, VST3_KeyswitchInfo& info /*out*/) = 0;
 	//
 	static const VST3_Id iid;
 };
@@ -983,10 +983,10 @@ VST3_DECLARE_CLASS_IID (VST3_IKeyswitchController, 0x1F2F76D3, 0xBFFB4B96, 0xB99
 class VST3_IComponentHandler
 : public VST3_FUnknown {
 public:
-	virtual int32_t VST3_PLUGIN_API beginEdit (uint32_t id) = 0;
-	virtual int32_t VST3_PLUGIN_API performEdit (uint32_t id, double valueNormalized) = 0;
-	virtual int32_t VST3_PLUGIN_API endEdit (uint32_t id) = 0;
-	virtual int32_t VST3_PLUGIN_API restartComponent (int32_t flags) = 0;
+	virtual int32_t VST3_API beginEdit (uint32_t id) = 0;
+	virtual int32_t VST3_API performEdit (uint32_t id, double valueNormalized) = 0;
+	virtual int32_t VST3_API endEdit (uint32_t id) = 0;
+	virtual int32_t VST3_API restartComponent (int32_t flags) = 0;
 	//
 	static const VST3_Id iid;
 };
@@ -998,10 +998,10 @@ VST3_DECLARE_CLASS_IID (VST3_IComponentHandler, 0x93A0BEA3, 0x0BD045DB, 0x8E890B
 class VST3_IComponentHandler2
 : public VST3_FUnknown {
 public:
-	virtual int32_t VST3_PLUGIN_API setDirty (uint8_t state) = 0;
-	virtual int32_t VST3_PLUGIN_API requestOpenEditor (const char* name = /*ViewType::*/vst3_Editor) = 0;
-	virtual int32_t VST3_PLUGIN_API startGroupEdit () = 0;
-	virtual int32_t VST3_PLUGIN_API finishGroupEdit () = 0;
+	virtual int32_t VST3_API setDirty (uint8_t state) = 0;
+	virtual int32_t VST3_API requestOpenEditor (const char* name = /*ViewType::*/vst3_Editor) = 0;
+	virtual int32_t VST3_API startGroupEdit () = 0;
+	virtual int32_t VST3_API finishGroupEdit () = 0;
 	//
 	static const VST3_Id iid;
 };
@@ -1015,18 +1015,18 @@ class VST3_IPlugFrame;
 class VST3_IPlugView
 : public VST3_FUnknown {
 public:
-	virtual int32_t VST3_PLUGIN_API isPlatformTypeSupported (const char* type) = 0;
-	virtual int32_t VST3_PLUGIN_API attached (void* parent, const char* type) = 0;
-	virtual int32_t VST3_PLUGIN_API removed () = 0;
-	virtual int32_t VST3_PLUGIN_API onWheel (float distance) = 0;
-	virtual int32_t VST3_PLUGIN_API onKeyDown (char16_t key, int16_t keyCode, int16_t modifiers) = 0;
-	virtual int32_t VST3_PLUGIN_API onKeyUp (char16_t key, int16_t keyCode, int16_t modifiers) = 0;
-	virtual int32_t VST3_PLUGIN_API getSize (VST3_ViewRect* size) = 0;
-	virtual int32_t VST3_PLUGIN_API onSize (VST3_ViewRect* newSize) = 0;
-	virtual int32_t VST3_PLUGIN_API onFocus (uint8_t state) = 0;
-	virtual int32_t VST3_PLUGIN_API setFrame (VST3_IPlugFrame* frame) = 0;
-	virtual int32_t VST3_PLUGIN_API canResize () = 0;
-	virtual int32_t VST3_PLUGIN_API checkSizeConstraint (VST3_ViewRect* rect) = 0;
+	virtual int32_t VST3_API isPlatformTypeSupported (const char* type) = 0;
+	virtual int32_t VST3_API attached (void* parent, const char* type) = 0;
+	virtual int32_t VST3_API removed () = 0;
+	virtual int32_t VST3_API onWheel (float distance) = 0;
+	virtual int32_t VST3_API onKeyDown (char16_t key, int16_t keyCode, int16_t modifiers) = 0;
+	virtual int32_t VST3_API onKeyUp (char16_t key, int16_t keyCode, int16_t modifiers) = 0;
+	virtual int32_t VST3_API getSize (VST3_ViewRect* size) = 0;
+	virtual int32_t VST3_API onSize (VST3_ViewRect* newSize) = 0;
+	virtual int32_t VST3_API onFocus (uint8_t state) = 0;
+	virtual int32_t VST3_API setFrame (VST3_IPlugFrame* frame) = 0;
+	virtual int32_t VST3_API canResize () = 0;
+	virtual int32_t VST3_API checkSizeConstraint (VST3_ViewRect* rect) = 0;
 	//
 	static const VST3_Id iid;
 };
@@ -1038,7 +1038,7 @@ VST3_DECLARE_CLASS_IID (VST3_IPlugView, 0x5BC32507, 0xD06049EA, 0xA6151B52, 0x2B
 class VST3_IPlugFrame
 : public VST3_FUnknown {
 public:
-	virtual int32_t VST3_PLUGIN_API resizeView(VST3_IPlugView* view, VST3_ViewRect* newSize) = 0;
+	virtual int32_t VST3_API resizeView(VST3_IPlugView* view, VST3_ViewRect* newSize) = 0;
 	//
 	static const VST3_Id iid;
 };
@@ -1053,19 +1053,19 @@ VST3_DECLARE_CLASS_IID (VST3_IPlugFrame, 0x367FAF01, 0xAFA94693, 0x8D4DA2A0, 0xE
 class VST3_IEditController
 : public VST3_IPluginBase {
 public:
-	virtual int32_t             VST3_PLUGIN_API setComponentState (VST3_IBStream* state) = 0;
-	virtual int32_t             VST3_PLUGIN_API setState (VST3_IBStream* state) = 0;
-	virtual int32_t             VST3_PLUGIN_API getState (VST3_IBStream* state) = 0;
-	virtual int32_t             VST3_PLUGIN_API getParameterCount () = 0;
-	virtual int32_t             VST3_PLUGIN_API getParameterInfo (int32_t paramIndex, VST3_ParameterInfo& info /*out*/) = 0;
-	virtual int32_t             VST3_PLUGIN_API getParamStringByValue (uint32_t id, double valueNormalized /*in*/, VST3_String string /*out*/) = 0;
-	virtual int32_t             VST3_PLUGIN_API getParamValueByString (uint32_t id, char16_t* string /*in*/, double& valueNormalized /*out*/) = 0;
-	virtual double              VST3_PLUGIN_API normalizedParamToPlain (uint32_t id, double valueNormalized) = 0;
-	virtual double              VST3_PLUGIN_API plainParamToNormalized (uint32_t id, double plainValue) = 0;
-	virtual double              VST3_PLUGIN_API getParamNormalized (uint32_t id) = 0;
-	virtual int32_t             VST3_PLUGIN_API setParamNormalized (uint32_t id, double value) = 0;
-	virtual int32_t             VST3_PLUGIN_API setComponentHandler (VST3_IComponentHandler* handler) = 0;
-	virtual VST3_IPlugView* VST3_PLUGIN_API createView (const char* name) = 0;
+	virtual int32_t             VST3_API setComponentState (VST3_IBStream* state) = 0;
+	virtual int32_t             VST3_API setState (VST3_IBStream* state) = 0;
+	virtual int32_t             VST3_API getState (VST3_IBStream* state) = 0;
+	virtual int32_t             VST3_API getParameterCount () = 0;
+	virtual int32_t             VST3_API getParameterInfo (int32_t paramIndex, VST3_ParameterInfo& info /*out*/) = 0;
+	virtual int32_t             VST3_API getParamStringByValue (uint32_t id, double valueNormalized /*in*/, VST3_String string /*out*/) = 0;
+	virtual int32_t             VST3_API getParamValueByString (uint32_t id, char16_t* string /*in*/, double& valueNormalized /*out*/) = 0;
+	virtual double              VST3_API normalizedParamToPlain (uint32_t id, double valueNormalized) = 0;
+	virtual double              VST3_API plainParamToNormalized (uint32_t id, double plainValue) = 0;
+	virtual double              VST3_API getParamNormalized (uint32_t id) = 0;
+	virtual int32_t             VST3_API setParamNormalized (uint32_t id, double value) = 0;
+	virtual int32_t             VST3_API setComponentHandler (VST3_IComponentHandler* handler) = 0;
+	virtual VST3_IPlugView* VST3_API createView (const char* name) = 0;
 	//
 	static const VST3_Id iid;
 };
@@ -1080,9 +1080,9 @@ VST3_DECLARE_CLASS_IID (VST3_IEditController, 0xDCD7BBE3, 0x7742448D, 0xA874AACC
 class VST3_IEditController2
 : public VST3_FUnknown {
 public:
-	virtual int32_t VST3_PLUGIN_API setKnobMode (int32_t mode) = 0;
-	virtual int32_t VST3_PLUGIN_API openHelp (uint8_t onlyCheck) = 0;
-	virtual int32_t VST3_PLUGIN_API openAboutBox (uint8_t onlyCheck) = 0;
+	virtual int32_t VST3_API setKnobMode (int32_t mode) = 0;
+	virtual int32_t VST3_API openHelp (uint8_t onlyCheck) = 0;
+	virtual int32_t VST3_API openAboutBox (uint8_t onlyCheck) = 0;
 	//
 	static const VST3_Id iid;
 };
@@ -1094,7 +1094,7 @@ VST3_DECLARE_CLASS_IID (VST3_IEditController2, 0x7F4EFE59, 0xF3204967, 0xAC27A3A
 class VST3_ITimerHandler
 : public VST3_FUnknown {
 public:
-	virtual void VST3_PLUGIN_API onTimer () = 0;
+	virtual void VST3_API onTimer () = 0;
 	//
 	static const VST3_Id iid;
 };
@@ -1108,8 +1108,8 @@ VST3_DECLARE_CLASS_IID (VST3_ITimerHandler, 0x10BDD94F, 0x41424774, 0x821FAD8F, 
 class VST3_IHostApplication
 : public VST3_FUnknown {
 public:
-	virtual int32_t VST3_PLUGIN_API getName (VST3_String name) = 0;
-	virtual int32_t VST3_PLUGIN_API createInstance (VST3_Id cid, VST3_Id _iid, void** obj) = 0;
+	virtual int32_t VST3_API getName (VST3_String name) = 0;
+	virtual int32_t VST3_API createInstance (VST3_Id cid, VST3_Id _iid, void** obj) = 0;
 	//
 	static const VST3_Id iid;
 };
@@ -1121,7 +1121,7 @@ VST3_DECLARE_CLASS_IID (VST3_IHostApplication, 0x58E595CC, 0xDB2D4969, 0x8B6AAF8
 class VST3_IEventHandler
 : public VST3_FUnknown {
 public:
-	virtual void VST3_PLUGIN_API onFDIsSet (int fd) = 0;
+	virtual void VST3_API onFDIsSet (int fd) = 0;
 	//
 	static const VST3_Id iid;
 };
@@ -1133,10 +1133,10 @@ VST3_DECLARE_CLASS_IID (VST3_IEventHandler, 0x561E65C9, 0x13A0496F, 0x813A2C35, 
 class VST3_IRunLoop
 : public VST3_FUnknown {
 public:
-	virtual int32_t VST3_PLUGIN_API registerEventHandler (VST3_IEventHandler* handler, int fd) = 0;
-	virtual int32_t VST3_PLUGIN_API unregisterEventHandler (VST3_IEventHandler* handler) = 0;
-	virtual int32_t VST3_PLUGIN_API registerTimer (VST3_ITimerHandler* handler, uint64_t milliseconds) = 0;
-	virtual int32_t VST3_PLUGIN_API unregisterTimer (VST3_ITimerHandler* handler) = 0;
+	virtual int32_t VST3_API registerEventHandler (VST3_IEventHandler* handler, int fd) = 0;
+	virtual int32_t VST3_API unregisterEventHandler (VST3_IEventHandler* handler) = 0;
+	virtual int32_t VST3_API registerTimer (VST3_ITimerHandler* handler, uint64_t milliseconds) = 0;
+	virtual int32_t VST3_API unregisterTimer (VST3_ITimerHandler* handler) = 0;
 	//
 	static const VST3_Id iid;
 };
@@ -1148,10 +1148,10 @@ VST3_DECLARE_CLASS_IID (VST3_IRunLoop, 0x18C35366, 0x97764F1A, 0x9C5B8385, 0x7A8
 class VST3_IParamValueQueue
 : public VST3_FUnknown {
 public:
-	virtual uint32_t  VST3_PLUGIN_API getParameterId () = 0;
-	virtual int32_t   VST3_PLUGIN_API getPointCount () = 0;
-	virtual int32_t   VST3_PLUGIN_API getPoint (int32_t index, int32_t& sampleOffset /*out*/, double& value /*out*/) = 0;
-	virtual int32_t   VST3_PLUGIN_API addPoint (int32_t sampleOffset, double value, int32_t& index /*out*/) = 0;
+	virtual uint32_t  VST3_API getParameterId () = 0;
+	virtual int32_t   VST3_API getPointCount () = 0;
+	virtual int32_t   VST3_API getPoint (int32_t index, int32_t& sampleOffset /*out*/, double& value /*out*/) = 0;
+	virtual int32_t   VST3_API addPoint (int32_t sampleOffset, double value, int32_t& index /*out*/) = 0;
 	//
 	static const VST3_Id iid;
 };
@@ -1163,9 +1163,9 @@ VST3_DECLARE_CLASS_IID (VST3_IParamValueQueue, 0x01263A18, 0xED074F6F, 0x98C9D35
 class VST3_IParameterChanges
 : public VST3_FUnknown {
 public:
-	virtual int32_t                     VST3_PLUGIN_API getParameterCount () = 0;
-	virtual VST3_IParamValueQueue*  VST3_PLUGIN_API getParameterData (int32_t index) = 0;
-	virtual VST3_IParamValueQueue*  VST3_PLUGIN_API addParameterData (const uint32_t& id, int32_t& index /*out*/) = 0;
+	virtual int32_t                 VST3_API getParameterCount () = 0;
+	virtual VST3_IParamValueQueue*  VST3_API getParameterData (int32_t index) = 0;
+	virtual VST3_IParamValueQueue*  VST3_API addParameterData (const uint32_t& id, int32_t& index /*out*/) = 0;
 	//
 	static const VST3_Id iid;
 };
@@ -1177,9 +1177,9 @@ VST3_DECLARE_CLASS_IID (VST3_IParameterChanges, 0xA4779663, 0x0BB64A56, 0xB44384
 class VST3_IEventList
 : public VST3_FUnknown {
 public:
-	virtual int32_t VST3_PLUGIN_API getEventCount () = 0;
-	virtual int32_t VST3_PLUGIN_API getEvent (int32_t index, VST3_Event& e /*out*/) = 0;
-	virtual int32_t VST3_PLUGIN_API addEvent (VST3_Event& e /*in*/) = 0;
+	virtual int32_t VST3_API getEventCount () = 0;
+	virtual int32_t VST3_API getEvent (int32_t index, VST3_Event& e /*out*/) = 0;
+	virtual int32_t VST3_API addEvent (VST3_Event& e /*in*/) = 0;
 	//
 	static const VST3_Id iid;
 };

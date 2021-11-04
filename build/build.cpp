@@ -7,6 +7,8 @@
 #include "kode.h"
 #include "plugin/kode_plugin.h"
 
+#include "plugin/clap/kode_hosted_clap_plugin.h"
+
 //----------------------------------------------------------------------
 
 class myDescriptor
@@ -30,6 +32,9 @@ public:
 
   myInstance(KODE_Descriptor* ADescriptor)
   : KODE_Instance(ADescriptor) {
+    KODE_HostedClapPlugin plugin;
+    plugin.test();
+
   }
 
   void on_plugin_init() final {}

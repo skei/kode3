@@ -19,6 +19,10 @@ KODE_Editor*      _kode_create_editor(KODE_Instance* AInstance);
 
 #undef KODE_PLUGIN_DEFINED
 
+#ifdef KODE_NO_PLUGIN
+  #define KODE_PLUGIN_DEFINED
+#endif
+
 //----------
 
 #ifdef KODE_PLUGIN_ALL
