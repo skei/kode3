@@ -8,7 +8,6 @@
 #include "plugin/vst2/kode_vst2.h"
 #include "plugin/vst2/kode_vst2_instance.h"
 
-
 //----------------------------------------------------------------------
 //
 //
@@ -149,8 +148,8 @@ public:
 //----------------------------------------------------------------------
 
 
-//#define KODE_VST2_MAIN_SYMBOL asm ("VSTPluginMain");
-//AEffect* kode_vst2_entrypoint(audioMasterCallback audioMaster) KODE_VST2_MAIN_SYMBOL
+#define KODE_VST2_MAIN_SYMBOL asm ("VSTPluginMain");
+AEffect* kode_vst2_entrypoint(audioMasterCallback audioMaster) KODE_VST2_MAIN_SYMBOL
 
 #define KODE_VST2_MAIN(D,I,E)                                       \
                                                                     \
