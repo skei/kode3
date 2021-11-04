@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1635984114 source:/DISKS/sda2/code/git/kode3/build/build.cpp
+1636014252 source:/DISKS/sda2/code/git/kode3/build/build.cpp
 	"kode.h"
 	"plugin/kode_plugin.h"
 	"plugin/clap/kode_hosted_clap_plugin.h"
@@ -526,7 +526,7 @@
 
 1635979251 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_base.h
 
-1635984159 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_hosted_clap_plugin.h
+1635985053 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_hosted_clap_plugin.h
 	<dlfcn.h>
 	"kode.h"
 	"plugin/clap/kode_clap.h"

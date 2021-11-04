@@ -1,20 +1,70 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
-	<ActiveTarget name="debug" />
+	<ActiveTarget name="exe debug" />
+	<File name="../src/extern/vst2/aeffectx.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="99" />
+		</Cursor>
+	</File>
+	<File name="../src/plugin/lv2/kode_lv2_plugin.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="179" topLine="0" />
+		</Cursor>
+	</File>
 	<File name="../../clap/include/clap/version.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="447" topLine="0" />
+			<Cursor1 position="352" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="../src/kode.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../../clap/include/clap/plugin.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="298" topLine="0" />
+			<Cursor1 position="3248" topLine="123" />
 		</Cursor>
 	</File>
-	<File name="../../clap/include/clap/macros.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../src/plugin/vst3/kode_vst3.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="330" topLine="0" />
+			<Cursor1 position="266" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="../src/plugin/kode_descriptor.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="662" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="../src/plugin/vst3/kode_vst3_plugin.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="182" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="../src/plugin/ladspa/kode_ladspa_plugin.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="223" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="../src/plugin/vst2/kode_vst2_plugin.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="182" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="../../clap/include/clap/host.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="509" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="../src/plugin/clap/kode_hosted_clap_plugin.h" open="1" top="1" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2732" topLine="61" />
+		</Cursor>
+	</File>
+	<File name="../src/plugin/dssi/kode_dssi_plugin.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="213" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="../src/plugin/clap/kode_clap.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="334" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="../../clap/include/clap/process.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -22,44 +72,49 @@
 			<Cursor1 position="244" topLine="6" />
 		</Cursor>
 	</File>
+	<File name="../src/plugin/clap/kode_clap_host.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="569" topLine="0" />
+		</Cursor>
+	</File>
 	<File name="build.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="600" topLine="0" />
+			<Cursor1 position="614" topLine="7" />
 		</Cursor>
 	</File>
-	<File name="../src/kode_editor.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../../clap/include/clap/macros.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="278" topLine="0" />
+			<Cursor1 position="330" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="../src/kode_clap_plugin.h" open="1" top="1" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../src/plugin/clap/kode_clap_plugin.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="0" topLine="28" />
+			<Cursor1 position="8727" topLine="261" />
 		</Cursor>
 	</File>
-	<File name="../src/kode_descriptor.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../src/plugin/vst3/kode_vst3_base.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="263" topLine="0" />
+			<Cursor1 position="2176" topLine="192" />
 		</Cursor>
 	</File>
-	<File name="../../clap/include/clap/plugin.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../src/plugin/clap/kode_clap_instance.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="424" topLine="3" />
+			<Cursor1 position="962" topLine="82" />
 		</Cursor>
 	</File>
-	<File name="../src/kode_clap.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../src/plugin/kode_instance.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="334" topLine="0" />
+			<Cursor1 position="557" topLine="8" />
 		</Cursor>
 	</File>
-	<File name="../src/kode_clap_instance.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../src/plugin/kode_plugin.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="674" topLine="28" />
+			<Cursor1 position="3481" topLine="80" />
 		</Cursor>
 	</File>
-	<File name="../src/kode_instance.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../src/plugin/exe/kode_exe_plugin.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="604" topLine="0" />
+			<Cursor1 position="424" topLine="9" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

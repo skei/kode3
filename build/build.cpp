@@ -33,7 +33,7 @@ public:
   myInstance(KODE_Descriptor* ADescriptor)
   : KODE_Instance(ADescriptor) {
     KODE_HostedClapPlugin plugin;
-    plugin.test();
+    //plugin.test();
 
   }
 
