@@ -63,20 +63,20 @@ public:
 //------------------------------
 
   KODE_Vst2Instance(KODE_Instance* AInstance, audioMasterCallback AAudioMaster) {
-//    MAudioMaster = AAudioMaster;
-//    MInstance = AInstance;
+    MAudioMaster = AAudioMaster;
+    MInstance = AInstance;
 //    MDescriptor = MInstance->getDescriptor();
-//    //memset(&MVstEvents,0,sizeof(KODE_VstEvents));
-//    memset(&MVstMidiSendEvents,0,sizeof(MVstMidiSendEvents));
-//    for (uint32_t i=0; i<KODE_PLUGIN_MAX_MIDI_SEND; i++) {
-//      MVstEvents.events[i] = (VstEvent*)&MVstMidiSendEvents[i];
-//    }
+    //memset(&MVstEvents,0,sizeof(KODE_VstEvents));
+    memset(&MVstMidiSendEvents,0,sizeof(MVstMidiSendEvents));
+    for (uint32_t i=0; i<KODE_PLUGIN_MAX_MIDI_SEND; i++) {
+      MVstEvents.events[i] = (VstEvent*)&MVstMidiSendEvents[i];
+    }
   }
 
   //----------
 
   virtual ~KODE_Vst2Instance() {
-//    if (MInstance) KODE_Delete(MInstance);
+//    if (MInstance) delete MInstance;
   }
 
 //------------------------------
@@ -231,11 +231,13 @@ public:
     VstIntPtr result    = 0;
 
     char*     cptr      = (char*)ptr;
-//    char      str[256]  = {0};
+    char      str[256]  = {0};
 
     switch (opcode) {
 
-      //----------
+//--------------------
+//
+//--------------------
 
       /*
         called when plug-in is initialized
@@ -243,8 +245,8 @@ public:
       */
 
       case effOpen: // 0
-//        ////KODE_Vst2Trace("vst2: dispatcher/effOpen\n");
-//        MIsOpen = true;
+        ////KODE_Vst2Trace("vst2: dispatcher/effOpen\n");
+        MIsOpen = true;
 //        //updateHostInfo();
 //        //MInstance->on_open();
 //        MInstance->on_initialize();
@@ -334,8 +336,8 @@ public:
 
       case effGetParamLabel: { // 6
         //KODE_Vst2Trace("vst2: dispatcher/effGetParamLabel %i\n",index);
-//        KODE_Parameter* pa = MDescriptor->getParameter(index);
-//        strcpy((char*)ptr,pa->getLabel());
+        KODE_Parameter* pa = MDescriptor->parameters[index];
+        strcpy((char*)ptr,pa->label);
         return 1;
         break;
       }
@@ -350,12 +352,12 @@ public:
 
       case effGetParamDisplay: { // 7
         //KODE_Vst2Trace("vst2: dispatcher/effGetParamDisplay %i\n",index);
-//        KODE_Parameter* pa = MDescriptor->getParameter(index);
+//        KODE_Parameter* pa = MDescriptor->parameters[index];
 //        float v = MInstance->getParamValue(index);
 //        char str[32];
 //        pa->getDisplayText(v,str);
 //        strcpy((char*)ptr,(char*)str);
-        return 1;
+//        return 1;
         break;
       }
 
@@ -369,8 +371,8 @@ public:
 
       case effGetParamName: { // 8
         //KODE_Vst2Trace("vst2: dispatcher/effGetParamName %i\n",index);
-//        KODE_Parameter* pa = MDescriptor->getParameter(index);
-//        strcpy((char*)ptr,pa->getName());
+        KODE_Parameter* pa = MDescriptor->parameters[index];
+        strcpy((char*)ptr,pa->name);
         return 1;
         break;
       }
@@ -467,18 +469,18 @@ public:
 
       case effEditGetRect: // 13
         //KODE_Vst2Trace("vst2: dispatcher/effEditGetRect\n");
-//        if (MDescriptor->hasFlag(KODE_PLUGIN_HAS_EDITOR)) {
+        if (MDescriptor->options.has_editor) {
 //          uint32_t w = MDescriptor->getEditorDefaultWidth();
 //          uint32_t h = MDescriptor->getEditorDefaultHeight();
 //          //if (w == 0) w = MInstance->getDefaultEditorWidth();
 //          //if (h == 0) h = MInstance->getDefaultEditorHeight();
-//          MVstRect.left     = 0;
-//          MVstRect.top      = 0;
-//          MVstRect.right    = w;
-//          MVstRect.bottom   = h;
-//          *(ERect**)ptr     = &MVstRect;
-//          return 1;
-//        }
+          MVstRect.left     = 0;
+          MVstRect.top      = 0;
+          MVstRect.right    = 640; //w;
+          MVstRect.bottom   = 480; //h;
+          *(ERect**)ptr     = &MVstRect;
+          return 1;
+        }
         break;
 
       //----------
@@ -492,7 +494,7 @@ public:
       case effEditOpen: // 14
         //KODE_Vst2Trace("vst2: dispatcher/effEditOpen\n");
         #ifndef KODE_NO_GUI
-//        if (MDescriptor->hasFlag(KODE_PLUGIN_HAS_EDITOR)) {
+        if (MDescriptor->options.has_editor) {
 //          if (!MIsEditorOpen) {
 //            MIsEditorOpen = true;
 //            //MEditor = (KODE_Editor*)MInstance->on_openEditor(ptr);
@@ -504,7 +506,7 @@ public:
 //            MEditor->open();
 //            return 1;
 //          }
-//        }
+        }
         #endif // KODE_NO_GUI
         break;
 
@@ -516,7 +518,7 @@ public:
       case effEditClose: // 15
         //KODE_Vst2Trace("vst2: dispatcher/effEditClose\n");
         #ifndef KODE_NO_GUI
-//        if (MDescriptor->hasFlag(KODE_PLUGIN_HAS_EDITOR)) {
+        if (MDescriptor->options.has_editor) {
 //          if (MIsEditorOpen) {
 //            MIsEditorOpen = false;
 //            if (MEditor) {
@@ -527,7 +529,7 @@ public:
 //              return 1;
 //            }
 //          }
-//        }
+        }
         #endif // KODE_NO_GUI
         break;
 
@@ -547,13 +549,13 @@ public:
       case effEditIdle: // 19
         //KODE_Vst2Trace("vst2: dispatcher/effEditIdle\n");
         #ifndef KODE_NO_GUI
-//        if (MDescriptor->hasFlag(KODE_PLUGIN_HAS_EDITOR)) {
+        if (MDescriptor->options.has_editor) {
 //          if (MIsEditorOpen) {
 //            //KODE_Assert(MEditor);
 //            MInstance->on_updateEditor(MEditor);
 //            updateEditorInIdle();
 //          }
-//        }
+        }
         #endif // KODE_NO_GUI
         break;
 
@@ -653,11 +655,9 @@ public:
       //case effGetChunk: v = getChunk ((void**)ptr, index ? true : false); break;
       //case effSetChunk: v = setChunk (ptr, (VstInt32)value, index ? true : false); break;
 
-      //----------
-
-  // vst 2
-
-      //----------
+//--------------------
+// vst 2
+//--------------------
 
       /*
         ptr: pointer to VstEvents*, host usually call ProcessEvents just before
@@ -684,7 +684,7 @@ public:
 
       case effProcessEvents: { // 25
         //KODE_Vst2Trace("vst2: dispatcher/effProcessEvents\n");
-//        if (MDescriptor->hasFlag(KODE_PLUGIN_RECEIVE_MIDI)) {
+        if (MDescriptor->options.can_receive_midi) {
 //          VstEvents* ev = (VstEvents*)ptr;
 //          int num_events = ev->numEvents;
 //          for (int32_t i=0; i<num_events; i++) {
@@ -696,7 +696,7 @@ public:
 //
 //            }
 //          }
-//        }
+        }
         // todo: sort?
         return 1;
       }
@@ -785,12 +785,12 @@ public:
 
       case effGetInputProperties: { // 33
         //KODE_Vst2Trace("vst2: dispatcher/effGetInputProperties %i\n",index);
-//        VstPinProperties* pin = (VstPinProperties*)ptr;
-//        char* pc = strcpy(pin->label,"input "); // returns ptr to end of string? ptr to the '\0', or after the 0?
-//        *pc++ = KODE_HEX_TABLE[index&0x0f];
-//        *pc = 0;
-//        pin->flags = 1; // active
-//        if ( (index&1) == 0) pin->flags = pin->flags | 2; // first of stereo pair
+        VstPinProperties* pin = (VstPinProperties*)ptr;
+        /* char* pc = */ strcpy(pin->label,"input "); // returns ptr to end of string? ptr to the '\0', or after the 0?
+        /* *pc++ = KODE_HEX_TABLE[index&0x0f];
+        *pc = 0; */
+        pin->flags = 1; // active
+        if ((index & 1) == 0) pin->flags |= 2; // first of stereo pair
         return 1;
       }
 
@@ -801,12 +801,12 @@ public:
 
       case effGetOutputProperties: { // 34
         //KODE_Vst2Trace("vst2: dispatcher/effGetOutputProperties %i\n",index);
-//        VstPinProperties* pin = (VstPinProperties*)ptr;
-//        char* pc = strcpy(pin->label,"output ");
-//        *pc++ = KODE_HEX_TABLE[index&0x0f];
-//        *pc = 0;
-//        pin->flags = 1; // active
-//        if ( (index&1) == 0) pin->flags = pin->flags | 2; // first of stereo pair
+        VstPinProperties* pin = (VstPinProperties*)ptr;
+        /* char* pc = */ strcpy(pin->label,"output ");
+        /* *pc++ = KODE_HEX_TABLE[index&0x0f];
+        *pc = 0; */
+        pin->flags = 1; // active
+        if ((index & 1) == 0) pin->flags |= 2; // first of stereo pair
         return 1;
         break;
       }
@@ -833,7 +833,7 @@ public:
       case effGetPlugCategory: { // 35
         //KODE_Vst2Trace("vst2: dispatcher/effGetPlugCategory\n");
         uint32_t res = 0;
-//        res = (MDescriptor->hasFlag(KODE_PLUGIN_IS_SYNTH)) ? kPlugCategSynth : kPlugCategEffect;
+        res = (MDescriptor->options.is_synth) ? kPlugCategSynth : kPlugCategEffect;
         //if (MPlugin->hasFlag(kpf_tool)) res = kPlugCategGenerator;
         return res;
       }
@@ -925,17 +925,17 @@ public:
 
       case effGetEffectName: // 45
         //KODE_Vst2Trace("vst2: dispatcher/effGetEffectName\n");
-//        strcpy(str,MDescriptor->getName());
-//          //#ifdef KODE_32BIT
-//          //  str += "_32";
-//          //#endif
-//          //#ifdef KODE_64BIT
-//          //  str += "_64";
-//          //#endif
-//          //ifdef KODE_DEBUG
-//          //  str += "_debug";
-//          //#endif
-//        strcpy((char*)ptr,(char*)str);
+        strcpy(str,MDescriptor->name);
+        //#ifdef KODE_32BIT
+        //  str += "_32";
+        //#endif
+        //#ifdef KODE_64BIT
+        //  str += "_64";
+        //#endif
+        #ifdef KODE_DEBUG
+          strcat(str,"_debug");
+        #endif
+        strcpy((char*)ptr,(char*)str);
         return 1;
 
       //----------
@@ -947,7 +947,7 @@ public:
 
       case effGetVendorString: // 47
         //KODE_Vst2Trace("vst2: dispatcher/effGetVendorString\n");
-//        strcpy((char*)ptr,(char*)MDescriptor->getAuthor());
+        strcpy((char*)ptr,(char*)MDescriptor->author);
         break;
 
       //----------
@@ -959,7 +959,7 @@ public:
 
       case effGetProductString: // 48
         //KODE_Vst2Trace("vst2: dispatcher/effGetProductString\n");
-//        strcpy((char*)ptr,(char*)MDescriptor->getName());
+        strcpy((char*)ptr,(char*)MDescriptor->description);
         break;
 
       //----------
@@ -970,7 +970,7 @@ public:
 
       case effGetVendorVersion: // 49
         //KODE_Vst2Trace("vst2: dispatcher/effGetVendorVersion\n");
-//        return MDescriptor->getVersion();
+        return MDescriptor->version;
 
       //----------
 
@@ -1024,88 +1024,87 @@ public:
       */
 
       case effCanDo: { // 51
-//        char* p = (char*)ptr;
-//
-//        // plug-in will send Vst/MIDI events to Host
-//        if (MDescriptor->hasFlag(KODE_PLUGIN_SEND_MIDI)) {
-//          if (!strcmp(p,"sendVstEvents"))    { //KODE_Vst2Trace(" -> 1\n"); return 1; }
-//          if (!strcmp(p,"sendVstMidiEvent")) { //KODE_Vst2Trace(" -> 1\n"); return 1; }
-//        }
-//
-//        // plug-in can receive Vst/MIDI events to Host
-//        if (MDescriptor->hasFlag(KODE_PLUGIN_RECEIVE_MIDI)) {
-//          if (!strcmp(p,"receiveVstEvents"))     { //KODE_Vst2Trace(" -> 1\n"); return 1; }
-//          if (!strcmp(p,"receiveVstMidiEvent"))  { //KODE_Vst2Trace(" -> 1\n"); return 1; }
-//        }
-//
-//        // plug-in can receive Time info from Host
-//        if (!strcmp(p,"receiveVstTimeInfo")) {
-//          //KODE_Vst2Trace(" -> 1\n");
-//          return 1;
-//        }
-//
-//        // plug-in supports offline functions (#offlineNotify, #offlinePrepare, #offlineRun)
-//        if (!strcmp(p,"offline")) {
-//          //KODE_Vst2Trace("-> 0\n");
-//          return 0;
-//        }
-//
-//        // plug-in supports function #getMidiProgramName ()
-//        if (!strcmp(p,"midiProgramNames")) {
-//          //KODE_Vst2Trace("-> 0\n");
-//          return 0;
-//        }
-//
-//        // plug-in supports function setBypass()
-//        if (!strcmp(p,"bypass")) {
-//          //KODE_Vst2Trace(" -> 1\n");
-//          return 1;
-//        }
-//
-//        if (!strcmp(p,"MPE")) {
-//          //#ifdef KODE_DEBUG_VST
-//        //  #ifdef KODE_PLUGIN_MPE
-//        //    //KODE_Vst2Trace("-> 1\n");
-//        //    return 1;
-//
-//          //if (MDescriptor->hasFlag(kpf_mpe)) return 1;
-//
-//          //#else
-//          //VST_TRACE("vst dispatcher: effCanDo '%s' >> 0",(char*)ptr);
-//        //  #endif
-//          //#endif // KODE_PLUGIN_MPE
-//          //#ifdef KODE_PLUGIN_MPE
-//          //MHostMPE = true;
-//          //// MVoices.setMPE(true);
-//          //on_setMode(kpm_mpe,MHostMPE);
-//          //return 1; // 0
-//          //#else
-//          //return 0;
-//          //#endif
-//        }
-//
-//        /*
-//          http://www.reaper.fm/sdk/vst/vst_ext.php
-//          A REAPER aware VST plug-in can respond to effCanDo "hasCockosExtensions",
-//          with 0xbeef0000 (returning this value), which will inform the host that
-//          it can call certain extended calls. A plug-in that responds to
-//          "hasCockosExtensions" may choose to implement any subset of the extended
-//          calls.
-//        */
-//
-//        //#ifdef KODE_PLUGIN_REAPER_EXT
-//        //if (MFlags&kpf_reaper) {
-//        //  // Warning: range check error while evaluating constants
-//        //  //and (Pos(ptr,'hasCockosExtensions') <> 0) then result := {%H-}$beef0000;
-//        //  if (!SStrcmp(p,"hasCockosExtensions")) return 0xbeef0000;
-//        //}
-//        //#endif // KODE_PLUGIN_REAPER_EXT
-//
-//        if (!strcmp(p,"hasCockosExtensions")) {
-//          //KODE_Vst2Trace("-> 0\n"); return 0;
-//        }
+        char* p = (char*)ptr;
 
-        //KODE_Vst2Trace("-> 0\n");
+        // plug-in will send Vst/MIDI events to Host
+        if (MDescriptor->options.can_send_midi) {
+          if (!strcmp(p,"sendVstEvents"))    {} //KODE_Vst2Trace(" -> 1\n"); return 1; }
+          if (!strcmp(p,"sendVstMidiEvent")) {} //KODE_Vst2Trace(" -> 1\n"); return 1; }
+        }
+
+        // plug-in can receive Vst/MIDI events to Host
+        if (MDescriptor->options.can_receive_midi) {
+          if (!strcmp(p,"receiveVstEvents"))     {} //KODE_Vst2Trace(" -> 1\n"); return 1; }
+          if (!strcmp(p,"receiveVstMidiEvent"))  {} //KODE_Vst2Trace(" -> 1\n"); return 1; }
+        }
+
+        // plug-in can receive Time info from Host
+        if (!strcmp(p,"receiveVstTimeInfo")) {
+          //KODE_Vst2Trace(" -> 1\n");
+          return 1;
+        }
+
+        // plug-in supports offline functions (#offlineNotify, #offlinePrepare, #offlineRun)
+        if (!strcmp(p,"offline")) {
+          //KODE_Vst2Trace("-> 0\n");
+          return 0;
+        }
+
+        // plug-in supports function #getMidiProgramName ()
+        if (!strcmp(p,"midiProgramNames")) {
+          //KODE_Vst2Trace("-> 0\n");
+          return 0;
+        }
+
+        // plug-in supports function setBypass()
+        if (!strcmp(p,"bypass")) {
+          //KODE_Vst2Trace(" -> 1\n");
+          return 1;
+        }
+
+        if (!strcmp(p,"MPE")) {
+          //#ifdef KODE_DEBUG_VST
+        //  #ifdef KODE_PLUGIN_MPE
+        //    //KODE_Vst2Trace("-> 1\n");
+        //    return 1;
+
+          //if (MDescriptor->hasFlag(kpf_mpe)) return 1;
+
+          //#else
+          //VST_TRACE("vst dispatcher: effCanDo '%s' >> 0",(char*)ptr);
+        //  #endif
+          //#endif // KODE_PLUGIN_MPE
+          //#ifdef KODE_PLUGIN_MPE
+          //MHostMPE = true;
+          //// MVoices.setMPE(true);
+          //on_setMode(kpm_mpe,MHostMPE);
+          //return 1; // 0
+          //#else
+          //return 0;
+          //#endif
+        }
+
+        /*
+          http://www.reaper.fm/sdk/vst/vst_ext.php
+          A REAPER aware VST plug-in can respond to effCanDo "hasCockosExtensions",
+          with 0xbeef0000 (returning this value), which will inform the host that
+          it can call certain extended calls. A plug-in that responds to
+          "hasCockosExtensions" may choose to implement any subset of the extended
+          calls.
+        */
+
+        //#ifdef KODE_PLUGIN_REAPER_EXT
+        //if (MFlags&kpf_reaper) {
+        //  // Warning: range check error while evaluating constants
+        //  //and (Pos(ptr,'hasCockosExtensions') <> 0) then result := {%H-}$beef0000;
+        //  if (!SStrcmp(p,"hasCockosExtensions")) return 0xbeef0000;
+        //}
+        //#endif // KODE_PLUGIN_REAPER_EXT
+
+        if (!strcmp(p,"hasCockosExtensions")) {
+          //KODE_Vst2Trace("-> 0\n"); return 0;
+        }
+       //KODE_Vst2Trace("-> 0\n");
         return 0;
       }
 
@@ -1163,11 +1162,9 @@ public:
         return 2;
         //break;
 
-      //----------
-
-  // vst 2.1
-
-      //----------
+//--------------------
+// vst 2.1
+//--------------------
 
       /*
         index: character
@@ -1287,11 +1284,9 @@ public:
         //KODE_Vst2Trace("vst2: dispatcher/effEndSetProgram\n");
         break;
 
-      //----------
-
-  // vst 2.3
-
-      //----------
+//--------------------
+// vst 2.3
+//--------------------
 
       /*
         value: pointer to VstSpeakerArrangement** pluginInput
@@ -1408,11 +1403,9 @@ public:
         //KODE_Vst2Trace("vst2: dispatcher/effBeginLoadProgram\n");
         break;
 
-      //----------
-
-    // vst 2.4
-
-      //----------
+//--------------------
+// vst 2.4
+//--------------------
 
       /*
         value
@@ -1443,7 +1436,10 @@ public:
         //KODE_Vst2Trace("vst2: dispatcher/effGetNumMidiOutputChannels\n");
         break;
 
-      //----------
+//--------------------
+//
+//--------------------
+
 
       default:
         //KODE_Vst2Trace("unhandled opcode: %i\n",opcode);
@@ -1453,8 +1449,6 @@ public:
 
     return result;
   }
-
-  //----------//------------------------------
 
 //------------------------------
 

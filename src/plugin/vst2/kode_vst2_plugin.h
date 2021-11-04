@@ -103,31 +103,31 @@ public:
     KODE_Vst2Instance* vst2_instance = new KODE_Vst2Instance(instance,audioMaster);
 //    instance->setListener(vst2_instance);
 
-//    instance->on_open();
-//    //instance->on_initialize();
+    instance->on_plugin_init();
+
 //    instance->setDefaultParameterValues();
 //    instance->updateAllParameters();
 
     int32_t flags = effFlagsCanReplacing;
-//    if (MDescriptor->hasFlag(KODE_PLUGIN_IS_SYNTH)) flags |= effFlagsIsSynth;
-//    if (MDescriptor->hasFlag(KODE_PLUGIN_HAS_EDITOR)) flags |= effFlagsHasEditor;
-//    //if (MPlugin->hasFlag(kpf_chunks))      flags |= effFlagsProgramChunks;
-//    //if (MPlugin->hasFlag(kpf_silentStop))  flags |= effFlagsNoSoundInStop;
-//    //#ifndef KODE_PLUGIN_VST2_VESTIGE
-//    //if (MDescriptor->hasFlag(KODE_PLUGIN_PROCESS_DOUBLE)) flags |= effFlagsCanDoubleReplacing;
-//    //#endif
+    if (MDescriptor->options.is_synth)    flags |= effFlagsIsSynth;
+    if (MDescriptor->options.has_editor)  flags |= effFlagsHasEditor;
+    //if (MPlugin->hasFlag(kpf_chunks))      flags |= effFlagsProgramChunks;
+    //if (MPlugin->hasFlag(kpf_silentStop))  flags |= effFlagsNoSoundInStop;
+    //#ifndef KODE_PLUGIN_VST2_VESTIGE
+    //if (MDescriptor->hasFlag(KODE_PLUGIN_PROCESS_DOUBLE)) flags |= effFlagsCanDoubleReplacing;
+    //#endif
 
     AEffect* effect = vst2_instance->getAEffect();
     memset(effect,0,sizeof(AEffect));
 
     effect->magic                     = kEffectMagic;
-    effect->uniqueID                  = 0;//MDescriptor->getShortId();
+    effect->uniqueID                  = MDescriptor->short_id;
     effect->flags                     = flags;
-    effect->numInputs                 = 0;//MDescriptor->getNumInputs();
-    effect->numOutputs                = 0;//MDescriptor->getNumOutputs();
-    effect->numParams                 = 0;//MDescriptor->getNumParameters();
-    effect->numPrograms               = 0;//MDescriptor->getNumPresets();
-    effect->version                   = 0;//MDescriptor->getVersion();
+    effect->numInputs                 = MDescriptor->inputs.size();
+    effect->numOutputs                = MDescriptor->outputs.size();
+    effect->numParams                 = MDescriptor->parameters.size();
+    effect->numPrograms               = MDescriptor->presets.size();
+    effect->version                   = MDescriptor->version;
     effect->initialDelay              = 0;
     effect->object                    = vst2_instance;
     effect->user                      = nullptr;//instance;

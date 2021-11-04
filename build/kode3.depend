@@ -1,15 +1,14 @@
 # depslib dependency file v1.0
-1636017187 source:/DISKS/sda2/code/git/kode3/build/build.cpp
+1636025118 source:/DISKS/sda2/code/git/kode3/build/build.cpp
 	"kode.h"
 	"plugin/kode_plugin.h"
 	"plugin/clap/kode_hosted_clap_plugin.h"
 
-1636017439 /DISKS/sda2/code/git/kode3/src/kode.h
+1636029343 /DISKS/sda2/code/git/kode3/src/kode.h
 	<stdint.h>
 	<stdio.h>
 	<stdlib.h>
 	<memory.h>
-	<vector>
 	"base/kode_debug.h"
 
 1635970350 /DISKS/sda2/code/git/kode3/src/kode_plugin.h
@@ -271,8 +270,11 @@
 	"plugin/vst2/kode_vst2_plugin.h"
 	"plugin/vst3/kode_vst3_plugin.h"
 
-1635978961 /DISKS/sda2/code/git/kode3/src/plugin/kode_descriptor.h
+1636030272 /DISKS/sda2/code/git/kode3/src/plugin/kode_descriptor.h
 	"kode.h"
+	"base/kode_array.h"
+	"plugin/kode_parameter.h"
+	"plugin/kode_preset.h"
 
 1635974228 /DISKS/sda2/code/git/kode3/src/plugin/kode_instance.h
 	"kode.h"
@@ -362,16 +364,13 @@
 	<lv2/urid/urid.h>
 	<lv2/lv2plug.in/ns/extensions/ui/ui.h>
 
-1636015066 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_plugin.h
+1636029716 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_plugin.h
 	"kode.h"
-	"plugin/vst2/kode_vst2.h"
-	"base/kode.h"
 	"plugin/kode_descriptor.h"
-	"plugin/kode_instance_listener.h"
 	"plugin/vst2/kode_vst2.h"
 	"plugin/vst2/kode_vst2_instance.h"
 
-1636015046 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2.h
+1636017573 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2.h
 	"kode.h"
 	"extern/vst2/aeffect.h"
 	"extern/vst2/aeffectx.h"
@@ -633,10 +632,9 @@
 1440689074 /DISKS/sda2/code/git/kode3/src/extern/vst2/aeffectx.h
 	"aeffect.h"
 
-1636015092 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_instance.h
-	"base/kode.h"
+1636019604 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_instance.h
+	"kode.h"
 	"plugin/kode_instance.h"
-	"plugin/kode_instance_listener.h"
 
 1636014561 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_instance.h
 	"plugin/kode_editor.h"
@@ -649,4 +647,15 @@
 	<string>
 	<locale>
 	<codecvt>
+
+1635538983 /DISKS/sda2/code/git/kode3/src/base/kode_array.h
+	<stdlib.h>
+
+1636029562 /DISKS/sda2/code/git/kode3/src/plugin/kode_parameter.h
+	"kode.h"
+	"base/kode_array.h"
+
+1636029591 /DISKS/sda2/code/git/kode3/src/plugin/kode_preset.h
+	"kode.h"
+	"base/kode_array.h"
 
