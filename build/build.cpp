@@ -2,7 +2,7 @@
 //#define KODE_PLUGIN_EXE
 #define KODE_PLUGIN_ALL
 
-#define KODE_DEBUG_PRINT_SOCKET
+//#define KODE_DEBUG_PRINT_SOCKET
 // nc -U -l -k /tmp/kode.socket
 
 
