@@ -15,7 +15,8 @@ class KODE_ClapInstance {
 private:
 //------------------------------
 
-  KODE_Instance* MInstance = nullptr;
+  KODE_Instance*        MInstance       = nullptr;
+  KODE_ProcessContext   MProcessContext = {};
 
 //------------------------------
 public:
@@ -75,7 +76,7 @@ public:
   */
 
   bool clap_instance_start_processing() {
-    MInstance->on_plugin_start_processing();
+    MInstance->on_plugin_start_processing(44100.0);
     return true;
   }
 
@@ -89,7 +90,7 @@ public:
   */
 
   clap_process_status clap_instance_process(const clap_process *process) {
-    MInstance->on_plugin_process();
+    MInstance->on_plugin_process(&MProcessContext);
     return CLAP_PROCESS_CONTINUE;
   }
 

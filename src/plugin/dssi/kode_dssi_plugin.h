@@ -320,6 +320,28 @@ private: // dssi callbacks
 //
 //----------------------------------------------------------------------
 
+/**
+ * DSSI supports a plugin discovery method similar to that of LADSPA:
+ *
+ * - DSSI hosts may wish to locate DSSI plugin shared object files by
+ *    searching the paths contained in the DSSI_PATH and LADSPA_PATH
+ *    environment variables, if they are present.  Both are expected
+ *    to be colon-separated lists of directories to be searched (in
+ *    order), and DSSI_PATH should be searched first if both variables
+ *    are set.
+ *
+ * - Each shared object file containing DSSI plugins must include a
+ *   function dssi_descriptor(), with the following function prototype
+ *   and C-style linkage.  Hosts may enumerate the plugin types
+ *   available in the shared object file by repeatedly calling
+ *   this function with successive Index values (beginning from 0),
+ *   until a return value of NULL indicates no more plugin types are
+ *   available.  Each non-NULL return is the DSSI_Descriptor
+ *   of a distinct plugin type.
+ */
+
+//----------------------------------------------------------------------
+
 #define KODE_DSSI_MAIN_SYMBOL asm ("dssi_descriptor");
 const DSSI_Descriptor* kode_dssi_entrypoint(unsigned long Index) KODE_DSSI_MAIN_SYMBOL
 

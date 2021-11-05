@@ -227,7 +227,11 @@ private: // lv2 callbacks
     KODE_Lv2Print("sample_rate %.2f bundle_path '%s' features %p\n",sample_rate,bundle_path,features);
     KODE_Lv2PrintFeatures(features);
     KODE_Descriptor* desc = kode_lv2_get_descriptor();
-    KODE_Lv2Instance* lv2_instance = new KODE_Lv2Instance(desc);
+    //KODE_Lv2Instance* lv2_instance = new KODE_Lv2Instance(desc);
+
+    KODE_Instance* inst = new INSTANCE(desc);                             // who deletes this ???
+    KODE_Lv2Instance* lv2_instance = new KODE_Lv2Instance(inst);
+
     lv2_instance->lv2_setup(sample_rate,bundle_path,features);
     return (LV2_Handle)lv2_instance;
   }

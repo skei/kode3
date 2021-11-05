@@ -5,7 +5,6 @@
 //#define KODE_DEBUG_PRINT_SOCKET
 // nc -U -l -k /tmp/kode.socket
 
-
 //----------
 
 #include "kode.h"
@@ -21,24 +20,12 @@ class myDescriptor
 public:
 
   myDescriptor() {
-
-    //setName("myPlugin");
-    //setAuthor("skei.audio");
-
     name = "myPlugin";
     author = "skei.audio";
-
-    //appendInput(  new KODE_PluginPort("input 1", KODE_PORT_AUDIO,1,KODE_PORT_INPUT) );
-    //appendInput(  new KODE_PluginPort("input 2", KODE_PORT_AUDIO,1,KODE_PORT_INPUT) );
-    //appendOutput( new KODE_PluginPort("output 1",KODE_PORT_AUDIO,1,KODE_PORT_OUTPUT) );
-    //appendOutput( new KODE_PluginPort("output 2",KODE_PORT_AUDIO,1,KODE_PORT_OUTPUT) );
-
     appendInput("input 1");
     appendInput("input 2");
     appendOutput("output 1");
     appendOutput("output 2");
-
-    //KODE_Parameter* param1 = new KODE_Parameter();
     appendParameter( new KODE_Parameter() );
   }
 
@@ -53,10 +40,9 @@ public:
 
   myInstance(KODE_Descriptor* ADescriptor)
   : KODE_Instance(ADescriptor) {
-    KODE_HostedClapPlugin plugin;
   }
 
-  void on_plugin_init() final {}
+  bool on_plugin_init() final { return true; }
   void on_plugin_destroy() final {}
 
 };

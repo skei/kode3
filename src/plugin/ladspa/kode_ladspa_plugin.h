@@ -122,6 +122,16 @@ public:
 
   //----------
 
+  /* This member is a function pointer that instantiates a plugin. A
+     handle is returned indicating the new plugin instance. The
+     instantiation function accepts a sample rate as a parameter. The
+     plugin descriptor from which this instantiate function was found
+     must also be passed. This function must return NULL if
+     instantiation fails.
+
+     Note that instance initialisation should generally occur in
+     activate() rather than here. */
+
   LADSPA_Handle instantiate(unsigned long SampleRate) {
     // instance deleted in ~KODE_LadspaInstance()
     KODE_Instance* instance = new INSTANCE(MDescriptor);
@@ -205,7 +215,11 @@ private: // ladspa callbacks
     KODE_LadspaInstance* ladspa_instance = (KODE_LadspaInstance*)Instance;
     if (ladspa_instance) ladspa_instance->ladspa_cleanup();
     //LADSPA_Trace("ladspa: cleanup -> deleting instance\n");
+
+// !!!
+
     delete ladspa_instance;
+
   }
 
 //------------------------------
@@ -215,6 +229,36 @@ private: // ladspa callbacks
 //----------------------------------------------------------------------
 //
 //----------------------------------------------------------------------
+
+/*
+  Accessing a Plugin:
+
+  The exact mechanism by which plugins are loaded is host-dependent,
+  however all most hosts will need to know is the name of shared
+  object file containing the plugin types. To allow multiple hosts to
+  share plugin types, hosts may wish to check for environment
+  variable LADSPA_PATH. If present, this should contain a
+  colon-separated path indicating directories that should be searched
+  (in order) when loading plugin types.
+
+  A plugin programmer must include a function called
+  "ladspa_descriptor" with the following function prototype within
+  the shared object file. This function will have C-style linkage (if
+  you are using C++ this is taken care of by the `extern "C"' clause
+  at the top of the file).
+
+  A host will find the plugin shared object file by one means or
+  another, find the ladspa_descriptor() function, call it, and
+  proceed from there.
+
+  Plugin types are accessed by index (not ID) using values from 0
+  upwards. Out of range indexes must result in this function
+  returning NULL, so the plugin count can be determined by checking
+  for the least index that results in NULL being returned.
+*/
+
+//----------------------------------------------------------------------
+
 
 #define KODE_LADSPA_MAIN_SYMBOL asm ("ladspa_descriptor");
 const LADSPA_Descriptor* kode_ladspa_entrypoint(unsigned long Index) KODE_LADSPA_MAIN_SYMBOL

@@ -82,15 +82,19 @@ private:
   pid_t MHostPid = 0;
   pid_t MHostTid = 0;
 
+  KODE_Instance* MInstance = nullptr;
+
 //------------------------------
 public:
 //------------------------------
 
-  KODE_Vst3Instance(KODE_Descriptor* ADescriptor)
+  //KODE_Vst3Instance(KODE_Descriptor* ADescriptor)
+  KODE_Vst3Instance(KODE_Instance* AInstance)
   /*: KODE_BaseInstance(ADescriptor)*/ {
     KODE_PRINT;
     MRefCount = 1;
-    MDescriptor = ADescriptor;
+    MInstance = AInstance;
+    MDescriptor = AInstance->getDescriptor();
     createParameterBuffers();
     createParameterInfo();
   }
@@ -142,7 +146,7 @@ public:
       KODE_Parameter* parameter = MDescriptor->parameters[i];
       float value = MParameterValues[i];
       float v = parameter->from_01(value);
-//      on_plugin_parameter(0,i,v);
+      MInstance->on_plugin_parameter(i,v);
       // if editor is open ...
     }
   }
@@ -154,12 +158,14 @@ public:
     KODE_Print("%s\n",ARedraw?"(redraw=true)":"");
     uint32_t num = MDescriptor->parameters.size();
     for (uint32_t i=0; i<num; i++) {
-      float value = MParameterValues[i];
+//      float value = MParameterValues[i];
       //KODE_Parameter* parameter = MDescriptor->getParameter(i);
       //float v = parameter->from01(value);
-      float v = value;
+//      float v = value;
       //on_plugin_parameter(0,i,v);
+
 //      AEditor->updateParameterFromHost(i,v,ARedraw);
+
     }
   }
   #endif
@@ -349,7 +355,7 @@ private:
                 //KODE_Print("MParameterValues[%i] = %.3f\n",id,value);
                 KODE_Parameter* param = MDescriptor->parameters[id];
                 if (param) value = param->from_01(value);
-//                on_plugin_parameter(0,id,value);
+                MInstance->on_plugin_parameter(id,value);
               //}
             } // id < param
             else {
@@ -364,7 +370,7 @@ private:
               switch(midi_ev) {
                 case KODE_VST3_PARAM_AFTERTOUCH: {
                   //if (offset != 0)
-//                  on_plugin_midi(offset,KODE_MIDI_CHANNEL_AFTERTOUCH+midi_ch,value*127.0f,0);
+                  MInstance->on_plugin_midi(offset,KODE_MIDI_CHANNEL_AFTERTOUCH+midi_ch,value*127.0f,0);
                   break;
                 } // at
                 case KODE_VST3_PARAM_PITCHBEND: {
@@ -374,13 +380,13 @@ private:
                     uint32_t m2 = i2 & 0x7f;
                     uint32_t m3 = i2 >> 7;
                     //if (offset != 0)
-//                    on_plugin_midi(offset,KODE_MIDI_PITCHBEND+midi_ch,m2,m3);
+                    MInstance->on_plugin_midi(offset,KODE_MIDI_PITCHBEND+midi_ch,m2,m3);
                   //}
                   break;
                 } // pb
                 case KODE_VST3_PARAM_BRIGHTNESS: {
                   //if (offset != 0)
-//                  on_plugin_midi(offset,KODE_MIDI_CONTROL_CHANGE+midi_ch,74,value*127.0f);
+                  MInstance->on_plugin_midi(offset,KODE_MIDI_CONTROL_CHANGE+midi_ch,74,value*127.0f);
                   break;
                 }
               } // switch (midi_ev)
@@ -416,7 +422,7 @@ private:
             msg2    = event.noteOn.pitch;
             msg3    = event.noteOn.velocity * 127;
             //noteid  = event.noteOn.noteId;
-//            on_plugin_midi(offset,msg1,msg2,msg3);
+            MInstance->on_plugin_midi(offset,msg1,msg2,msg3);
             //on_noteExpression(offset,type,noteid,value);
             break;
           case VST3_Event::vst3_NoteOffEvent:
@@ -425,7 +431,7 @@ private:
             msg2    = event.noteOff.pitch;
             msg3    = event.noteOff.velocity * 127;
             //noteid  = event.noteOff.noteId;
-//            on_plugin_midi(offset,msg1,msg2,msg3);
+            MInstance->on_plugin_midi(offset,msg1,msg2,msg3);
             //on_noteExpression(offset,type,noteid,value);
             break;
           case VST3_Event::vst3_DataEvent:
@@ -436,7 +442,7 @@ private:
             msg2    = event.polyPressure.pitch;
             msg3    = event.polyPressure.pressure * 127;
             //noteid  = event.polyPressure.noteId;
-//            on_plugin_midi(offset,msg1,msg2,msg3);
+            MInstance->on_plugin_midi(offset,msg1,msg2,msg3);
             break;
           case VST3_Event::vst3_NoteExpressionValueEvent:
             //offset = event.sampleOffset;
@@ -496,7 +502,7 @@ public: // FUnknown
     const uint32_t r = --MRefCount;
     KODE_Print("-> %i %s",r, (r==0) ? "(delete)\n" : "\n" );
     if (r == 0) {
-//      on_plugin_close();
+//      MInstance->on_plugin_close();
       delete this;
     };
     return r;
@@ -656,7 +662,7 @@ public: // IPluginBase
     else {
     }
     KODE_Print(" -> Ok\n");
-//    on_plugin_initialize();
+//    MInstance->on_plugin_initialize();
     return vst3_ResultOk;
   }
 
@@ -969,7 +975,7 @@ public: // IComponent
         // use static, pre malloc'd buffer?
         void* ptr = malloc(size);
         state->read(&ptr,size,&num_read);
-//        on_plugin_restoreState(size,ptr,0);
+        MInstance->on_plugin_load_state(size,ptr,0);
         free(ptr);
         break;
       }

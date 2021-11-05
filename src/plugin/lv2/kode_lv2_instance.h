@@ -18,6 +18,7 @@ class KODE_Lv2Instance {
 private:
 //------------------------------
 
+  KODE_Instance*            MInstance         = nullptr;
   KODE_Descriptor*          MDescriptor       = nullptr;
   #ifndef KODE_NO_GUI
   KODE_Editor*              MEditor           = nullptr;
@@ -63,11 +64,13 @@ public:
   */
 
 
-  KODE_Lv2Instance(KODE_Descriptor* ADescriptor/*, float ASampleRate, const char* path, const LV2_Feature* const* features*/)
+  //KODE_Lv2Instance(KODE_Descriptor* ADescriptor/*, float ASampleRate, const char* path, const LV2_Feature* const* features*/)
+  KODE_Lv2Instance(KODE_Instance* AInstance)
   /*: KODE_BaseInstance(ADescriptor)*/ {
+    MInstance = AInstance;
     //instance->on_open();
     //MInstance->on_initialize(); // open?
-    MDescriptor       = ADescriptor;
+    MDescriptor       = AInstance->getDescriptor();
     //MSampleRate       = ASampleRate;
     MNumInputs        = MDescriptor->inputs.size();
     MNumOutputs       = MDescriptor->outputs.size();
@@ -322,7 +325,7 @@ public:
         // to/from01 ??
         //KODE_Parameter* param = MPlugin->getParameter(i);
         //if (param) v = param->from01(v);
-//        on_plugin_parameter(0,i,v);
+        MInstance->on_plugin_parameter(i,v);
       }
     }
 
@@ -334,7 +337,7 @@ public:
         if (ev->body.type == MMidiInputUrid) {
           const uint8_t* const msg = (const uint8_t*)(ev + 1);
           offset = (uint32_t)ev->time.frames;
-//          on_plugin_midi(offset,msg[0],msg[1],msg[2]);
+          MInstance->on_plugin_midi(offset,msg[0],msg[1],msg[2]);
         }
       }
     }

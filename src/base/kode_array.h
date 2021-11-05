@@ -96,7 +96,7 @@ private:
 //------------------------------
 
   void deleteItems(void) {
-    for (uint32_t i=0; i<MSize; i++) delete MBuffer[i];
+    for (uint32_t i=0; i<MSize; i++) { delete MBuffer[i]; }
   }
 
   //----------
