@@ -10,7 +10,7 @@
 #include <locale>
 #include <codecvt>
 
-char16_t* kode_vst3_str16cpy(char16_t* destination, const char16_t* source) {
+char16_t* vst3_str16cpy(char16_t* destination, const char16_t* source) {
   char16_t* temp = destination;
   while((*temp++ = *source++) != 0) ;
   return destination;
@@ -18,16 +18,16 @@ char16_t* kode_vst3_str16cpy(char16_t* destination, const char16_t* source) {
 
 //----------
 
-void KODE_CharToUtf16(const void* C, void* U) {
+void VST3_CharToUtf16(const void* C, void* U) {
   std::string source = (char*)C;
   std::wstring_convert<std::codecvt_utf8_utf16<char16_t>,char16_t> convert;
   std::u16string dest = convert.from_bytes(source);
-  kode_vst3_str16cpy((char16_t*)U,dest.data());
+  vst3_str16cpy((char16_t*)U,dest.data());
 }
 
 //----------
 
-void KODE_Utf16ToChar(const void* U, void* C) {
+void VST3_Utf16ToChar(const void* U, void* C) {
   std::u16string source = (char16_t*)U;
   std::wstring_convert<std::codecvt_utf8_utf16<char16_t>,char16_t> convert;
   std::string dest = convert.to_bytes(source);
@@ -47,7 +47,7 @@ void KODE_Utf16ToChar(const void* U, void* C) {
 
 //----------
 
-bool KODE_iidEqual(const void* iid1, const void* iid2) {
+bool VST3_iidEqual(const void* iid1, const void* iid2) {
   uint32_t* ptr1 = (uint32_t*)iid1;
   uint32_t* ptr2 = (uint32_t*)iid2;
   if (ptr1[0] != ptr2[0]) return false;
@@ -69,26 +69,26 @@ bool KODE_iidEqual(const void* iid1, const void* iid2) {
 
 //----------
 
-void KODE_Vst3PrintIID(const void* iid) {
+void VST3_PrintIID(const void* iid) {
   uint8_t* ptr = (uint8_t*)iid;
   for (uint32_t i=0; i<4; i++) {
-    KODE_Vst3DPrint("%c",KODE_HEX_TABLE[ ptr[i] >> 4 ]);
-    KODE_Vst3DPrint("%c",KODE_HEX_TABLE[ ptr[i] & 15 ]);
+    KODE_DPrint("%c",KODE_HEX_TABLE[ ptr[i] >> 4 ]);
+    KODE_DPrint("%c",KODE_HEX_TABLE[ ptr[i] & 15 ]);
   }
-  KODE_Vst3DPrint("-");
+  KODE_DPrint("-");
   for (uint32_t i=4; i<8; i++) {
-    KODE_Vst3DPrint("%c",KODE_HEX_TABLE[ ptr[i] >> 4 ]);
-    KODE_Vst3DPrint("%c",KODE_HEX_TABLE[ ptr[i] & 15 ]);
+    KODE_DPrint("%c",KODE_HEX_TABLE[ ptr[i] >> 4 ]);
+    KODE_DPrint("%c",KODE_HEX_TABLE[ ptr[i] & 15 ]);
   }
-  KODE_Vst3DPrint("-");
+  KODE_DPrint("-");
   for (uint32_t i=8; i<12; i++) {
-    KODE_Vst3DPrint("%c",KODE_HEX_TABLE[ ptr[i] >> 4 ]);
-    KODE_Vst3DPrint("%c",KODE_HEX_TABLE[ ptr[i] & 15 ]);
+    KODE_DPrint("%c",KODE_HEX_TABLE[ ptr[i] >> 4 ]);
+    KODE_DPrint("%c",KODE_HEX_TABLE[ ptr[i] & 15 ]);
   }
-  KODE_Vst3DPrint("-");
+  KODE_DPrint("-");
   for (uint32_t i=12; i<16; i++) {
-    KODE_Vst3DPrint("%c",KODE_HEX_TABLE[ ptr[i] >> 4 ]);
-    KODE_Vst3DPrint("%c",KODE_HEX_TABLE[ ptr[i] & 15 ]);
+    KODE_DPrint("%c",KODE_HEX_TABLE[ ptr[i] >> 4 ]);
+    KODE_DPrint("%c",KODE_HEX_TABLE[ ptr[i] & 15 ]);
   }
 }
 
