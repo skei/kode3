@@ -19,9 +19,6 @@
 
 //----------------------------------------------------------------------
 
-const char  KODE_HEX_TABLE[]  = "0123456789ABCDEF";
-const char  KODE_CSYMBOLS[]   = "________________________________________________0123456789_______ABCDEFGHIJKLMNOPQRSTUVWXYZ______abcdefghijklmnopqrstuvwxyz_____";
-
 // 4         4    5         5
 // 123456789abcdef0123456789a
 // abcdefghijklmnopqrstuvwxyz
@@ -46,6 +43,8 @@ const char  KODE_CSYMBOLS[]   = "_______________________________________________
 
 //#define __KODE_DLLEXPORT              __attribute__((visibility("default")))
 
+const char  KODE_HEX_TABLE[]  = "0123456789ABCDEF";
+const char  KODE_CSYMBOLS[]   = "________________________________________________0123456789_______ABCDEFGHIJKLMNOPQRSTUVWXYZ______abcdefghijklmnopqrstuvwxyz_____";
 
 //----------------------------------------------------------------------
 
@@ -59,6 +58,15 @@ uint32_t KODE_HashString(const char* buffer) {
   return h;
 }
 
+//
+
+void KODE_MakeValidSymbol(char* buffer) {
+  for (uint32_t i=0; i<strlen(buffer); i++) {
+    unsigned char c = buffer[i];
+    if ((c<32) || (c>127)) buffer[i] = '_';
+    else buffer[i] = KODE_CSYMBOLS[c];
+  }
+}
 
 //----------------------------------------------------------------------
 #endif
