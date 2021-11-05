@@ -476,8 +476,8 @@ public:
           //if (h == 0) h = MInstance->getDefaultEditorHeight();
           MVstRect.left     = 0;
           MVstRect.top      = 0;
-          MVstRect.right    = 640; //w;
-          MVstRect.bottom   = 480; //h;
+          MVstRect.right    = w;
+          MVstRect.bottom   = h;
           *(ERect**)ptr     = &MVstRect;
           return 1;
         }

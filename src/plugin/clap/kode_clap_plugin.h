@@ -146,6 +146,10 @@ public:
 public:
 //------------------------------
 
+  // trampolines to KODE_ClapInstance
+
+  //----------
+
   static bool clap_instance_init_callback(const struct clap_plugin *plugin) {
     KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
     return instance->clap_instance_init();
@@ -213,6 +217,9 @@ KODE_ClapPlugin KODE_GLOBAL_CLAP_PLUGIN;
 //
 //----------------------------------------------------------------------
 
+// trampolines to KODE_GLOBAL_CLAP_PLUGIN
+
+//----------
 
 static bool clap_entry_init_callback(const char *plugin_path) {
   return KODE_GLOBAL_CLAP_PLUGIN.clap_entry_init(plugin_path);

@@ -52,6 +52,16 @@ struct KODE_PluginOptions {
 class KODE_Descriptor {
 
 //------------------------------
+private:
+//------------------------------
+
+  uint8_t   MLongId[16];
+  uint8_t   MLongEditorId[16];
+  char      MVersionString[32];
+  char      MIdString[256];
+
+
+//------------------------------
 public:
 //------------------------------
 
@@ -110,16 +120,59 @@ public:
 public:
 //------------------------------
 
-  char* getVersion(char* buffer) {
+  uint8_t* getLongId() {
+    uint32_t* ptr = (uint32_t*)MLongId;
+    ptr[0] = KODE_MAGIC_K_PL;
+    ptr[1] = KODE_HashString(name);
+    ptr[2] = KODE_HashString(author);
+    ptr[3] = version;
+    return MLongId;
+  }
+
+  //----------
+
+  uint8_t* getLongEditorId() {
+    uint32_t* ptr = (uint32_t*)MLongEditorId;
+    ptr[0] = KODE_MAGIC_K_ED;
+    ptr[1] = KODE_HashString(name);
+    ptr[2] = KODE_HashString(author);
+    ptr[3] = version;
+    return MLongEditorId;
+  }
+
+  //----------
+
+    // 0x03030001 -> "3.3.1"
+
+  //const char* getVersionText() {
+  //  char temp[16];
+  //  uint32_t major = MVersion & 0xff000000;
+  //  uint32_t minor = MVersion & 0x00ff0000;
+  //  uint32_t build = MVersion & 0x0000ffff;
+  //  KODE_IntToString(temp,major);
+  //  strcpy(MVersionText,temp);
+  // strcat(MVersionText,".");
+  //  KODE_IntToString(temp,minor);
+  //  strcat(MVersionText,temp);
+  //  strcat(MVersionText,".");
+  //  KODE_IntToString(temp,build);
+  //  strcat(MVersionText,temp);
+  //  return MVersionText;
+  //}
+
+  //char* getVersionString(char* buffer) {
+  char* getVersionString() {
+    char* buffer = MVersionString;
     sprintf(buffer,"%i.%i.%i",((version & 0xff000000) >> 24),((version & 0x00ff0000) >> 16),(version & 0x0000ffff));
     return buffer;
   }
 
   //----------
 
-  char* getIdString(char* buffer) {
-    char ver[32];
-    getVersion(ver);
+  //char* getIdString(char* buffer) {
+  char* getIdString() {
+    char* buffer = MIdString;
+    char * ver = getVersionString();
     buffer[0] = 0;
     strcat(buffer,name);
     strcat(buffer,"/");

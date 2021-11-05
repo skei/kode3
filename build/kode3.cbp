@@ -201,6 +201,7 @@
 		<Unit filename="../src/plugin/kode_parameter.h" />
 		<Unit filename="../src/plugin/kode_plugin.h" />
 		<Unit filename="../src/plugin/kode_preset.h" />
+		<Unit filename="../src/plugin/kode_process_context.h" />
 		<Unit filename="../src/plugin/ladspa/kode_hosted_ladspa_plugin.h" />
 		<Unit filename="../src/plugin/ladspa/kode_ladspa.h" />
 		<Unit filename="../src/plugin/ladspa/kode_ladspa_host.h" />

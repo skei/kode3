@@ -27,9 +27,16 @@ private:
 public:
 //------------------------------
 
-  const char*           name  = "";
-  const char*           label = "";
-  KODE_ParameterOptions options;
+  const char*           name        = "";
+  const char*           short_name  = "";
+  const char*           label       = "";
+  KODE_ParameterOptions options     = {};
+
+  float                 def_value   = 0.0;
+  float                 min_value   = 0.0;
+  float                 max_value   = 0.0;
+
+  uint32_t              num_steps   = 0;
 
 //------------------------------
 public:

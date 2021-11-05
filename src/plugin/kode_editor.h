@@ -7,11 +7,16 @@
 
 //----------------------------------------------------------------------
 
+/*
+  TODO: separate edito for each format?
+*/
+
 class KODE_Editor {
 
 private:
 
   KODE_Instance*  MInstance = nullptr;
+  //KODE_Window* MWindow = nullptr;
 
 public:
 
