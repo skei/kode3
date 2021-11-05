@@ -1,22 +1,14 @@
-
-
-
-
-
-
-#if 0
-
 #ifndef kode_ladspa_instance_included
 #define kode_ladspa_instance_included
 //----------------------------------------------------------------------
 
 // in progress
 
-#include "base/kode.h"
+#include "kode.h"
 //#include "base/kode_queue.h"
 #include "plugin/kode_descriptor.h"
 #include "plugin/kode_instance.h"
-#include "plugin/kode_instance_listener.h"
+//#include "plugin/kode_instance_listener.h"
 #include "plugin/kode_process_context.h"
 #include "plugin/ladspa/kode_ladspa.h"
 
@@ -25,7 +17,7 @@
 //----------------------------------------------------------------------
 
 class KODE_LadspaInstance
-: public KODE_InstanceListener {
+/*: public KODE_InstanceListener*/ {
 
   //friend class KODE_LadspaPlugin;
 
@@ -33,17 +25,17 @@ class KODE_LadspaInstance
 private:
 //------------------------------
 
-  KODE_Descriptor*  MDescriptor     = KODE_NULL;
-  KODE_Instance*    MInstance       = KODE_NULL;
-  //KODE_Editor*      MEditor         = KODE_NULL;
-  float**           MInputPtrs      = KODE_NULL;
-  float**           MOutputPtrs     = KODE_NULL;
-  float**           MParameterPtrs  = KODE_NULL;
+  KODE_Descriptor*  MDescriptor     = nullptr;
+  KODE_Instance*    MInstance       = nullptr;
+  //KODE_Editor*      MEditor         = nullptr;
+  float**           MInputPtrs      = nullptr;
+  float**           MOutputPtrs     = nullptr;
+  float**           MParameterPtrs  = nullptr;
   uint32_t          MNumInputs      = 0;
   uint32_t          MNumOutputs     = 0;
   uint32_t          MNumParameters  = 0;
-  //float*            MHostValues     = KODE_NULL;
-  //float*            MProcessValues  = KODE_NULL;
+  //float*            MHostValues     = nullptr;
+  //float*            MProcessValues  = nullptr;
   float             MSampleRate     = 0.0f;
 
 
@@ -55,14 +47,14 @@ public:
     MDescriptor     = AInstance->getDescriptor();
     MInstance       = AInstance;
     MSampleRate     = ASampleRate;
-    MNumInputs      = MDescriptor->getNumInputs();
-    MNumOutputs     = MDescriptor->getNumOutputs();
-    MNumParameters  = MDescriptor->getNumParameters();
-    MInputPtrs      = (float**)KODE_Malloc(MNumInputs     * sizeof(float*));
-    MOutputPtrs     = (float**)KODE_Malloc(MNumOutputs    * sizeof(float*));
-    MParameterPtrs  = (float**)KODE_Malloc(MNumParameters * sizeof(float*));
-    //MHostValues     = (float*) KODE_Malloc(MNumParameters * sizeof(float ));
-    //MProcessValues  = (float*) KODE_Malloc(MNumParameters * sizeof(float ));
+    MNumInputs      = MDescriptor->inputs.size();
+    MNumOutputs     = MDescriptor->outputs.size();
+    MNumParameters  = MDescriptor->parameters.size();
+    MInputPtrs      = (float**)malloc(MNumInputs     * sizeof(float*));
+    MOutputPtrs     = (float**)malloc(MNumOutputs    * sizeof(float*));
+    MParameterPtrs  = (float**)malloc(MNumParameters * sizeof(float*));
+    //MHostValues     = (float*)malloc(MNumParameters * sizeof(float ));
+    //MProcessValues  = (float*)malloc(MNumParameters * sizeof(float ));
 
     //instance->on_open();
     //MInstance->on_initialize(); // open?
@@ -73,11 +65,11 @@ public:
 
   virtual ~KODE_LadspaInstance() {
     if (MInstance) delete MInstance;
-    if (MInputPtrs)     KODE_Free(MInputPtrs);
-    if (MOutputPtrs)    KODE_Free(MOutputPtrs);
-    if (MParameterPtrs) KODE_Free(MParameterPtrs);
-    //if (MHostValues)    KODE_Free(MHostValues);
-    //if (MProcessValues) KODE_Free(MProcessValues);
+    if (MInputPtrs)     free(MInputPtrs);
+    if (MOutputPtrs)    free(MOutputPtrs);
+    if (MParameterPtrs) free(MParameterPtrs);
+    //if (MHostValues)    free(MHostValues);
+    //if (MProcessValues) free(MProcessValues);
   }
 
   //----------
@@ -118,7 +110,7 @@ public:
       //MSampleRate = MPlugin->getSampleRate();
       //MInstance->on_stateChange(kps_initialize);
       //MInstance->on_initialize();
-      MInstance->on_activate();
+//      MInstance->on_activate();
     }
   }
 
@@ -131,32 +123,34 @@ public:
       for (uint32_t i=0; i<MNumParameters; i++) {
         float v = *MParameterPtrs[i];
         //MHostValues[i] = v;
-        if (v != MInstance->getParamValue(i)) {
-          MInstance->setParamValue(i,v); // almoste3qual
+        if (v != MInstance->getParameterValue(i)) {
+          MInstance->setParameterValue(i,v); // almoste3qual
 
-          KODE_Parameter* param = MDescriptor->getParameter(i);
-          /*if (param)*/ v = param->from01(v);
+          KODE_Parameter* param = MDescriptor->parameters[i];
+          /*if (param)*/ v = param->from_01(v);
 
-          MInstance->on_parameterChange(i,v);
+//          MInstance->on_parameterChange(i,v);
         }
       }
 
       KODE_ProcessContext context;
-      uint32_t num_in  = MDescriptor->getNumInputs();
-      uint32_t num_out = MDescriptor->getNumOutputs();
-      for (uint32_t i=0; i<num_in; i++)  { context.inputs[i]  = MInputPtrs[i]; }
-      for (uint32_t i=0; i<num_out; i++) { context.outputs[i] = MOutputPtrs[i]; }
-      context.playstate     = KODE_PLUGIN_PLAYSTATE_NONE;
-      context.samplepos     = 0;
-      context.beatpos       = 0.0f;
-      context.tempo         = 0.0f;
-      context.timesig_num   = 0;
-      context.timesig_denom = 0;
-      context.numInputs     = num_in;
-      context.numOutputs    = num_out;
-      context.numSamples    = SampleCount;
-      context.samplerate    = MSampleRate;
-      MInstance->on_process(&context);
+      uint32_t num_in  = MDescriptor->inputs.size();
+      uint32_t num_out = MDescriptor->outputs.size();
+//      for (uint32_t i=0; i<num_in; i++)  { context.inputs[i]  = MInputPtrs[i]; }
+//      for (uint32_t i=0; i<num_out; i++) { context.outputs[i] = MOutputPtrs[i]; }
+//      context.playstate     = KODE_PLUGIN_PLAYSTATE_NONE;
+//      context.samplepos     = 0;
+//      context.beatpos       = 0.0f;
+//      context.tempo         = 0.0f;
+//      context.timesig_num   = 0;
+//      context.timesig_denom = 0;
+//      context.numInputs     = num_in;
+//      context.numOutputs    = num_out;
+//      context.numSamples    = SampleCount;
+//      context.samplerate    = MSampleRate;
+
+//      MInstance->on_process(&context);
+
     }
   }
 
@@ -177,7 +171,7 @@ public:
   void ladspa_deactivate() {
     //LADSPA_Trace("ladspa: deactivate\n");
     if (MInstance) {
-      MInstance->on_deactivate();
+//      MInstance->on_deactivate();
       //MInstance->on_stop();
     }
   }
@@ -187,7 +181,7 @@ public:
   void ladspa_cleanup() {
     //LADSPA_Trace("ladspa: cleanup\n");
     if (MInstance) {
-      MInstance->on_terminate();
+//      MInstance->on_terminate();
       //MInstance->on_close();
     }
   }
@@ -199,5 +193,3 @@ public:
 
 //----------------------------------------------------------------------
 #endif
-
-#endif // 0

@@ -2,27 +2,11 @@
 #define kode_ladspa_plugin_included
 //----------------------------------------------------------------------
 
-#include "kode.h"
-#include "plugin/ladspa/kode_ladspa.h"
-
-#define KODE_LADSPA_MAIN(D,I,E)
-
-//----------------------------------------------------------------------
-#endif
-
-
-
-#if 0
-
-#ifndef kode_ladspa_plugin_included
-#define kode_ladspa_plugin_included
-//----------------------------------------------------------------------
-
 // in progress
 
-#include "base/kode.h"
+#include "kode.h"
 #include "plugin/kode_descriptor.h"
-#include "plugin/kode_instance_listener.h"
+//#include "plugin/kode_instance_listener.h"
 #include "plugin/ladspa/kode_ladspa.h"
 #include "plugin/ladspa/kode_ladspa_instance.h"
 #include "plugin/ladspa/kode_ladspa_utils.h"
@@ -37,15 +21,15 @@
 //----------------------------------------------------------------------
 
 
-template<class DESC, class INST>
+template<class DESCRIPTOR, class INSTANCE, class EDITOR>
 class KODE_LadspaPlugin
-: public KODE_InstanceListener {
+/*: public KODE_InstanceListener*/ {
 
 //------------------------------
 private:
 //------------------------------
 
-  KODE_Descriptor*      MDescriptor       = KODE_NULL;
+  KODE_Descriptor*      MDescriptor       = nullptr;
   LADSPA_Descriptor*    MLadspaDescriptor = {0};
 //LADSPA_Descriptor*    MLadspaDescriptor = KODE_NULL;
 
@@ -56,10 +40,10 @@ private:
 
   KODE_LadspaPorts   MPorts;
 
-  char*                 MNameBuffer       = KODE_NULL;
-  char*                 MLabelBuffer      = KODE_NULL;
-  char*                 MMakerBuffer      = KODE_NULL;
-  char*                 MCopyrightBuffer  = KODE_NULL;
+  char*                 MNameBuffer       = nullptr;
+  char*                 MLabelBuffer      = nullptr;
+  char*                 MMakerBuffer      = nullptr;
+  char*                 MCopyrightBuffer  = nullptr;
 
 //------------------------------
 public:
@@ -73,13 +57,13 @@ public:
 
   ~KODE_LadspaPlugin() {
     //KODE_TRACE;
-    if (MDescriptor)        KODE_Delete MDescriptor;
-    if (MNameBuffer)        KODE_Free(MNameBuffer);
-    if (MLabelBuffer)       KODE_Free(MLabelBuffer);
-    if (MMakerBuffer)       KODE_Free(MMakerBuffer);
-    if (MCopyrightBuffer)   KODE_Free(MCopyrightBuffer);
+    if (MDescriptor)        delete MDescriptor;
+    if (MNameBuffer)        free(MNameBuffer);
+    if (MLabelBuffer)       free(MLabelBuffer);
+    if (MMakerBuffer)       free(MMakerBuffer);
+    if (MCopyrightBuffer)   free(MCopyrightBuffer);
     KODE_LadspaCleanupPorts(&MPorts);
-    if (MLadspaDescriptor)  KODE_Free(MLadspaDescriptor);
+    if (MLadspaDescriptor)  free(MLadspaDescriptor);
   }
 
 //------------------------------
@@ -92,27 +76,27 @@ public:
   */
 
   const LADSPA_Descriptor* entrypoint(unsigned long Index) {
-    if (Index > 0) return KODE_NULL;
+    if (Index > 0) return nullptr;
     if (MLadspaDescriptor) return MLadspaDescriptor;
-    MDescriptor = KODE_New DESC();
-    MLadspaDescriptor = (LADSPA_Descriptor*)KODE_Malloc(sizeof(LADSPA_Descriptor));
-    KODE_Memset(MLadspaDescriptor,0,sizeof(LADSPA_Descriptor));
+    MDescriptor = new DESCRIPTOR();
+    MLadspaDescriptor = (LADSPA_Descriptor*)malloc(sizeof(LADSPA_Descriptor));
+    memset(MLadspaDescriptor,0,sizeof(LADSPA_Descriptor));
     //setDefaultParamValues();
 
-    MNameBuffer       = (char*)KODE_Malloc(KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
-    MLabelBuffer      = (char*)KODE_Malloc(KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
-    MMakerBuffer      = (char*)KODE_Malloc(KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
-    MCopyrightBuffer  = (char*)KODE_Malloc(KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
+    MNameBuffer       = (char*)malloc(KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
+    MLabelBuffer      = (char*)malloc(KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
+    MMakerBuffer      = (char*)malloc(KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
+    MCopyrightBuffer  = (char*)malloc(KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
 
-    KODE_Strncpy(MNameBuffer,      MDescriptor->getName(),        KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
-    KODE_Strncpy(MLabelBuffer,     MDescriptor->getName(),        KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1); // todo: make valid c symbol (see lv2)
-    KODE_Strncpy(MMakerBuffer,     MDescriptor->getAuthor(),      KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
-    KODE_Strncpy(MCopyrightBuffer, MDescriptor->getLicenseText(), KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
+    strncpy(MNameBuffer,      MDescriptor->name,        KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
+    strncpy(MLabelBuffer,     MDescriptor->name,        KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1); // todo: make valid c symbol (see lv2)
+    strncpy(MMakerBuffer,     MDescriptor->author,      KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
+    strncpy(MCopyrightBuffer, MDescriptor->license_text, KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
 
     uint32_t numports = KODE_LadspaSetupPorts(MDescriptor,&MPorts);
     //KODE_Assert(port == numports);
 
-    MLadspaDescriptor->UniqueID            = MDescriptor->getShortId();
+    MLadspaDescriptor->UniqueID            = MDescriptor->short_id;
     MLadspaDescriptor->Label               = MLabelBuffer;
     MLadspaDescriptor->Properties          = LADSPA_PROPERTY_HARD_RT_CAPABLE; // LADSPA_PROPERTY_REALTIME, LADSPA_PROPERTY_INPLACE_BROKEN
     MLadspaDescriptor->Name                = MNameBuffer;
@@ -140,10 +124,10 @@ public:
 
   LADSPA_Handle instantiate(unsigned long SampleRate) {
     // instance deleted in ~KODE_LadspaInstance()
-    KODE_Instance* instance = KODE_New INST(MDescriptor);
-    instance->on_open();
+    KODE_Instance* instance = new INSTANCE(MDescriptor);
+//    instance->on_open();
     // ladspa_instance deleted in ladspa_cleanup_callback()
-    KODE_LadspaInstance* ladspa_instance = KODE_New KODE_LadspaInstance(instance,SampleRate);
+    KODE_LadspaInstance* ladspa_instance = new KODE_LadspaInstance(instance,SampleRate);
     return (LADSPA_Handle)ladspa_instance;
   }
 
@@ -154,7 +138,7 @@ private: // ladspa callbacks
   static
   LADSPA_Handle ladspa_instantiate_callback(const struct _LADSPA_Descriptor* Descriptor, unsigned long SampleRate) {
     KODE_LadspaPlugin* plugin = (KODE_LadspaPlugin*)Descriptor->ImplementationData;
-    LADSPA_Handle instance = KODE_NULL;
+    LADSPA_Handle instance = nullptr;
     if (plugin) instance = plugin->instantiate(SampleRate);
     return (LADSPA_Handle)instance;
   }
@@ -237,16 +221,14 @@ const LADSPA_Descriptor* kode_ladspa_entrypoint(unsigned long Index) KODE_LADSPA
 
 //----------
 
-#define KODE_LADSPA_MAIN(DESC,INST)                                       \
+#define KODE_LADSPA_MAIN(D,I,E)                                           \
                                                                           \
-  KODE_LadspaPlugin<DESC,INST> _LADSPA_PLUGIN;                            \
+  KODE_LadspaPlugin<D,I,E> _LADSPA_PLUGIN;                                \
                                                                           \
-  __KODE_DLLEXPORT                                                        \
+  __attribute__((visibility("default")))                                  \
   const LADSPA_Descriptor* kode_ladspa_entrypoint(unsigned long Index) {  \
     return _LADSPA_PLUGIN.entrypoint(Index);                              \
   }
 
 //----------------------------------------------------------------------
 #endif
-
-#endif // 0

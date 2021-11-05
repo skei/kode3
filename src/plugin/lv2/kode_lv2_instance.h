@@ -1,69 +1,42 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-#if 0
-
 #ifndef kode_lv2_instance_included
 #define kode_lv2_instance_included
 //----------------------------------------------------------------------
 
-#include "plugin/base/kode_base_instance.h"
+//#include "plugin/base/kode_base_instance.h"
 
 #ifndef KODE_NO_GUI
   #include "plugin/kode_editor.h"
 #endif
 
+#include "plugin/kode_process_context.h"
 #include "plugin/lv2/kode_lv2.h"
 #include "plugin/lv2/kode_lv2_utils.h"
 
-
-//----------------------------------------------------------------------
-
-//#define KODE_LV2_QUEUE_SIZE 1024
-//typedef KODE_Queue<uint32_t,KODE_LV2_QUEUE_SIZE> KODE_Lv2UpdateQueue;
-
-//----------------------------------------------------------------------
-//
-//
-//
-//----------------------------------------------------------------------
-
-class KODE_Lv2Instance
-: public KODE_BaseInstance {
+class KODE_Lv2Instance {
 
 //------------------------------
 private:
 //------------------------------
 
-  KODE_Descriptor*          MDescriptor       = KODE_NULL;
+  KODE_Descriptor*          MDescriptor       = nullptr;
   #ifndef KODE_NO_GUI
-  KODE_Editor*              MEditor           = KODE_NULL;
+  KODE_Editor*              MEditor           = nullptr;
   #endif
   LV2_URID                  MMidiInputUrid    = 0;
-  const LV2_Atom_Sequence*  MAtomSequence     = KODE_NULL;
+  const LV2_Atom_Sequence*  MAtomSequence     = nullptr;
   float                     MSampleRate       = 0.0f;
   uint32_t                  MNumInputs        = 0;
   uint32_t                  MNumOutputs       = 0;
   uint32_t                  MNumParameters    = 0;
-  float**                   MInputPtrs        = KODE_NULL;
-  float**                   MOutputPtrs       = KODE_NULL;
-  float**                   MParameterPtrs    = KODE_NULL;
-  float*                    MParameterValues  = KODE_NULL;
-  float*                    MHostValues       = KODE_NULL;
-  float*                    MProcessValues    = KODE_NULL;
+  float**                   MInputPtrs        = nullptr;
+  float**                   MOutputPtrs       = nullptr;
+  float**                   MParameterPtrs    = nullptr;
+  float*                    MParameterValues  = nullptr;
+  float*                    MHostValues       = nullptr;
+  float*                    MProcessValues    = nullptr;
 
-  //float*                    MEditorParameterValues  = KODE_NULL;
-  //float*                    MHostParameterValues    = KODE_NULL;
+  //float*                    MEditorParameterValues  = nullptr;
+  //float*                    MHostParameterValues    = nullptr;
   //KODE_Lv2UpdateQueue       MHostParameterQueue;
 
 //------------------------------
@@ -91,14 +64,14 @@ public:
 
 
   KODE_Lv2Instance(KODE_Descriptor* ADescriptor/*, float ASampleRate, const char* path, const LV2_Feature* const* features*/)
-  : KODE_BaseInstance(ADescriptor) {
+  /*: KODE_BaseInstance(ADescriptor)*/ {
     //instance->on_open();
     //MInstance->on_initialize(); // open?
     MDescriptor       = ADescriptor;
     //MSampleRate       = ASampleRate;
-    MNumInputs        = MDescriptor->getNumInputs();
-    MNumOutputs       = MDescriptor->getNumOutputs();
-    MNumParameters    = MDescriptor->getNumParameters();
+    MNumInputs        = MDescriptor->inputs.size();
+    MNumOutputs       = MDescriptor->outputs.size();
+    MNumParameters    = MDescriptor->parameters.size();
     MInputPtrs        = (float**)malloc(MNumInputs     * sizeof(float*));
     MOutputPtrs       = (float**)malloc(MNumOutputs    * sizeof(float*));
     MParameterPtrs    = (float**)malloc(MNumParameters * sizeof(float*));
@@ -135,9 +108,9 @@ public:
 public:
 //------------------------------
 
-  KODE_Descriptor* getDescriptor() override {
-    return MDescriptor;
-  }
+  //KODE_Descriptor* getDescriptor() override {
+  //  return MDescriptor;
+  //}
 
   //----------
 
@@ -209,7 +182,7 @@ public:
     MSampleRate = ASampleRate;
     LV2_URID_Map* urid_map = (LV2_URID_Map*)KODE_Lv2FindFeature(LV2_URID__map,features);
     if (urid_map) {
-      if (MDescriptor->canReceiveMidi()) {
+      if (MDescriptor->options.can_receive_midi) {
         MMidiInputUrid = KODE_Lv2MapUrid(LV2_MIDI__MidiEvent,urid_map);
       }
     }
@@ -274,7 +247,7 @@ public:
       return;
     }
     port -= MNumParameters;
-    if (MDescriptor->canReceiveMidi()) {
+    if (MDescriptor->options.can_receive_midi) {
       MAtomSequence = (const LV2_Atom_Sequence*)data_location;
       port -= 1;
     }
@@ -306,8 +279,8 @@ public:
 
   void lv2_activate() {
     KODE_Print("lv2_activate\n");
-    on_plugin_open();
-    on_plugin_activate();
+//    on_plugin_open();
+//    on_plugin_activate();
   }
 
   //----------
@@ -349,33 +322,35 @@ public:
         // to/from01 ??
         //KODE_Parameter* param = MPlugin->getParameter(i);
         //if (param) v = param->from01(v);
-        on_plugin_parameter(0,i,v);
+//        on_plugin_parameter(0,i,v);
       }
     }
 
     // midi
 
-    if (MDescriptor->canReceiveMidi()) {
+    if (MDescriptor->options.can_receive_midi) {
       uint32_t offset = 0;
       LV2_ATOM_SEQUENCE_FOREACH(MAtomSequence, ev) {
         if (ev->body.type == MMidiInputUrid) {
           const uint8_t* const msg = (const uint8_t*)(ev + 1);
           offset = (uint32_t)ev->time.frames;
-          on_plugin_midi(offset,msg[0],msg[1],msg[2]);
+//          on_plugin_midi(offset,msg[0],msg[1],msg[2]);
         }
       }
     }
 
-    KODE_ProcessContext context;
-    context.numinputs = MDescriptor->getNumInputs();
-    context.numoutputs = MDescriptor->getNumOutputs();
-    for (uint32_t i=0; i<context.numinputs; i++)  { context.inputs[i]  = MInputPtrs[i]; }
-    for (uint32_t i=0; i<context.numoutputs; i++) { context.outputs[i] = MOutputPtrs[i]; }
-    context.numsamples  = sample_count;
-    context.samplerate  = MSampleRate;
-    //context.offset      = 0;
-    //context.oversample  = 1;
-    on_plugin_process(&context);
+//    KODE_ProcessContext context;
+//    context.numinputs = MDescriptor->getNumInputs();
+//    context.numoutputs = MDescriptor->getNumOutputs();
+//    for (uint32_t i=0; i<context.numinputs; i++)  { context.inputs[i]  = MInputPtrs[i]; }
+//    for (uint32_t i=0; i<context.numoutputs; i++) { context.outputs[i] = MOutputPtrs[i]; }
+//    context.numsamples  = sample_count;
+//    context.samplerate  = MSampleRate;
+//    //context.offset      = 0;
+//    //context.oversample  = 1;
+
+//    on_plugin_process(&context);
+
     //todo: flush midi
   }
 
@@ -402,8 +377,8 @@ public:
 
   void lv2_deactivate() {
     KODE_Print("lv2_deactivate\n");
-    on_plugin_close();
-    on_plugin_deactivate();
+//    on_plugin_close();
+//    on_plugin_deactivate();
   }
 
   //----------
@@ -422,7 +397,7 @@ public:
 
   void lv2_cleanup() {
     KODE_Print("lv2_cleanup\n");
-    on_plugin_terminate();
+//    on_plugin_terminate();
   }
 
   //----------
@@ -430,12 +405,31 @@ public:
   //static
   //const void* lv2_extension_data_callback(const char* uri) {
   //  KODE_Print("lv2_extension_data_callback: '%s'\n",uri);
-  //  return KODE_NULL;
+  //  return nullptr;
   //}
 
 };
 
 //----------------------------------------------------------------------
 #endif
+
+
+
+
+
+
+
+
+
+
+#if 0
+
+
+
+
+
+
+};
+
 
 #endif // 0

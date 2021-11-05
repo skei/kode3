@@ -6,8 +6,8 @@
 
 #include <ladspa.h>
 
-//#define KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH      256
-//#define KODE_PLUGIN_LADSPA_MAX_PORT_NAME_LENGTH 64
+#define KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH      256
+#define KODE_PLUGIN_LADSPA_MAX_PORT_NAME_LENGTH 64
 
 //----------------------------------------------------------------------
 #endif

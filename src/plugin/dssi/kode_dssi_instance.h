@@ -1,29 +1,25 @@
-
-
-
-#if 0
-
 #ifndef kode_dssi_instance_included
 #define kode_dssi_instance_included
 //----------------------------------------------------------------------
 
-#include "base/kode.h"
+#include "kode.h"
 #include "plugin/kode_instance.h"
-#include "plugin/kode_instance_listener.h"
+#include "plugin/kode_process_context.h"
+//#include "plugin/kode_instance_listener.h"
 
 class KODE_DssiInstance
-: public KODE_InstanceListener {
+/*: public KODE_InstanceListener*/ {
 
 //----------
 //------------------------------
 private:
 //------------------------------
 
-  KODE_Instance*          MInstance           = KODE_NULL;
-  KODE_Descriptor*        MDescriptor         = KODE_NULL;
-  float**                 MInputPtrs          = KODE_NULL;
-  float**                 MOutputPtrs         = KODE_NULL;
-  float**                 MParameterPtrs      = KODE_NULL;
+  KODE_Instance*          MInstance           = nullptr;
+  KODE_Descriptor*        MDescriptor         = nullptr;
+  float**                 MInputPtrs          = nullptr;
+  float**                 MOutputPtrs         = nullptr;
+  float**                 MParameterPtrs      = nullptr;
   DSSI_Program_Descriptor MProgramDescriptor  = {0};
   uint32_t                MCurrentBank        = 0;
   uint32_t                MCurrentProgram     = 0;
@@ -33,8 +29,8 @@ private:
   float                   MSampleRate         = 0.0f;
 
   //KODE_Rect               MEditorRect         = KODE_Rect(0);
-  //float*                  MHostValues     = KODE_NULL;
-  //float*                  MProcessValues  = KODE_NULL;
+  //float*                  MHostValues     = nullptr;
+  //float*                  MProcessValues  = nullptr;
 
 //------------------------------
 public:
@@ -44,23 +40,23 @@ public:
     MInstance = AInstance;
     MDescriptor = AInstance->getDescriptor();
     MSampleRate = ASampleRate;
-    MNumInputs      = MDescriptor->getNumInputs();
-    MNumOutputs     = MDescriptor->getNumOutputs();
-    MNumParameters  = MDescriptor->getNumParameters();
-    MInputPtrs      = (float**)KODE_Malloc(MNumInputs     * sizeof(float*));
-    MOutputPtrs     = (float**)KODE_Malloc(MNumOutputs    * sizeof(float*));
-    MParameterPtrs  = (float**)KODE_Malloc(MNumParameters * sizeof(float*));
+    MNumInputs      = MDescriptor->inputs.size();
+    MNumOutputs     = MDescriptor->outputs.size();
+    MNumParameters  = MDescriptor->parameters.size();
+    MInputPtrs      = (float**)malloc(MNumInputs     * sizeof(float*));
+    MOutputPtrs     = (float**)malloc(MNumOutputs    * sizeof(float*));
+    MParameterPtrs  = (float**)malloc(MNumParameters * sizeof(float*));
     //MHostValues     = (float*) KODE_Malloc(MNumParameters * sizeof(float ));
     //MProcessValues  = (float*) KODE_Malloc(MNumParameters * sizeof(float ));
   }
 
   virtual ~KODE_DssiInstance() {
-    if (MInstance)      KODE_Delete MInstance;
-    if (MInputPtrs)     KODE_Free(MInputPtrs);
-    if (MOutputPtrs)    KODE_Free(MOutputPtrs);
-    if (MParameterPtrs) KODE_Free(MParameterPtrs);
-    //if (MHostValues)    KODE_Free(MHostValues);
-    //if (MProcessValues) KODE_Free(MProcessValues);
+    if (MInstance)      delete MInstance;
+    if (MInputPtrs)     free(MInputPtrs);
+    if (MOutputPtrs)    free(MOutputPtrs);
+    if (MParameterPtrs) free(MParameterPtrs);
+    //if (MHostValues)    free(MHostValues);
+    //if (MProcessValues) free(MProcessValues);
   }
 
 //------------------------------
@@ -78,11 +74,11 @@ private:
   void updateParametersInProcess(void) {
     for (uint32_t i=0; i<MNumParameters; i++) {
      float v = *MParameterPtrs[i];
-      if (v != MInstance->getParamValue(i)) {
-        MInstance->setParamValue(i,v);
-        KODE_Parameter* param = MDescriptor->getParameter(i);
-        v = param->from01(v);
-        MInstance->on_parameterChange(i,v);
+      if (v != MInstance->getParameterValue(i)) {
+        MInstance->setParameterValue(i,v);
+        KODE_Parameter* param = MDescriptor->parameters[i];
+        v = param->from_01(v);
+//        MInstance->on_parameterChange(i,v);
       }
     }
   }
@@ -103,29 +99,29 @@ private:
           chn = event->data.note.channel;
           idx = event->data.note.note;
           val = event->data.note.velocity;
-          MInstance->on_midiInput(ofs,0x80+chn,idx,val);
+//          MInstance->on_midiInput(ofs,0x80+chn,idx,val);
           break;
         case SND_SEQ_EVENT_NOTEON:
           // note on
           chn = event->data.note.channel;
           idx = event->data.note.note;
           val = event->data.note.velocity;
-          if (val > 0) MInstance->on_midiInput(ofs,0x90+chn,idx,val);
-          else MInstance->on_midiInput(ofs,0x80+chn,idx,val);
+//          if (val > 0) MInstance->on_midiInput(ofs,0x90+chn,idx,val);
+//          else MInstance->on_midiInput(ofs,0x80+chn,idx,val);
           break;
         case SND_SEQ_EVENT_KEYPRESS:
           // polyphonic key pressure (aftertouch)
           chn = event->data.note.channel;
           idx = event->data.note.note;
           val = event->data.note.velocity;
-          MInstance->on_midiInput(ofs,0xA0+chn,idx,val);
+//          MInstance->on_midiInput(ofs,0xA0+chn,idx,val);
           break;
         case SND_SEQ_EVENT_CONTROLLER:
           //control_change
           chn = event->data.control.channel;
           idx = event->data.control.param;
           val = event->data.control.value;
-          MInstance->on_midiInput(ofs,0xB0+chn,idx,val);
+//          MInstance->on_midiInput(ofs,0xB0+chn,idx,val);
           break;
         //case // 0xC0 = program change
         //  break;
@@ -134,14 +130,14 @@ private:
           chn = event->data.control.channel;
           idx = 0;
           val = event->data.control.value;
-          MInstance->on_midiInput(ofs,0xD0+chn,0,val);
+//          MInstance->on_midiInput(ofs,0xD0+chn,0,val);
           break;
         case SND_SEQ_EVENT_PITCHBEND:
           //pitch_bend
           chn = event->data.control.channel;
           idx = 0;
           val = event->data.control.value;
-          MInstance->on_midiInput(ofs,0xE0+chn,0,val);
+//          MInstance->on_midiInput(ofs,0xE0+chn,0,val);
           break;
       }
       event_index++;
@@ -173,7 +169,7 @@ public:
   //----------
 
   void dssi_activate() {
-    MInstance->on_activate();
+//    MInstance->on_activate();
   }
 
   //----------
@@ -182,7 +178,7 @@ public:
     updateParametersInProcess();
     KODE_ProcessContext context;
     //...
-    MInstance->on_process(&context);
+//    MInstance->on_process(&context);
     //on_processBlock(MInputPtrs,MOutputPtrs,SampleCount);
   }
 
@@ -201,14 +197,14 @@ public:
   //----------
 
   void dssi_deactivate() {
-    MInstance->on_deactivate();
+//    MInstance->on_deactivate();
   }
 
   //----------
 
   void dssi_cleanup() {
-    MInstance->on_terminate();
-    MInstance->on_close();
+//    MInstance->on_terminate();
+//    MInstance->on_close();
   }
 
 //------------------------------
@@ -218,7 +214,7 @@ public:
 public:
 
   char* dssi_configure(const char* Key, const char* Value) {
-    return KODE_NULL;
+    return nullptr;
   }
 
   /*
@@ -234,7 +230,7 @@ public:
     MProgramDescriptor.Bank = 0;
     MProgramDescriptor.Program = 0;
     MProgramDescriptor.Name = "name";
-    return KODE_NULL;
+    return nullptr;
   }
 
   void dssi_select_program(unsigned long Bank, unsigned long Program) {
@@ -268,5 +264,3 @@ public:
 
 //----------------------------------------------------------------------
 #endif
-
-#endif // 0

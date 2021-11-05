@@ -41,6 +41,12 @@ const char  KODE_CSYMBOLS[]   = "_______________________________________________
 #define KODE_MIDI_PITCHBEND           0xE0
 #define KODE_MIDI_SYS                 0xF0
 
+#define KODE_MAX_STRING_LENGTH        512
+#define KODE_MAX_PATH_LENGTH          512
+
+//#define __KODE_DLLEXPORT              __attribute__((visibility("default")))
+
+
 //----------------------------------------------------------------------
 
 uint32_t KODE_HashString(const char* buffer) {

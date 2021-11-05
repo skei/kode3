@@ -73,6 +73,7 @@ public:
   const char*           url           = "url";
   const char*           description   = "description";
   const char*           keywords      = "keywords";
+  const char*           license_text  = "";
 
   uint32_t              editorWidth   = 640;  // default width
   uint32_t              editorHeight  = 480;  // default height
