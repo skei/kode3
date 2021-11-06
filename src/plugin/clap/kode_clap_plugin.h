@@ -221,35 +221,43 @@ KODE_ClapPlugin KODE_GLOBAL_CLAP_PLUGIN;
 
 //----------
 
-static bool clap_entry_init_callback(const char *plugin_path) {
+static // ?
+bool clap_entry_init_callback(const char *plugin_path) {
   return KODE_GLOBAL_CLAP_PLUGIN.clap_entry_init(plugin_path);
 }
 
-static void clap_entry_deinit_callback() {
+static // ?
+void clap_entry_deinit_callback() {
   KODE_GLOBAL_CLAP_PLUGIN.clap_entry_deinit();
 }
 
-static uint32_t clap_entry_get_plugin_count_callback() {
+static // ?
+uint32_t clap_entry_get_plugin_count_callback() {
   return KODE_GLOBAL_CLAP_PLUGIN.clap_entry_get_plugin_count();
 }
 
-static const clap_plugin_descriptor* clap_entry_get_plugin_descriptor_callback(uint32_t index) {
+static // ?
+const clap_plugin_descriptor* clap_entry_get_plugin_descriptor_callback(uint32_t index) {
   return KODE_GLOBAL_CLAP_PLUGIN.clap_entry_get_plugin_descriptor(index);
 }
 
-static const clap_plugin* clap_entry_create_plugin_callback(const clap_host* host, const char* plugin_id) {
+static // ?
+const clap_plugin* clap_entry_create_plugin_callback(const clap_host* host, const char* plugin_id) {
   return KODE_GLOBAL_CLAP_PLUGIN.clap_entry_create_plugin(host,plugin_id);
 }
 
-static uint32_t clap_entry_get_invalidation_sources_count_callback(void) {
+static // ?
+uint32_t clap_entry_get_invalidation_sources_count_callback(void) {
   return KODE_GLOBAL_CLAP_PLUGIN.clap_entry_get_invalidation_sources_count();
 }
 
-static const clap_plugin_invalidation_source* clap_entry_get_invalidation_sources_callback(uint32_t index) {
+static // ?
+const clap_plugin_invalidation_source* clap_entry_get_invalidation_sources_callback(uint32_t index) {
   return KODE_GLOBAL_CLAP_PLUGIN.clap_entry_get_invalidation_sources(index);
 }
 
-static void clap_entry_refresh_callback(void) {
+static // ?
+void clap_entry_refresh_callback(void) {
   KODE_GLOBAL_CLAP_PLUGIN.clap_entry_refresh();
 }
 

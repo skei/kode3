@@ -56,7 +56,7 @@ public:
   virtual void      on_plugin_destroy() {}
   virtual bool      on_plugin_activate() { return false; }
   virtual void      on_plugin_deactivate() {}
-  virtual bool      on_plugin_start_processing(float ASampleRate) { return false; }
+  virtual bool      on_plugin_start_processing() { return false; }
   virtual void      on_plugin_stop_processing() {}
   virtual uint32_t  on_plugin_process(KODE_ProcessContext* AContext) { return 0; }
   virtual void      on_plugin_parameter(uint32_t AIndex, float AValue) {}

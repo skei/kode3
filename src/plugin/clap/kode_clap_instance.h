@@ -76,7 +76,7 @@ public:
   */
 
   bool clap_instance_start_processing() {
-    MInstance->on_plugin_start_processing(44100.0);
+    MInstance->on_plugin_start_processing();
     return true;
   }
 
