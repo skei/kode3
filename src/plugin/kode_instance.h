@@ -10,7 +10,7 @@
 class KODE_Instance {
 
 //------------------------------
-protected:
+private:
 //------------------------------
 
   KODE_Descriptor* MDescriptor = nullptr;

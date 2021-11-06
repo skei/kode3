@@ -36,6 +36,8 @@ private:
   float*                    MHostValues       = nullptr;
   float*                    MProcessValues    = nullptr;
 
+  KODE_ProcessContext       MProcessContext   = {0};
+
   //float*                    MEditorParameterValues  = nullptr;
   //float*                    MHostParameterValues    = nullptr;
   //KODE_Lv2UpdateQueue       MHostParameterQueue;
@@ -342,17 +344,16 @@ public:
       }
     }
 
-//    KODE_ProcessContext context;
-//    context.numinputs = MDescriptor->getNumInputs();
-//    context.numoutputs = MDescriptor->getNumOutputs();
-//    for (uint32_t i=0; i<context.numinputs; i++)  { context.inputs[i]  = MInputPtrs[i]; }
-//    for (uint32_t i=0; i<context.numoutputs; i++) { context.outputs[i] = MOutputPtrs[i]; }
-//    context.numsamples  = sample_count;
-//    context.samplerate  = MSampleRate;
-//    //context.offset      = 0;
-//    //context.oversample  = 1;
+    MProcessContext.numinputs = MDescriptor->inputs.size();
+    MProcessContext.numoutputs = MDescriptor->outputs.size();
+    for (uint32_t i=0; i<MProcessContext.numinputs; i++)  { MProcessContext.inputs[i]  = MInputPtrs[i]; }
+    for (uint32_t i=0; i<MProcessContext.numoutputs; i++) { MProcessContext.outputs[i] = MOutputPtrs[i]; }
+    MProcessContext.numsamples  = sample_count;
+    MProcessContext.samplerate  = MSampleRate;
+    //context.offset      = 0;
+    //context.oversample  = 1;
 
-//    on_plugin_process(&context);
+    MInstance->on_plugin_process(&MProcessContext);
 
     //todo: flush midi
   }
@@ -415,24 +416,3 @@ public:
 
 //----------------------------------------------------------------------
 #endif
-
-
-
-
-
-
-
-
-
-
-#if 0
-
-
-
-
-
-
-};
-
-
-#endif // 0

@@ -4,6 +4,7 @@
 
 #include "kode.h"
 #include "plugin/kode_instance.h"
+#include "plugin/kode_process_context.h"
 //#include "plugin/kode_instance_listener.h"
 
 //----------------------------------------------------------------------
@@ -57,6 +58,8 @@ private:
     KODE_Editor*        MEditor         = nullptr;
     bool                MIsEditorOpen   = false;
   #endif // KODE_NO_GUI
+
+  KODE_ProcessContext MProcessContext = {0};
 
 //------------------------------
 public:
@@ -158,7 +161,7 @@ private:
   #endif
 
 //------------------------------
-public:
+public: // vst2
 //------------------------------
 
   /*
@@ -178,7 +181,7 @@ public:
   void vst2_setParameter(VstInt32 index, float parameter) {
     //MInstance->updateProcessValue(index,parameter);
     //MInstance->updateEditorValue(index,parameter);
-//    MInstance->setParamValue(index,parameter);
+    MInstance->setParameterValue(index,parameter);
 //    MInstance->queueParamToProcess(index);
     #ifndef KODE_NO_GUI
 //      if (MIsEditorOpen) MInstance->queueParamToEditor(index);
@@ -193,7 +196,7 @@ public:
   */
 
   float vst2_getParameter(VstInt32 index) {
-//    return MInstance->getParamValue(index);
+    return MInstance->getParameterValue(index);
     return 0.0;
   }
 
@@ -203,19 +206,20 @@ public:
     updateParametersInProcess();
 //    host_updateTime();
 //    KODE_ProcessContext context;// = {0};
-//    uint32_t i;
-//    for (i=0; i<MDescriptor->getNumInputs(); i++)  { context.inputs[i]  = inputs[i]; }
-//    for (i=0; i<MDescriptor->getNumOutputs(); i++) { context.outputs[i] = outputs[i]; }
-//    context.numSamples    = sampleFrames;
-//    //context.oversample    = 1;
-//    context.samplerate    = MSampleRate;
-//    context.samplepos     = MSamplePos;    // getSamplePos();
-//    context.beatpos       = MBeatPos;
-//    context.tempo         = MTempo;        // getTempo();
-//    context.timesig_num   = MTimeSigNum;   // getTimeSigNum();
-//    context.timesig_denom = MTimeSigDenom; // getTimeSigDenom();
-//    context.playstate     = MPlayState;
-//    MInstance->on_process(&context);
+    uint32_t i;
+
+    for (i=0; i<MDescriptor->inputs.size(); i++)  { MProcessContext.inputs[i]  = inputs[i]; }
+    for (i=0; i<MDescriptor->outputs.size(); i++) { MProcessContext.outputs[i] = outputs[i]; }
+    MProcessContext.numsamples    = sampleFrames;
+    //MProcessContext.oversample    = 1;
+    MProcessContext.samplerate    = MSampleRate;
+    MProcessContext.samplepos     = MSamplePos;    // getSamplePos();
+    MProcessContext.beatpos       = MBeatPos;
+    MProcessContext.tempo         = MTempo;        // getTempo();
+    MProcessContext.timesignum    = MTimeSigNum;   // getTimeSigNum();
+    MProcessContext.timesigdenom  = MTimeSigDenom; // getTimeSigDenom();
+    MProcessContext.playstate     = MPlayState;
+    MInstance->on_plugin_process(&MProcessContext);
 //    //on_postProcess();
 //    if (MDescriptor->hasFlag(KODE_PLUGIN_SEND_MIDI)) host_flushMidi();
   }
@@ -690,7 +694,7 @@ public:
             if (event->type == kVstMidiType) {
 
               // todo: buffer, handle all in process..
-//              MInstance->on_midiInput(event->deltaFrames,event->midiData[0],event->midiData[1],event->midiData[2]);
+              MInstance->on_plugin_midi(event->deltaFrames,event->midiData[0],event->midiData[1],event->midiData[2]);
 
             }
           }

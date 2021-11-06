@@ -14,6 +14,7 @@
 #include "base/kode_queue.h"
 
 //#include "plugin/base/kode_base_instance.h"
+#include "plugin/kode_process_context.h"
 #include "plugin/vst3/kode_vst3.h"
 #include "plugin/vst3/kode_vst3_utils.h"
 
@@ -55,34 +56,33 @@ class KODE_Vst3Instance
 private:
 //------------------------------
 
-  uint32_t                      MRefCount               = 1;
+  uint32_t                  MRefCount               = 1;
   VST3_IComponentHandler*   MComponentHandler       = nullptr;
   VST3_IComponentHandler2*  MComponentHandler2      = nullptr;
   VST3_IPlugFrame*          MPlugFrame              = nullptr;
   VST3_IHostApplication*    MHostApp                = nullptr;
   VST3_ParameterInfo*       MParamInfos             = nullptr;
   VST3_IRunLoop*            MRunLoop                = nullptr;
-  uint32_t                      MIoMode                 = 0;
-  uint32_t                      MProcessMode            = 0;
-  uint32_t                      MSampleSize             = 0;
-  uint32_t                      MBlockSize              = 0;
-  float                         MSampleRate             = 0.0f;
-  bool                          MIsProcessing           = false;
-  char                          MHostName[129]          = {0};
-//  KODE_ProcessContext           MProcessContext         = {0};
-  KODE_Descriptor*              MDescriptor             = nullptr;
-  VST3_UpdateQueue          MHostParameterQueue;
-  float*                        MHostParameterValues    = nullptr;
-  float*                        MParameterValues        = nullptr;
-//float*                        MEditorParameterValues  = nullptr;
+  uint32_t                  MIoMode                 = 0;
+  uint32_t                  MProcessMode            = 0;
+  uint32_t                  MSampleSize             = 0;
+  uint32_t                  MBlockSize              = 0;
+  float                     MSampleRate             = 0.0f;
+  bool                      MIsProcessing           = false;
+  char                      MHostName[129]          = {0};
+  KODE_ProcessContext       MProcessContext         = {0};
+  KODE_Descriptor*          MDescriptor             = nullptr;
+  KODE_Instance*            MInstance               = nullptr;
+  VST3_UpdateQueue          MHostParameterQueue     = {};
+  float*                    MHostParameterValues    = nullptr;
+  float*                    MParameterValues        = nullptr;
+//float*                    MEditorParameterValues  = nullptr;
   #ifndef KODE_NO_GUI
-  KODE_Editor*                  MEditor                 = nullptr;
+  KODE_Editor*              MEditor                 = nullptr;
   #endif
 
-  pid_t MHostPid = 0;
-  pid_t MHostTid = 0;
-
-  KODE_Instance* MInstance = nullptr;
+  pid_t                     MHostPid                = 0;
+  pid_t                     MHostTid                = 0;
 
 //------------------------------
 public:
@@ -158,7 +158,7 @@ public:
     //KODE_Print("%s\n",ARedraw?"(redraw=true)":"");
     uint32_t num = MDescriptor->parameters.size();
     for (uint32_t i=0; i<num; i++) {
-//      float value = MParameterValues[i];
+//      float value = MInstance->getParameterValue(i);
       //KODE_Parameter* parameter = MDescriptor->getParameter(i);
       //float v = parameter->from01(value);
 //      float v = value;
@@ -1283,32 +1283,32 @@ public: // IAudioProcessor
       if (not_flush) {
         uint32_t i;
         for (i=0; i<MDescriptor->inputs.size(); i++) {
-//          MProcessContext.inputs[i]  = data.inputs[0].channelBuffers32[i];
+          MProcessContext.inputs[i]  = data.inputs[0].channelBuffers32[i];
         }
         for (i=0; i<MDescriptor->outputs.size(); i++) {
-//          MProcessContext.outputs[i] = data.outputs[0].channelBuffers32[i];
+          MProcessContext.outputs[i] = data.outputs[0].channelBuffers32[i];
         }
-//        MProcessContext.numinputs    = MDescriptor->getNumInputs();
-//        MProcessContext.numoutputs   = MDescriptor->getNumOutputs();
-//        MProcessContext.numsamples   = data.numSamples;
-//        //MProcessContext.oversample    = 1;
-//        MProcessContext.samplerate   = data.processContext->sampleRate;
-//        MProcessContext.samplepos    = data.processContext->projectTimeSamples;//continousTimeSamples;
-//        MProcessContext.beatpos      = data.processContext->projectTimeMusic;
-//        MProcessContext.tempo        = data.processContext->tempo;
-//        MProcessContext.timesignum   = data.processContext->timeSigNumerator;
-//        MProcessContext.timesigdenom = data.processContext->timeSigDenominator;
-//        MProcessContext.playstate    = KODE_PLUGIN_PLAYSTATE_NONE;
-//        if (data.processContext->state & VST3_ProcessContext::StatesAndFlags::vst3_Playing) {
-//          MProcessContext.playstate |= KODE_PLUGIN_PLAYSTATE_PLAYING;
-//        }
-//        if (data.processContext->state & VST3_ProcessContext::StatesAndFlags::vst3_Recording) {
-//          MProcessContext.playstate |= KODE_PLUGIN_PLAYSTATE_RECORDING;
-//        }
-//        if (data.processContext->state & VST3_ProcessContext::StatesAndFlags::vst3_CycleActive) {
-//          MProcessContext.playstate |= KODE_PLUGIN_PLAYSTATE_LOOPING;
-//        }
-//        on_plugin_process(&MProcessContext);
+        MProcessContext.numinputs    = MDescriptor->inputs.size();
+        MProcessContext.numoutputs   = MDescriptor->outputs.size();
+        MProcessContext.numsamples   = data.numSamples;
+        //MProcessContext.oversample    = 1;
+        MProcessContext.samplerate   = data.processContext->sampleRate;
+        MProcessContext.samplepos    = data.processContext->projectTimeSamples;//continousTimeSamples;
+        MProcessContext.beatpos      = data.processContext->projectTimeMusic;
+        MProcessContext.tempo        = data.processContext->tempo;
+        MProcessContext.timesignum   = data.processContext->timeSigNumerator;
+        MProcessContext.timesigdenom = data.processContext->timeSigDenominator;
+        MProcessContext.playstate    = 0;//KODE_PLUGIN_PLAYSTATE_NONE;
+        if (data.processContext->state & VST3_ProcessContext::StatesAndFlags::vst3_Playing) {
+          MProcessContext.playstate |= 1;//KODE_PLUGIN_PLAYSTATE_PLAYING;
+        }
+        if (data.processContext->state & VST3_ProcessContext::StatesAndFlags::vst3_Recording) {
+          MProcessContext.playstate |= 2;//KODE_PLUGIN_PLAYSTATE_RECORDING;
+        }
+        if (data.processContext->state & VST3_ProcessContext::StatesAndFlags::vst3_CycleActive) {
+          MProcessContext.playstate |= 4;//KODE_PLUGIN_PLAYSTATE_LOOPING;
+        }
+        MInstance->on_plugin_process(&MProcessContext);
       } // !flush
       //else {
       //  // flush?

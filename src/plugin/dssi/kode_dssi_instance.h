@@ -28,6 +28,9 @@ private:
   uint32_t                MNumParameters      = 0;
   float                   MSampleRate         = 0.0f;
 
+  KODE_ProcessContext     MProcessContext     = {0};
+
+
   //KODE_Rect               MEditorRect         = KODE_Rect(0);
   //float*                  MHostValues     = nullptr;
   //float*                  MProcessValues  = nullptr;
@@ -176,9 +179,10 @@ public:
 
   void dssi_run(unsigned long SampleCount) {
     updateParametersInProcess();
-    KODE_ProcessContext context;
-    //...
-    MInstance->on_plugin_process(&context);
+
+    // setup...
+
+    MInstance->on_plugin_process(&MProcessContext);
     //on_processBlock(MInputPtrs,MOutputPtrs,SampleCount);
   }
 
