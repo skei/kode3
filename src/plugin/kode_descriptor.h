@@ -4,6 +4,7 @@
 
 #include "kode.h"
 #include "base/kode_array.h"
+#include "base/kode_utils.h"
 #include "plugin/kode_parameter.h"
 #include "plugin/kode_preset.h"
 

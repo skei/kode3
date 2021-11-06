@@ -191,7 +191,7 @@ public:
           MInstance->setParameterValue(i,v); // almoste3qual
 
           KODE_Parameter* param = MDescriptor->parameters[i];
-          /*if (param)*/ v = param->from_01(v);
+          /*if (param)*/ v = param->from01(v);
 
 //          MInstance->on_parameterChange(i,v);
         }

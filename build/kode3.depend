@@ -1,14 +1,14 @@
 # depslib dependency file v1.0
-1636142608 source:/DISKS/sda2/code/git/kode3/build/build.cpp
+1636152466 source:/DISKS/sda2/code/git/kode3/build/build.cpp
 	"kode.h"
 	"plugin/kode_plugin.h"
-	"plugin/clap/kode_hosted_clap_plugin.h"
 
-1636130349 /DISKS/sda2/code/git/kode3/src/kode.h
+1636147928 /DISKS/sda2/code/git/kode3/src/kode.h
 	<stdint.h>
 	<stdio.h>
 	<stdlib.h>
 	<memory.h>
+	"base/kode_system.h"
 	"base/kode_debug.h"
 
 1635970350 /DISKS/sda2/code/git/kode3/src/kode_plugin.h
@@ -270,21 +270,23 @@
 	"plugin/vst2/kode_vst2_plugin.h"
 	"plugin/vst3/kode_vst3_plugin.h"
 
-1636122930 /DISKS/sda2/code/git/kode3/src/plugin/kode_descriptor.h
+1636147941 /DISKS/sda2/code/git/kode3/src/plugin/kode_descriptor.h
 	"kode.h"
 	"base/kode_array.h"
+	"base/kode_utils.h"
 	"plugin/kode_parameter.h"
 	"plugin/kode_preset.h"
 
-1636065907 /DISKS/sda2/code/git/kode3/src/plugin/kode_instance.h
+1636144852 /DISKS/sda2/code/git/kode3/src/plugin/kode_instance.h
 	"kode.h"
 	"plugin/kode_descriptor.h"
+	"plugin/kode_process_context.h"
 
 1636072717 /DISKS/sda2/code/git/kode3/src/plugin/kode_editor.h
 	"kode.h"
 	"plugin/kode_instance.h"
 
-1636075401 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_plugin.h
+1636149216 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_plugin.h
 	"kode.h"
 	"plugin/kode_plugin.h"
 	"plugin/clap/kode_clap.h"
@@ -295,13 +297,13 @@
 	"kode.h"
 	"extern/clap/all.h"
 
-1635977164 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_instance.h
+1636143730 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_instance.h
 	"kode_clap.h"
 	"plugin/kode_descriptor.h"
 	"plugin/kode_instance.h"
 	"plugin/kode_editor.h"
 
-1636123564 /DISKS/sda2/code/git/kode3/src/plugin/dssi/kode_dssi_plugin.h
+1636149238 /DISKS/sda2/code/git/kode3/src/plugin/dssi/kode_dssi_plugin.h
 	"kode.h"
 	"plugin/kode_descriptor.h"
 	"plugin/dssi/kode_dssi.h"
@@ -313,17 +315,16 @@
 	"kode.h"
 	<dssi.h>
 
-1635974001 /DISKS/sda2/code/git/kode3/src/plugin/exe/kode_exe_plugin.h
+1636152634 /DISKS/sda2/code/git/kode3/src/plugin/exe/kode_exe_plugin.h
 	"kode.h"
 	"plugin/kode_plugin.h"
 	"plugin/exe/kode_exe.h"
-	"plugin/exe/kode_exe_instance.h"
 
 1635969975 /DISKS/sda2/code/git/kode3/src/plugin/exe/kode_exe.h
 
-1635969975 /DISKS/sda2/code/git/kode3/src/plugin/exe/kode_exe_instance.h
+1636149426 /DISKS/sda2/code/git/kode3/src/plugin/exe/kode_exe_instance.h
 
-1636123226 /DISKS/sda2/code/git/kode3/src/plugin/ladspa/kode_ladspa_plugin.h
+1636149238 /DISKS/sda2/code/git/kode3/src/plugin/ladspa/kode_ladspa_plugin.h
 	"kode.h"
 	"plugin/kode_descriptor.h"
 	"plugin/ladspa/kode_ladspa.h"
@@ -338,7 +339,7 @@
 	"kode.h"
 	<ladspa.h>
 
-1636122552 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_plugin.h
+1636149666 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_plugin.h
 	"plugin/lv2/kode_lv2.h"
 	"plugin/lv2/kode_lv2_instance.h"
 	"plugin/lv2/kode_lv2_utils.h"
@@ -356,7 +357,7 @@
 	<lv2/urid/urid.h>
 	<lv2/lv2plug.in/ns/extensions/ui/ui.h>
 
-1636040505 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_plugin.h
+1636149265 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_plugin.h
 	"kode.h"
 	"plugin/kode_descriptor.h"
 	"plugin/vst2/kode_vst2.h"
@@ -367,7 +368,7 @@
 	"extern/vst2/aeffect.h"
 	"extern/vst2/aeffectx.h"
 
-1636116395 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_plugin.h
+1636149265 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_plugin.h
 	"kode.h"
 	"plugin/vst3/kode_vst3.h"
 	"plugin/vst3/kode_vst3_instance.h"
@@ -568,10 +569,12 @@
 	"kode.h"
 	"plugin/clap/kode_clap.h"
 
-1636142621 /DISKS/sda2/code/git/kode3/src/base/kode_debug.h
-	"base/kode_debug_print.h"
-	"base/kode_debug_stacktrace.h"
-	"base/kode_debug_memory.h"
+1636150537 /DISKS/sda2/code/git/kode3/src/base/kode_debug.h
+	"base/debug/kode_debug_print.h"
+	"base/debug/kode_debug_callstack.h"
+	"base/debug/kode_debug_crash_handler.h"
+	"base/debug/kode_debug_memory.h"
+	"base/debug/kode_debug_stacktrace.h"
 
 1636142575 /DISKS/sda2/code/git/kode3/src/base/kode_debug_stacktrace.h
 	<iostream>
@@ -582,14 +585,14 @@
 	<regex>
 	<execinfo.h>
 
-1636123742 /DISKS/sda2/code/git/kode3/src/plugin/dssi/kode_dssi_instance.h
+1636146402 /DISKS/sda2/code/git/kode3/src/plugin/dssi/kode_dssi_instance.h
 	"kode.h"
 	"plugin/kode_instance.h"
 	"plugin/kode_process_context.h"
 
 1636122792 /DISKS/sda2/code/git/kode3/src/plugin/ladspa/kode_ladspa_utils.h
 
-1636123175 /DISKS/sda2/code/git/kode3/src/plugin/ladspa/kode_ladspa_instance.h
+1636146402 /DISKS/sda2/code/git/kode3/src/plugin/ladspa/kode_ladspa_instance.h
 	"kode.h"
 	"plugin/kode_descriptor.h"
 	"plugin/kode_instance.h"
@@ -598,7 +601,7 @@
 
 1635973060 /DISKS/sda2/code/git/kode3/src/plugin/ladspa/kode_ladspa_host.h
 
-1636122442 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_instance.h
+1636144165 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_instance.h
 	"plugin/kode_editor.h"
 	"plugin/kode_process_context.h"
 	"plugin/lv2/kode_lv2.h"
@@ -619,7 +622,7 @@
 	"kode.h"
 	"plugin/kode_instance.h"
 
-1636116336 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_instance.h
+1636148523 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_instance.h
 	"plugin/kode_editor.h"
 	"base/kode_queue.h"
 	"plugin/vst3/kode_vst3.h"
@@ -634,7 +637,7 @@
 1636129665 /DISKS/sda2/code/git/kode3/src/base/kode_array.h
 	<stdlib.h>
 
-1636115080 /DISKS/sda2/code/git/kode3/src/plugin/kode_parameter.h
+1636146402 /DISKS/sda2/code/git/kode3/src/plugin/kode_parameter.h
 	<stdio.h>
 	"base/kode_array.h"
 
@@ -645,7 +648,7 @@
 1636133813 /DISKS/sda2/code/git/kode3/src/base/kode_debug_memory.h
 	<regex>
 
-1636115826 /DISKS/sda2/code/git/kode3/src/plugin/kode_process_context.h
+1636143642 /DISKS/sda2/code/git/kode3/src/plugin/kode_process_context.h
 	"kode.h"
 
 1635530307 /DISKS/sda2/code/git/kode3/src/base/kode_queue.h
@@ -662,4 +665,41 @@
 	<unistd.h>
 	<sys/socket.h>
 	<sys/un.h>
+
+1636149207 /DISKS/sda2/code/git/kode3/src/base/kode_system.h
+	"kode.h"
+
+1636147792 /DISKS/sda2/code/git/kode3/src/base/kode_utils.h
+	"kode.h"
+
+1636149882 /DISKS/sda2/code/git/kode3/src/base/kode_debug_callstack.h
+	<stdio.h>
+	<sys/unistd.h>
+	<cxxabi.h>
+	<execinfo.h>
+
+1636133597 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug_print.h
+	<stdio.h>
+	<string.h>
+	<stdarg.h>
+	<sys/time.h>
+	<sys/syscall.h>
+	<sys/unistd.h>
+	<unistd.h>
+	<sys/socket.h>
+	<sys/un.h>
+
+1636149882 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug_callstack.h
+	<stdio.h>
+	<sys/unistd.h>
+	<cxxabi.h>
+	<execinfo.h>
+
+1636133813 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug_memory.h
+	<regex>
+
+1636150641 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug_stacktrace.h
+
+1636150735 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug_crash_handler.h
+	<signal.h>
 

@@ -28,14 +28,14 @@ public:
 //------------------------------
 
   KODE_Vst2Plugin() {
-    KODE_Print("\n");
+    //KODE_Print("\n");
     //MDescriptor = KODE_New DESC();
   }
 
   //----------
 
   ~KODE_Vst2Plugin() {
-    KODE_Print("\n");
+    //KODE_Print("\n");
     if (MDescriptor) delete MDescriptor;
   }
 
@@ -45,7 +45,7 @@ private: // vst2 callbacks
 
   static
   VstIntPtr vst2_dispatcher_callback(AEffect* effect, VstInt32 opcode, VstInt32 index, VstIntPtr value, void* ptr, float opt) {
-    KODE_Print("\n");
+    //KODE_Print("\n");
     VstIntPtr result = 0;
     KODE_Vst2Instance* vst2_instance = (KODE_Vst2Instance*)effect->object;
     result = vst2_instance->vst2_dispatcher(opcode,index,value,ptr,opt);
@@ -59,7 +59,7 @@ private: // vst2 callbacks
 
   static
   void vst2_setParameter_callback(AEffect* effect, VstInt32 index, float parameter) {
-    KODE_Print("\n");
+    //KODE_Print("\n");
     KODE_Vst2Instance* vst2_instance = (KODE_Vst2Instance*)effect->object;
     vst2_instance->vst2_setParameter(index,parameter);
   }
@@ -68,7 +68,7 @@ private: // vst2 callbacks
 
   static
   float vst2_getParameter_callback(AEffect* effect, VstInt32 index) {
-    KODE_Print("\n");
+    //KODE_Print("\n");
     KODE_Vst2Instance* vst2_instance = (KODE_Vst2Instance*)effect->object;
     return vst2_instance->vst2_getParameter(index);
   }
@@ -94,31 +94,24 @@ public:
 //------------------------------
 
   AEffect* entrypoint(audioMasterCallback audioMaster) {
-    KODE_Print("\n");
-
+    //KODE_Print("\n");
     if (!MDescriptor) MDescriptor     = new DESCRIPTOR();                             // deleted in: ~KODE_Instance()
     KODE_Instance* instance           = new INSTANCE(MDescriptor);                    // deleted in ~KODE_Vst2Instance()
     KODE_Vst2Instance* vst2_instance  = new KODE_Vst2Instance(instance,audioMaster);  // deleted in:
-
 //    instance->setListener(vst2_instance);
-
     instance->on_plugin_init();
-
 //    instance->setDefaultParameterValues();
 //    instance->updateAllParameters();
-
     int32_t flags = effFlagsCanReplacing;
     if (MDescriptor->options.is_synth)    flags |= effFlagsIsSynth;
     if (MDescriptor->options.has_editor)  flags |= effFlagsHasEditor;
-    //if (MPlugin->hasFlag(kpf_chunks))      flags |= effFlagsProgramChunks;
-    //if (MPlugin->hasFlag(kpf_silentStop))  flags |= effFlagsNoSoundInStop;
+    //if (MDescriptor->options.use_chunks)) flags |= effFlagsProgramChunks;
+    //if (MPlugin->hasFlag(kpf_silentStop)) flags |= effFlagsNoSoundInStop;
     //#ifndef KODE_PLUGIN_VST2_VESTIGE
-    //if (MDescriptor->hasFlag(KODE_PLUGIN_PROCESS_DOUBLE)) flags |= effFlagsCanDoubleReplacing;
+    //if (MDescriptor->options.can_process_double) flags |= effFlagsCanDoubleReplacing;
     //#endif
-
     AEffect* effect = vst2_instance->getAEffect();
     memset(effect,0,sizeof(AEffect));
-
     effect->magic                     = kEffectMagic;
     effect->uniqueID                  = MDescriptor->short_id;
     effect->flags                     = flags;
@@ -136,19 +129,14 @@ public:
     effect->processReplacing          = vst2_process_callback;
     effect->processDoubleReplacing    = vst2_processDouble_callback;
     return effect;
-
-    //return nullptr;
   }
-
 };
-
 
 //----------------------------------------------------------------------
 //
 // entrypoint
 //
 //----------------------------------------------------------------------
-
 
 #define KODE_VST2_MAIN_SYMBOL asm ("VSTPluginMain");
 AEffect* kode_vst2_entrypoint(audioMasterCallback audioMaster) KODE_VST2_MAIN_SYMBOL
@@ -157,7 +145,8 @@ AEffect* kode_vst2_entrypoint(audioMasterCallback audioMaster) KODE_VST2_MAIN_SY
                                                                     \
   KODE_Vst2Plugin<D,I,E> VST2_PLUGIN;                               \
                                                                     \
-  __attribute__((visibility("default")))                            \
+  /*__attribute__((visibility("default")))*/                        \
+  __KODE_EXPORT                                                  \
   AEffect* kode_vst2_entrypoint(audioMasterCallback audioMaster) {  \
     if (!audioMaster(0,audioMasterVersion,0,0,0,0)) return 0;       \
     AEffect* effect = VST2_PLUGIN.entrypoint(audioMaster);          \

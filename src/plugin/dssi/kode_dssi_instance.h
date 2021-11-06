@@ -77,7 +77,7 @@ private:
       if (v != MInstance->getParameterValue(i)) {
         MInstance->setParameterValue(i,v);
         KODE_Parameter* param = MDescriptor->parameters[i];
-        v = param->from_01(v);
+        v = param->from01(v);
 //        MInstance->on_parameterChange(i,v);
       }
     }

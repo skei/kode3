@@ -5,7 +5,7 @@
 #include "kode.h"
 #include "plugin/kode_plugin.h"
 #include "plugin/exe/kode_exe.h"
-#include "plugin/exe/kode_exe_instance.h"
+//#include "plugin/exe/kode_exe_instance.h"
 
 //----------------------------------------------------------------------
 //
@@ -29,6 +29,7 @@ public:
     if (descriptor) {
       KODE_Instance* instance = _kode_create_instance(descriptor); // new INSTANCE(descriptor);
       if (instance) {
+        //KODE_ExeInstance* exe_instance = new KODE_ExeInstance(instance);
         KODE_Editor* editor = _kode_create_editor(instance); // new EDITOR(instacne);
         if (editor) {
           //editor->create(parent);
@@ -38,10 +39,10 @@ public:
           //editor->destroy();
           delete editor;
         }
+        //delete exe_instance;
         delete instance;
       }
-      delete descriptor;
-
+      //delete descriptor; // deleted by KODE_Instance
     }
     return 0;
   }

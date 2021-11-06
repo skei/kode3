@@ -1,6 +1,6 @@
 
-//#define KODE_PLUGIN_EXE
-#define KODE_PLUGIN_ALL
+#define KODE_PLUGIN_EXE
+//#define KODE_PLUGIN_ALL
 
 //#define KODE_DEBUG_PRINT_SOCKET
 // nc -U -l -k /tmp/kode.socket
@@ -9,8 +9,6 @@
 
 #include "kode.h"
 #include "plugin/kode_plugin.h"
-
-#include "plugin/clap/kode_hosted_clap_plugin.h"
 
 //----------------------------------------------------------------------
 
@@ -62,4 +60,5 @@ public:
 
 //----------------------------------------------------------------------
 
-KODE_MAIN(myDescriptor,myInstance,myEditor)
+//KODE_MAIN(myDescriptor,myInstance,myEditor)
+KODE_MAIN(KODE_Descriptor,KODE_Instance,KODE_Editor)

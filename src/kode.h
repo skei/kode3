@@ -15,9 +15,7 @@
 //using namespace std;
 
 //----------------------------------------------------------------------
-
-#include "base/kode_debug.h"
-
+//
 //----------------------------------------------------------------------
 
 // 4         4    5         5
@@ -42,32 +40,17 @@
 #define KODE_MAX_STRING_LENGTH        512
 #define KODE_MAX_PATH_LENGTH          512
 
-//#define __KODE_DLLEXPORT              __attribute__((visibility("default")))
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
 
-const char  KODE_HEX_TABLE[]  = "0123456789ABCDEF";
-const char  KODE_CSYMBOLS[]   = "________________________________________________0123456789_______ABCDEFGHIJKLMNOPQRSTUVWXYZ______abcdefghijklmnopqrstuvwxyz_____";
+#include "base/kode_system.h"
+#include "base/kode_debug.h"
 
 //----------------------------------------------------------------------
 
-uint32_t KODE_HashString(const char* buffer) {
-  char* ptr = (char*)buffer;
-  unsigned long h = 5381;
-  int c;
-  while ((c = *ptr++)) {
-    h = ((h << 5) + h) + c; // h * 33 + c
-  }
-  return h;
-}
 
-//
 
-void KODE_MakeValidSymbol(char* buffer) {
-  for (uint32_t i=0; i<strlen(buffer); i++) {
-    unsigned char c = buffer[i];
-    if ((c<32) || (c>127)) buffer[i] = '_';
-    else buffer[i] = KODE_CSYMBOLS[c];
-  }
-}
 
 //----------------------------------------------------------------------
 #endif

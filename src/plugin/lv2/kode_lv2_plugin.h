@@ -55,7 +55,7 @@ public:
 //------------------------------
 
   KODE_Lv2Plugin() {
-    KODE_LV2PRINT;
+    //KODE_LV2PRINT;
     setup_lv2_uri();
     setup_lv2_descriptor();
     #ifndef KODE_NO_GUI
@@ -70,7 +70,7 @@ public:
   //----------
 
   virtual ~KODE_Lv2Plugin() {
-    KODE_LV2PRINT;
+    //KODE_LV2PRINT;
   }
 
 //------------------------------
@@ -78,7 +78,7 @@ public:
 //------------------------------
 
   const LV2_Descriptor* lv2_entrypoint(unsigned long Index) {
-    KODE_Lv2Print("Index %i\n",Index);
+    //KODE_Lv2Print("Index %i\n",Index);
     if (Index > 0) return nullptr;
     return &MLv2Descriptor;
   }
@@ -86,7 +86,7 @@ public:
   //----------
 
   const LV2UI_Descriptor* lv2ui_entrypoint(uint32_t index) {
-    KODE_Lv2Print("index %i\n",index);
+    //KODE_Lv2Print("index %i\n",index);
     if (index > 0) return nullptr;
     return &MLv2UIDescriptor;
   }
@@ -102,7 +102,7 @@ public:
 //------------------------------
 
   void export_ttl(void) {
-    KODE_LV2PRINT;
+    //KODE_LV2PRINT;
     #ifdef KODE_LV2_EXPORT_TTL
     KODE_Descriptor* descriptor = &MDescriptor;
     KODE_Lv2WriteManifest(descriptor);
@@ -115,7 +115,7 @@ private:
 
   //void setup_lv2_uri() {
   void setup_lv2_uri() {
-    KODE_LV2PRINT;
+    //KODE_LV2PRINT;
     memset(MLv2Uri,0,KODE_LV2_MAX_URI_LENGTH+1);
     strcpy(MLv2Uri,"urn:");
     strcat(MLv2Uri,MDescriptor.author);
@@ -126,7 +126,7 @@ private:
   //----------
 
   void setup_lv2ui_uri() {
-    KODE_LV2PRINT;
+    //KODE_LV2PRINT;
     memset(MLv2UIUri,0,KODE_LV2_MAX_URI_LENGTH+1);
     strcpy(MLv2UIUri,"urn:");
     strcat(MLv2UIUri,MDescriptor.author);
@@ -138,7 +138,7 @@ private:
   //----------
 
   void setup_lv2_descriptor() {
-    KODE_LV2PRINT;
+    //KODE_LV2PRINT;
     memset(&MLv2Descriptor,0,sizeof(LV2_Descriptor));
     MLv2Descriptor.URI             = MLv2Uri;
     MLv2Descriptor.instantiate     = lv2_instantiate_callback;
@@ -153,7 +153,7 @@ private:
   //----------
 
   void setup_lv2ui_descriptor() {
-    KODE_LV2PRINT;
+    //KODE_LV2PRINT;
     memset(&MLv2UIDescriptor,0,sizeof(LV2UI_Descriptor));
     MLv2UIDescriptor.URI            = MLv2UIUri;
     MLv2UIDescriptor.instantiate    = lv2ui_instantiate_callback;
@@ -224,14 +224,15 @@ private: // lv2 callbacks
 
   static
   LV2_Handle lv2_instantiate_callback(const LV2_Descriptor* descriptor, double sample_rate, const char* bundle_path, const LV2_Feature* const* features) {
-    KODE_Lv2Print("sample_rate %.2f bundle_path '%s' features %p\n",sample_rate,bundle_path,features);
-    KODE_Lv2PrintFeatures(features);
+    //KODE_Lv2Print("sample_rate %.2f bundle_path '%s' features %p\n",sample_rate,bundle_path,features);
+    //KODE_Lv2PrintFeatures(features);
     KODE_Descriptor* desc = kode_lv2_get_descriptor();
     //KODE_Lv2Instance* lv2_instance = new KODE_Lv2Instance(desc);
 
+// !!!
     KODE_Instance* inst = new INSTANCE(desc);                             // who deletes this ???
-    KODE_Lv2Instance* lv2_instance = new KODE_Lv2Instance(inst);
 
+    KODE_Lv2Instance* lv2_instance = new KODE_Lv2Instance(inst);
     lv2_instance->lv2_setup(sample_rate,bundle_path,features);
     return (LV2_Handle)lv2_instance;
   }
@@ -240,7 +241,7 @@ private: // lv2 callbacks
 
   static
   void lv2_connect_port_callback(LV2_Handle instance, uint32_t port, void* data_location) {
-    KODE_Lv2Print("port %i data_location %p\n",port,data_location);
+    //KODE_Lv2Print("port %i data_location %p\n",port,data_location);
     KODE_Lv2Instance* lv2_instance = (KODE_Lv2Instance*)instance;
     if (lv2_instance) lv2_instance->lv2_connect_port(port,data_location);
   }
@@ -249,7 +250,7 @@ private: // lv2 callbacks
 
   static
   void lv2_activate_callback(LV2_Handle instance) {
-    KODE_LV2PRINT;
+    //KODE_LV2PRINT;
     KODE_Lv2Instance* lv2_instance = (KODE_Lv2Instance*)instance;
     if (lv2_instance) lv2_instance->lv2_activate();
   }
@@ -258,7 +259,7 @@ private: // lv2 callbacks
 
   static
   void lv2_run_callback(LV2_Handle instance, uint32_t sample_count) {
-//    KODE_Lv2Print("sample_count %i\n",sample_count);
+    //KODE_Lv2Print("sample_count %i\n",sample_count);
     KODE_Lv2Instance* lv2_instance = (KODE_Lv2Instance*)instance;
     if (lv2_instance) lv2_instance->lv2_run(sample_count);
   }
@@ -267,7 +268,7 @@ private: // lv2 callbacks
 
   static
   void lv2_deactivate_callback(LV2_Handle instance) {
-    KODE_LV2PRINT;
+    //KODE_LV2PRINT;
     KODE_Lv2Instance* lv2_instance = (KODE_Lv2Instance*)instance;
     if (lv2_instance) lv2_instance->lv2_deactivate();
   }
@@ -276,7 +277,7 @@ private: // lv2 callbacks
 
   static
   void lv2_cleanup_callback(LV2_Handle instance) {
-    KODE_LV2PRINT;
+    //KODE_LV2PRINT;
     KODE_Lv2Instance* lv2_instance = (KODE_Lv2Instance*)instance;
     if (lv2_instance) lv2_instance->lv2_cleanup();
     delete lv2_instance;
@@ -300,7 +301,7 @@ private: // lv2 callbacks
 
   static
   const void* lv2_extension_data_callback(const char* uri) {
-    KODE_Lv2Print("uri %s\n",uri);
+    //KODE_Lv2Print("uri %s\n",uri);
     return nullptr;
   }
 
@@ -318,7 +319,8 @@ private: // ui callbacks
     LV2UI_Widget*               widget,
     const LV2_Feature* const*   features) {
     /* --- */
-    KODE_Lv2Print("\n");
+    //KODE_Lv2Print("\n");
+
 //    if (strcmp(plugin_uri, MLv2UIUri) != 0) {
 //      return nullptr;
 //    }
@@ -348,6 +350,7 @@ private: // ui callbacks
 //    fl_embed( self->ui,(Window)parentXwindow);
 //    *widget = (LV2UI_Widget)fl_xid(self->ui);
 //    return (LV2UI_Handle)self;
+
     return nullptr;
   }
 
@@ -355,16 +358,19 @@ private: // ui callbacks
 
   static
   void lv2ui_cleanup_callback(LV2UI_Handle ui) {
-    KODE_Lv2Print("\n");
+    //KODE_Lv2Print("\n");
+
 //    StuckUI *self = (StuckUI*)ui;
 //    delete self;
+
   }
 
   //----------
 
   static
   void lv2ui_port_event_callback(LV2UI_Handle ui, uint32_t port_index, uint32_t buffer_size, uint32_t format, const void * buffer) {
-    KODE_Lv2Print("\n");
+    //KODE_Lv2Print("\n");
+
 //    StuckUI *self = (StuckUI*)ui;
 //    if (!format) {
 //      float val = *(float*)buffer;
@@ -381,13 +387,14 @@ private: // ui callbacks
 //          break;
 //      }
 //    }
+
   }
 
   //----------
 
   static
   const void* lv2ui_extension_data_callback(const char* uri) {
-    KODE_Lv2Print("uri %s\n",uri);
+    //KODE_Lv2Print("uri %s\n",uri);
     //if (!strcmp(uri, LV2_UI__idleInterface)) return &_lv2_idle_interface;
     //if (!strcmp(uri, LV2_UI__resize)) return &_lv2_resize;
     return nullptr;
@@ -404,10 +411,6 @@ private: // ui callbacks
 
 
 };
-
-/*
-  - carla calls lv2_descriptor a second time before deleting the first
-*/
 
 //----------------------------------------------------------------------
 //
@@ -439,16 +442,15 @@ private: // ui callbacks
    consistent between loads of the plugin library.
 */
 
-#define KODE_LV2_MAIN_SYMBOL asm ("lv2_descriptor");
-const LV2_Descriptor* kode_lv2_entrypoint(unsigned long Index) KODE_LV2_MAIN_SYMBOL
+//----------------------------------------------------------------------
 
-#define KODE_LV2_UI_SYMBOL asm ("lv2ui_descriptor");
-const LV2UI_Descriptor* kode_lv2ui_entrypoint(uint32_t index) KODE_LV2_UI_SYMBOL
+//#define KODE_LV2_MAIN_SYMBOL        asm ("lv2_descriptor");
+//#define KODE_LV2_UI_SYMBOL          asm ("lv2ui_descriptor");
+//#define KODE_LV2_EXPORT_TTL_SYMBOL  asm ("lv2_export_ttl");
 
-#ifdef KODE_LV2_EXPORT_TTL
-  #define KODE_LV2_EXPORT_TTL_SYMBOL asm ("lv2_export_ttl");
-  void kode_lv2_export_ttl(void) KODE_LV2_EXPORT_TTL_SYMBOL
-#endif
+const LV2_Descriptor*   kode_lv2_entrypoint(  uint32_t Index) asm ("lv2_descriptor");   // KODE_LV2_MAIN_SYMBOL
+const LV2UI_Descriptor* kode_lv2ui_entrypoint(uint32_t index) asm ("lv2ui_descriptor"); // KODE_LV2_UI_SYMBOL
+void                    kode_lv2_export_ttl(void) asm             ("lv2_export_ttl");   // KODE_LV2_EXPORT_TTL_SYMBOL
 
 //----------
 
@@ -456,29 +458,36 @@ const LV2UI_Descriptor* kode_lv2ui_entrypoint(uint32_t index) KODE_LV2_UI_SYMBOL
                                                                       \
   KODE_Lv2Plugin<D,I,E>     _KODE_LV2_PLUGIN;                         \
                                                                       \
-  __attribute__((visibility("default")))                              \
+  /*__attribute__((visibility("default")))*/                          \
+  __KODE_EXPORT                                                    \
   const LV2_Descriptor* kode_lv2_entrypoint(unsigned long Index) {    \
-    KODE_Lv2Print("Index %i\n",Index);                                \
+    /*KODE_Lv2Print("Index %i\n",Index);*/                            \
     return _KODE_LV2_PLUGIN.lv2_entrypoint(Index);                    \
   }                                                                   \
                                                                       \
-  __attribute__((visibility("default")))                              \
+  /*__attribute__((visibility("default")))*/                          \
+  __KODE_EXPORT                                                    \
   const LV2UI_Descriptor* kode_lv2ui_entrypoint(uint32_t index) {     \
-    KODE_Lv2Print("index %i\n",index);                                \
+    /*KODE_Lv2Print("index %i\n",index);*/                            \
     return _KODE_LV2_PLUGIN.lv2ui_entrypoint(index);                  \
   }                                                                   \
                                                                       \
   __attribute__((visibility("default")))                              \
   void kode_lv2_export_ttl(void) {                                    \
-    KODE_LV2PRINT;                                                    \
+    /*KODE_LV2PRINT;*/                                                \
     _KODE_LV2_PLUGIN.export_ttl();                                    \
   }                                                                   \
                                                                       \
   /* called from lv2_instantiate_callback*/                           \
   KODE_Descriptor* kode_lv2_get_descriptor() {                        \
-    KODE_LV2PRINT;                                                    \
+    /*KODE_LV2PRINT;*/                                                \
     return _KODE_LV2_PLUGIN.getDescriptor();                          \
   }
 
 //----------------------------------------------------------------------
 #endif
+
+/*
+  - ?? (check this)
+    carla calls lv2_descriptor a second time before deleting the first
+*/

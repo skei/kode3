@@ -52,13 +52,13 @@ public:
 public:
 //------------------------------
 
-  virtual float from_01(float value) {
+  virtual float from01(float value) {
     return value;
   }
 
   //----------
 
-  virtual float to_01(float value) {
+  virtual float to01(float value) {
     return value;
   }
 
