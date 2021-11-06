@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1636152466 source:/DISKS/sda2/code/git/kode3/build/build.cpp
+1636161621 source:/DISKS/sda2/code/git/kode3/build/build.cpp
 	"kode.h"
 	"plugin/kode_plugin.h"
 
@@ -277,14 +277,17 @@
 	"plugin/kode_parameter.h"
 	"plugin/kode_preset.h"
 
-1636144852 /DISKS/sda2/code/git/kode3/src/plugin/kode_instance.h
+1636162718 /DISKS/sda2/code/git/kode3/src/plugin/kode_instance.h
 	"kode.h"
 	"plugin/kode_descriptor.h"
 	"plugin/kode_process_context.h"
 
-1636072717 /DISKS/sda2/code/git/kode3/src/plugin/kode_editor.h
+1636218345 /DISKS/sda2/code/git/kode3/src/plugin/kode_editor.h
 	"kode.h"
 	"plugin/kode_instance.h"
+	"plugin/kode_parameter.h"
+	"gui/kode_widget.h"
+	"gui/kode_window.h"
 
 1636149216 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_plugin.h
 	"kode.h"
@@ -293,7 +296,7 @@
 	"plugin/clap/kode_clap_host.h"
 	"plugin/clap/kode_clap_instance.h"
 
-1635975917 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap.h
+1636217496 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap.h
 	"kode.h"
 	"extern/clap/all.h"
 
@@ -339,7 +342,7 @@
 	"kode.h"
 	<ladspa.h>
 
-1636149666 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_plugin.h
+1636162521 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_plugin.h
 	"plugin/lv2/kode_lv2.h"
 	"plugin/lv2/kode_lv2_instance.h"
 	"plugin/lv2/kode_lv2_utils.h"
@@ -585,7 +588,7 @@
 	<regex>
 	<execinfo.h>
 
-1636146402 /DISKS/sda2/code/git/kode3/src/plugin/dssi/kode_dssi_instance.h
+1636162641 /DISKS/sda2/code/git/kode3/src/plugin/dssi/kode_dssi_instance.h
 	"kode.h"
 	"plugin/kode_instance.h"
 	"plugin/kode_process_context.h"
@@ -601,7 +604,7 @@
 
 1635973060 /DISKS/sda2/code/git/kode3/src/plugin/ladspa/kode_ladspa_host.h
 
-1636144165 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_instance.h
+1636162489 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_instance.h
 	"plugin/kode_editor.h"
 	"plugin/kode_process_context.h"
 	"plugin/lv2/kode_lv2.h"
@@ -618,13 +621,15 @@
 1440689074 /DISKS/sda2/code/git/kode3/src/extern/vst2/aeffectx.h
 	"aeffect.h"
 
-1636110782 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_instance.h
+1636161897 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_instance.h
 	"kode.h"
 	"plugin/kode_instance.h"
+	"plugin/kode_process_context.h"
 
-1636148523 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_instance.h
+1636162308 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_instance.h
 	"plugin/kode_editor.h"
 	"base/kode_queue.h"
+	"plugin/kode_process_context.h"
 	"plugin/vst3/kode_vst3.h"
 	"plugin/vst3/kode_vst3_utils.h"
 
@@ -637,7 +642,7 @@
 1636129665 /DISKS/sda2/code/git/kode3/src/base/kode_array.h
 	<stdlib.h>
 
-1636146402 /DISKS/sda2/code/git/kode3/src/plugin/kode_parameter.h
+1636216939 /DISKS/sda2/code/git/kode3/src/plugin/kode_parameter.h
 	<stdio.h>
 	"base/kode_array.h"
 
@@ -702,4 +707,11 @@
 
 1636150735 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug_crash_handler.h
 	<signal.h>
+
+1636218100 /DISKS/sda2/code/git/kode3/src/gui/kode_widget.h
+	"kode.h"
+	"base/kode_array.h"
+
+1636218225 /DISKS/sda2/code/git/kode3/src/gui/kode_window.h
+	"kode.h"
 

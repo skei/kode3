@@ -10,7 +10,8 @@
 //
 //----------------------------------------------------------------------
 
-struct KODE_ParameterOptions {  bool can_automate = true;
+struct KODE_ParameterOptions {
+  bool can_automate = true;
 };
 
 //----------------------------------------------------------------------
