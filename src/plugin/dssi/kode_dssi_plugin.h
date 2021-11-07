@@ -95,7 +95,9 @@ public:
   // see KODE_LadspaPlugin
 
   const DSSI_Descriptor* entrypoint(unsigned long Index) {
-    KODE_PRINT;
+    printf("DSSI\n");
+
+    //KODE_PRINT;
 
     //KODE_Memset(&MDssiDescriptor,0,sizeof(DSSI_Descriptor));
     //KODE_Memset(&MLadspaDescriptor,0,sizeof(LADSPA_Descriptor));

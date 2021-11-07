@@ -223,6 +223,7 @@ KODE_ClapPlugin KODE_GLOBAL_CLAP_PLUGIN;
 
 static // ?
 bool clap_entry_init_callback(const char *plugin_path) {
+  printf("CLAP\n");
   return KODE_GLOBAL_CLAP_PLUGIN.clap_entry_init(plugin_path);
 }
 

@@ -91,7 +91,7 @@ public:
   //KODE_Vst3Instance(KODE_Descriptor* ADescriptor)
   KODE_Vst3Instance(KODE_Instance* AInstance)
   /*: KODE_BaseInstance(ADescriptor)*/ {
-    //KODE_PRINT;
+    KODE_PRINT;
     MRefCount = 1;
     MInstance = AInstance;
     MDescriptor = AInstance->getDescriptor();
@@ -102,7 +102,7 @@ public:
   //----------
 
   virtual ~KODE_Vst3Instance() {
-    //KODE_PRINT;
+    KODE_PRINT;
     deleteParameterInfo();
     destroyParameterBuffers();
   }
@@ -552,7 +552,7 @@ public: // FUnknown
 
   int32_t VST3_API queryInterface(const VST3_Id _iid, void** obj) final {
     //KODE_Print("iid: ");
-    VST3_PrintIID(_iid);
+    //VST3_PrintIID(_iid);
     if (VST3_iidEqual(VST3_IAudioProcessor_iid,_iid) ) {
       //KODE_Print(" (IAudioProcessor) -> Ok\n");
       *obj = (VST3_IAudioProcessor*)this;

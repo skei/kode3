@@ -63,25 +63,25 @@ char _kode_debug_prefix_buffer[256] = {0};
 #ifdef KODE_DEBUG_PRINT_TIME
 //------------------------------
 
-void _kode_debug_time_start() {
-  //kode_debug_start_time = clock();
-  struct timeval time;
-  gettimeofday(&time,NULL);
-  _kode_debug_start_time = (double)time.tv_sec + (double)time.tv_usec * .000001;
-}
+  void _kode_debug_time_start() {
+    //kode_debug_start_time = clock();
+    struct timeval time;
+    gettimeofday(&time,NULL);
+    _kode_debug_start_time = (double)time.tv_sec + (double)time.tv_usec * .000001;
+  }
 
-//----------
+  //----------
 
-double _kode_debug_time_elapsed() {
-  //clock_t currenttime = clock();
-  //double elapsed = currenttime - kode_debug_start_time;
-  //return elapsed / CLOCKS_PER_SEC;
-  struct timeval time;
-  gettimeofday(&time,NULL);
-  double currenttime = (double)time.tv_sec + (double)time.tv_usec * .000001;
-  double elapsed = currenttime - _kode_debug_start_time;
-  return elapsed;
-}
+  double _kode_debug_time_elapsed() {
+    //clock_t currenttime = clock();
+    //double elapsed = currenttime - kode_debug_start_time;
+    //return elapsed / CLOCKS_PER_SEC;
+    struct timeval time;
+    gettimeofday(&time,NULL);
+    double currenttime = (double)time.tv_sec + (double)time.tv_usec * .000001;
+    double elapsed = currenttime - _kode_debug_start_time;
+    return elapsed;
+  }
 
 #endif
 
@@ -89,15 +89,15 @@ double _kode_debug_time_elapsed() {
 #ifdef KODE_DEBUG_PRINT_THREAD
 //------------------------------
 
-pid_t _kode_debug_get_process_id() {
-  return getpid();
-}
+  pid_t _kode_debug_get_process_id() {
+    return getpid();
+  }
 
-//----------
+  //----------
 
-pid_t _kode_debug_get_thread_id() {
-  return gettid();
-}
+  pid_t _kode_debug_get_thread_id() {
+    return gettid();
+  }
 
 #endif
 
@@ -105,27 +105,27 @@ pid_t _kode_debug_get_thread_id() {
 #ifdef KODE_DEBUG_PRINT_SOCKET
 //------------------------------
 
-void _kode_debug_socket_init() {
-  //open_socket();
-  _kode_debug_socket_handle = socket(PF_UNIX,SOCK_STREAM,0);
-  sockaddr_un address;
-  memset(&address,0,sizeof(sockaddr_un));
-  address.sun_family = AF_UNIX;
-  snprintf(address.sun_path,108,"/tmp/kode.socket"); // max 108?
-  connect(_kode_debug_socket_handle,reinterpret_cast<sockaddr*>(&address),sizeof(sockaddr_un));
-}
+  void _kode_debug_socket_init() {
+    //open_socket();
+    _kode_debug_socket_handle = socket(PF_UNIX,SOCK_STREAM,0);
+    sockaddr_un address;
+    memset(&address,0,sizeof(sockaddr_un));
+    address.sun_family = AF_UNIX;
+    snprintf(address.sun_path,108,"/tmp/kode.socket"); // max 108?
+    connect(_kode_debug_socket_handle,reinterpret_cast<sockaddr*>(&address),sizeof(sockaddr_un));
+  }
 
-//----------
+  //----------
 
-void _kode_debug_socket_close() {
-  close(_kode_debug_socket_handle);
-}
+  void _kode_debug_socket_close() {
+    close(_kode_debug_socket_handle);
+  }
 
-//----------
+  //----------
 
-void _kode_debug_socket_print(char* buffer) {
-  dprintf(_kode_debug_socket_handle,"%s",buffer);
-}
+  void _kode_debug_socket_print(char* buffer) {
+    dprintf(_kode_debug_socket_handle,"%s",buffer);
+  }
 
 #endif
 
@@ -160,7 +160,7 @@ void _kode_print(const char* format, ...) {
   vsprintf(_kode_debug_print_buffer,format,args);
   strcat(_kode_debug_prefix_buffer,_kode_debug_print_buffer);
   #if defined KODE_DEBUG_PRINT_SOCKET
-    //_kode_debug_socket_print(_kode_debug_prefix_buffer);
+    _kode_debug_socket_print(_kode_debug_prefix_buffer);
   #else
     printf("%s",_kode_debug_prefix_buffer);
   #endif
@@ -175,7 +175,7 @@ void _kode_dprint(const char* format, ...) {
   va_start(args,format);
   vsprintf(_kode_debug_print_buffer,format,args);
   #if defined KODE_DEBUG_PRINT_SOCKET
-    //_kode_debug_socket_print(_kode_debug_print_buffer);
+    _kode_debug_socket_print(_kode_debug_print_buffer);
   #else
     printf("%s",_kode_debug_print_buffer);
   #endif
@@ -206,6 +206,10 @@ class _kode_global_debug_class {
 public:
 
   _kode_global_debug_class() {
+
+    //printf("printf: hello world from _kode_global_debug_class\n");
+    //KODE_Print("KODE_Print: hello world from _kode_global_debug_class\n");
+
     #if defined KODE_DEBUG_PRINT_SOCKET
       _kode_debug_socket_init();
     #endif

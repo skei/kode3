@@ -1,9 +1,17 @@
 
-//#define KODE_PLUGIN_EXE
-#define KODE_PLUGIN_ALL
 
-//#define KODE_DEBUG_PRINT_SOCKET
+
+#define KODE_PLUGIN_VST3
+//#define KODE_PLUGIN_ALL
+
+
+
+#define KODE_DEBUG_PRINT
+#define KODE_DEBUG_PRINT_SOCKET
+
 // nc -U -l -k /tmp/kode.socket
+
+
 
 //----------
 
@@ -18,8 +26,13 @@ class myDescriptor
 public:
 
   myDescriptor() {
-    name = "myPlugin";
-    author = "skei.audio";
+    KODE_PRINT;
+    #ifdef KODE_DEBUG
+    name    = "kode_debug";
+    #else
+    name    = "kode";
+    #endif
+    author  = "skei.audio";
     appendInput("input 1");
     appendInput("input 2");
     appendOutput("output 1");
@@ -38,6 +51,7 @@ public:
 
   myInstance(KODE_Descriptor* ADescriptor)
   : KODE_Instance(ADescriptor) {
+    KODE_PRINT;
   }
 
   bool on_plugin_init() final { return true; }
@@ -54,11 +68,12 @@ public:
 
   myEditor(KODE_Instance* AInstance)
   : KODE_Editor(AInstance) {
+    KODE_PRINT;
   }
 
 };
 
 //----------------------------------------------------------------------
 
-//KODE_MAIN(myDescriptor,myInstance,myEditor)
-KODE_MAIN(KODE_Descriptor,KODE_Instance,KODE_Editor)
+KODE_MAIN(myDescriptor,myInstance,myEditor)
+//KODE_MAIN(KODE_Descriptor,KODE_Instance,KODE_Editor)

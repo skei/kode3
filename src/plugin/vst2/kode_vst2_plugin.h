@@ -95,8 +95,10 @@ public:
 
   AEffect* entrypoint(audioMasterCallback audioMaster) {
     //KODE_Print("\n");
-    if (!MDescriptor) MDescriptor     = new DESCRIPTOR();                             // deleted in: ~KODE_Instance()
-    KODE_Instance* instance           = new INSTANCE(MDescriptor);                    // deleted in ~KODE_Vst2Instance()
+    //if (!MDescriptor) MDescriptor     = new DESCRIPTOR();                             // deleted in: ~KODE_Instance()
+    //KODE_Instance* instance           = new INSTANCE(MDescriptor);                    // deleted in ~KODE_Vst2Instance()
+    if (!MDescriptor) MDescriptor     = _kode_create_descriptor(); // new DESCRIPTOR();                             // deleted in: ~KODE_Instance()
+    KODE_Instance* instance           = _kode_create_instance(MDescriptor); //new INSTANCE(MDescriptor);                    // deleted in ~KODE_Vst2Instance()
     KODE_Vst2Instance* vst2_instance  = new KODE_Vst2Instance(instance,audioMaster);  // deleted in:
 //    instance->setListener(vst2_instance);
     instance->on_plugin_init();
@@ -146,8 +148,9 @@ AEffect* kode_vst2_entrypoint(audioMasterCallback audioMaster) KODE_VST2_MAIN_SY
   KODE_Vst2Plugin<D,I,E> VST2_PLUGIN;                               \
                                                                     \
   /*__attribute__((visibility("default")))*/                        \
-  __KODE_EXPORT                                                  \
+  __KODE_EXPORT                                                     \
   AEffect* kode_vst2_entrypoint(audioMasterCallback audioMaster) {  \
+    printf("VST2\n");                                               \
     if (!audioMaster(0,audioMasterVersion,0,0,0,0)) return 0;       \
     AEffect* effect = VST2_PLUGIN.entrypoint(audioMaster);          \
     return effect;                                                  \
