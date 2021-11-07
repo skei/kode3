@@ -36,7 +36,9 @@ public:
 
   ~KODE_Vst2Plugin() {
     //KODE_Print("\n");
-    if (MDescriptor) delete MDescriptor;
+//    KODE_DPrint("deleting MDescriptor\n");
+//    if (MDescriptor) delete MDescriptor;    // deleted in ~KODE_Descriptor()
+//    KODE_DPrint("deleting MDescriptor OK\n");
   }
 
 //------------------------------
@@ -50,7 +52,9 @@ private: // vst2 callbacks
     KODE_Vst2Instance* vst2_instance = (KODE_Vst2Instance*)effect->object;
     result = vst2_instance->vst2_dispatcher(opcode,index,value,ptr,opt);
     if (opcode==effClose) {
+      KODE_DPrint("deleting vst2_instance\n");
       delete (KODE_Vst2Instance*)vst2_instance;
+      KODE_DPrint("deleting vst2_instance OK\n");
     }
     return result;
   }
@@ -100,10 +104,14 @@ public:
     if (!MDescriptor) MDescriptor     = _kode_create_descriptor(); // new DESCRIPTOR();                             // deleted in: ~KODE_Instance()
     KODE_Instance* instance           = _kode_create_instance(MDescriptor); //new INSTANCE(MDescriptor);                    // deleted in ~KODE_Vst2Instance()
     KODE_Vst2Instance* vst2_instance  = new KODE_Vst2Instance(instance,audioMaster);  // deleted in:
+
 //    instance->setListener(vst2_instance);
+
     instance->on_plugin_init();
+
 //    instance->setDefaultParameterValues();
 //    instance->updateAllParameters();
+
     int32_t flags = effFlagsCanReplacing;
     if (MDescriptor->options.is_synth)    flags |= effFlagsIsSynth;
     if (MDescriptor->options.has_editor)  flags |= effFlagsHasEditor;
@@ -140,8 +148,8 @@ public:
 //
 //----------------------------------------------------------------------
 
-#define KODE_VST2_MAIN_SYMBOL asm ("VSTPluginMain");
-AEffect* kode_vst2_entrypoint(audioMasterCallback audioMaster) KODE_VST2_MAIN_SYMBOL
+//#define KODE_VST2_MAIN_SYMBOL asm ("VSTPluginMain");
+AEffect* kode_vst2_entrypoint(audioMasterCallback audioMaster) asm ("VSTPluginMain"); // KODE_VST2_MAIN_SYMBOL
 
 #define KODE_VST2_MAIN(D,I,E)                                       \
                                                                     \

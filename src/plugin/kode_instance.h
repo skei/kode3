@@ -20,12 +20,14 @@ public:
 //------------------------------
 
   KODE_Instance(KODE_Descriptor* ADescriptor) {
+    KODE_PRINT;
     MDescriptor = ADescriptor;
   }
 
   //----------
 
   virtual ~KODE_Instance() {
+    KODE_PRINT;
     if (MDescriptor) delete MDescriptor;
   }
 

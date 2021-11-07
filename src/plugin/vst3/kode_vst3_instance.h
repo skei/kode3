@@ -13,7 +13,7 @@
 
 #include "base/kode_queue.h"
 
-//#include "plugin/base/kode_base_instance.h"
+#include "plugin/kode_instance.h"
 #include "plugin/kode_process_context.h"
 #include "plugin/vst3/kode_vst3.h"
 #include "plugin/vst3/kode_vst3_utils.h"
@@ -49,8 +49,7 @@ class KODE_Vst3Instance
 , public VST3_IEditController2
 , public VST3_IPlugView
 , public VST3_ITimerHandler
-, public VST3_IEventHandler
-/*, public KODE_BaseInstance*/ {
+, public VST3_IEventHandler {
 
 //------------------------------
 private:
@@ -88,9 +87,7 @@ private:
 public:
 //------------------------------
 
-  //KODE_Vst3Instance(KODE_Descriptor* ADescriptor)
-  KODE_Vst3Instance(KODE_Instance* AInstance)
-  /*: KODE_BaseInstance(ADescriptor)*/ {
+  KODE_Vst3Instance(KODE_Instance* AInstance) {
     KODE_PRINT;
     MRefCount = 1;
     MInstance = AInstance;
@@ -111,17 +108,10 @@ public:
 public:
 //------------------------------
 
-  KODE_Descriptor* getDescriptor() {
-    //KODE_PRINT;
-    return MDescriptor;
-  }
-
-  pid_t getHostPid() { return MHostPid; }
-  pid_t getHostTid() { return MHostTid; }
-
-  const char* getHostName() {
-    return MHostName;
-  }
+  KODE_Descriptor*  getDescriptor() { return MDescriptor; }
+  pid_t             getHostPid()    { return MHostPid; }
+  pid_t             getHostTid()    { return MHostTid; }
+  const char*       getHostName()   { return MHostName; }
 
 //------------------------------
 public:
@@ -158,13 +148,9 @@ public:
     //KODE_Print("%s\n",ARedraw?"(redraw=true)":"");
     uint32_t num = MDescriptor->parameters.size();
     for (uint32_t i=0; i<num; i++) {
-//      float value = MInstance->getParameterValue(i);
-      //KODE_Parameter* parameter = MDescriptor->getParameter(i);
-      //float v = parameter->from01(value);
-//      float v = value;
-      //on_plugin_parameter(0,i,v);
 
-//      AEditor->updateParameterFromHost(i,v,ARedraw);
+//      float value = MInstance->getParameterValue(i);
+//      AEditor->updateParameterFromHost(i,value,ARedraw);
 
     }
   }
@@ -662,7 +648,9 @@ public: // IPluginBase
     else {
     }
     //KODE_Print(" -> Ok\n");
+
 //    MInstance->on_plugin_initialize();
+
     return vst3_ResultOk;
   }
 
@@ -676,7 +664,9 @@ public: // IPluginBase
 
   int32_t VST3_API terminate() final {
     //KODE_Print(" -> Ok\n");
+
 //    on_plugin_terminate();
+
     return vst3_ResultOk;
   }
 
@@ -904,8 +894,10 @@ public: // IComponent
   */
 
   int32_t VST3_API setActive(uint8_t state) final {
+
 //    if (state) on_plugin_activate();
 //    else on_plugin_deactivate();
+
     //KODE_Print("state: %i -> Ok\n",state);
     return vst3_ResultOk;
   }
@@ -1184,7 +1176,9 @@ public: // IAudioProcessor
     MSampleSize   = setup.symbolicSampleSize; // vst3_Sample32, vst3_Sample64
     MBlockSize    = setup.maxSamplesPerBlock;
     MSampleRate   = setup.sampleRate;
+
 //    on_plugin_prepare(MSampleRate,MBlockSize);
+
     //KODE_Print("process_mode: %i sample_size %i block_size %i sample_rate %.2f -> ok\n",MProcessMode,MSampleSize,MBlockSize,MSampleRate);
     return vst3_ResultOk;
   }
@@ -1918,8 +1912,8 @@ public: // IEditController
   int32_t VST3_API setComponentHandler(VST3_IComponentHandler* handler) final {
     //KODE_Print("handler: %p -> Ok\n",handler);
     MComponentHandler = handler;
-//    MHostPid = getpid();
-//    MHostTid = gettid();
+    MHostPid = getpid();
+    MHostTid = gettid();
     return vst3_ResultOk;
   }
 
@@ -2043,8 +2037,10 @@ public: // IPlugView
     if (MDescriptor->options.has_editor) {
       //if (MRunLoop)
       MRunLoop->unregisterTimer(this);
+
 //      MEditor->close();
 //      on_plugin_closeEditor(MEditor);
+
       MEditor = nullptr;
       //KODE_Print(" -> Ok\n");
       return vst3_ResultOk;
@@ -2188,7 +2184,9 @@ public: // ITimerHandler
     //KODE_PRINT;
     #ifndef KODE_NO_GUI
       if (MEditor) {
+
 //        on_plugin_updateEditor(MEditor);
+
       }
       flushParametersToHost();
       //}

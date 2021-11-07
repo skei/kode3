@@ -19,8 +19,7 @@ struct KODE_VstEvents {
 
 //----------------------------------------------------------------------
 
-class KODE_Vst2Instance
-/*: public KODE_InstanceListener*/ {
+class KODE_Vst2Instance  {
 
 //------------------------------
 private:
@@ -79,7 +78,9 @@ public:
   //----------
 
   virtual ~KODE_Vst2Instance() {
-    if (MInstance) delete MInstance;
+    KODE_DPrint("deleting MInstance\n");
+    //if (MInstance) delete MInstance;
+    KODE_DPrint("deleting MDescriptor OK\n");
   }
 
 //------------------------------
@@ -149,14 +150,18 @@ private:
 //------------------------------
 
   void updateParametersInProcess() {
+
 //    MInstance->flushParamsToProcess();
+
   }
 
   //----------
 
   #ifndef KODE_NO_GUI
   void updateEditorInIdle() {
+
 //    MInstance->flushParamsToEditor();
+
   }
   #endif
 
@@ -182,9 +187,13 @@ public: // vst2
     //MInstance->updateProcessValue(index,parameter);
     //MInstance->updateEditorValue(index,parameter);
     MInstance->setParameterValue(index,parameter);
+
 //    MInstance->queueParamToProcess(index);
+
     #ifndef KODE_NO_GUI
+
 //      if (MIsEditorOpen) MInstance->queueParamToEditor(index);
+
     #endif // KODE_NO_GUI
   }
 
@@ -204,8 +213,10 @@ public: // vst2
 
   void vst2_process(float** inputs, float** outputs, VstInt32 sampleFrames) {
     updateParametersInProcess();
+
 //    host_updateTime();
 //    KODE_ProcessContext context;// = {0};
+
     uint32_t i;
 
     for (i=0; i<MDescriptor->inputs.size(); i++)  { MProcessContext.inputs[i]  = inputs[i]; }
@@ -220,8 +231,10 @@ public: // vst2
     MProcessContext.timesigdenom  = MTimeSigDenom; // getTimeSigDenom();
     MProcessContext.playstate     = MPlayState;
     MInstance->on_plugin_process(&MProcessContext);
+
 //    //on_postProcess();
 //    if (MDescriptor->hasFlag(KODE_PLUGIN_SEND_MIDI)) host_flushMidi();
+
   }
 
   //----------
@@ -253,7 +266,9 @@ public: // vst2
         MIsOpen = true;
         //updateHostInfo();
         //MInstance->on_open();
+
 //        MInstance->on_initialize();
+
         break;
 
       //----------
@@ -266,8 +281,10 @@ public: // vst2
       case effClose: // 1
         //KODE_Vst2Trace("vst2: dispatcher/effClose\n");
         MIsOpen = false;
+
 //        MInstance->on_terminate();
 //        MInstance->on_close();
+
         break;
 
       //----------
@@ -393,7 +410,9 @@ public: // vst2
       case effSetSampleRate: // 10
         //KODE_Vst2Trace("vst2: dispatcher/effSetSampleRate %.3f\n",opt);
         MSampleRate = opt;
+
 //        MInstance->on_sampleRate(MSampleRate);
+
         break;
 
       //----------
@@ -448,7 +467,9 @@ public: // vst2
         if (value == 0) { // suspend
           MIsProcessing = false;
           MIsSuspended = true;
+
 //          MInstance->on_deactivate();
+
         }
         else { // resume
           //if (!MIsInitialized) {
@@ -457,7 +478,9 @@ public: // vst2
           //}
           MIsProcessing = true;
           MIsSuspended = false;
+
 //          MInstance->on_activate();
+
         }
         break;
 
@@ -505,7 +528,9 @@ public: // vst2
 //            MEditor = MInstance->openEditor(ptr);
             //MInstance->copyParameterValuesToEditor(MEditor);
             // MEditor->on_realign(true);
+
 //            MEditor->open();
+
             return 1;
           }
         }
@@ -524,9 +549,13 @@ public: // vst2
           if (MIsEditorOpen) {
             MIsEditorOpen = false;
             if (MEditor) {
+
 //              MEditor->close();
+
               //MInstance->on_closeEditor(MEditor);
+
 //              MInstance->closeEditor(MEditor);
+
               MEditor = nullptr;
               return 1;
             }
@@ -554,7 +583,9 @@ public: // vst2
         if (MDescriptor->options.has_editor) {
           if (MIsEditorOpen) {
             //KODE_Assert(MEditor);
+
 //            MInstance->on_updateEditor(MEditor);
+
             updateEditorInIdle();
           }
         }
