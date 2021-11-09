@@ -30,7 +30,7 @@ public:
 //------------------------------
 
   KODE_Vst3Plugin() {
-    KODE_PRINT;
+    KODE_VST3PRINT;
     MDescriptor = new DESCRIPTOR();
     MRefCount = 1;
   }
@@ -38,7 +38,7 @@ public:
   //----------
 
   virtual ~KODE_Vst3Plugin() {
-    KODE_PRINT;
+    KODE_VST3PRINT;
     delete MDescriptor;
   }
 
@@ -48,7 +48,7 @@ public: // FUnknown
 
   uint32_t VST3_API addRef() final {
     MRefCount++;
-    KODE_Print("-> %i\n",MRefCount);
+    KODE_Vst3Print("-> %i\n",MRefCount);
     return MRefCount;
   }
 
@@ -57,7 +57,7 @@ public: // FUnknown
   uint32_t VST3_API release() final {
     //const uint32_t r = --MRefCount;
     MRefCount--;
-    KODE_Print("-> %i %s",MRefCount, (MRefCount==0) ? "(delete)\n" : "\n" );
+    KODE_Vst3Print("-> %i %s",MRefCount, (MRefCount==0) ? "(delete)\n" : "\n" );
     if (MRefCount == 0) delete this;
     return MRefCount;
   }
@@ -65,22 +65,22 @@ public: // FUnknown
   //----------
 
   int32_t VST3_API queryInterface(const VST3_Id _iid, void** obj) final {
-    KODE_Print("iid: ");
+    KODE_Vst3Print("iid: ");
     VST3_PrintIID(_iid);
     if (VST3_iidEqual(VST3_IPluginFactory2_iid,_iid)) {
       *obj = (VST3_IPluginFactory2*)this;
-      KODE_DPrint(" (IPluginFactory2) -> Ok\n");
+      KODE_Vst3DPrint(" (IPluginFactory2) -> Ok\n");
       addRef();
       return vst3_ResultOk;
     }
     if (VST3_iidEqual(VST3_IPluginFactory3_iid,_iid)) {
       *obj = (VST3_IPluginFactory3*)this;
-      KODE_DPrint(" (IPluginFactory3) -> Ok\n");
+      KODE_Vst3DPrint(" (IPluginFactory3) -> Ok\n");
       addRef();
       return vst3_ResultOk;
     }
     *obj = nullptr;
-    KODE_DPrint(" (unknown) -> NoInterface\n");
+    KODE_Vst3DPrint(" (unknown) -> NoInterface\n");
     return vst3_NoInterface;
   }
 
@@ -93,54 +93,54 @@ public:
   //--------------------
 
   int32_t VST3_API getFactoryInfo(VST3_PFactoryInfo* info) final {
-    KODE_Print(" -> Ok\n");
+    KODE_Vst3Print(" -> Ok\n");
     strcpy(info->vendor,MDescriptor->author);
     strcpy(info->url,MDescriptor->url);
     strcpy(info->email,MDescriptor->email);
     info->flags = VST3_PFactoryInfo::vst3_NoFlags;
-    //KODE_DPrint(". author: '%s'\n",info->vendor);
-    //KODE_DPrint(". url: '%s'\n",info->url);
-    //KODE_DPrint(". email: '%s'\n",info->email);
-    //KODE_DPrint(". flags: %i\n",info->flags);
+    //KODE_Vst3DPrint(". author: '%s'\n",info->vendor);
+    //KODE_Vst3DPrint(". url: '%s'\n",info->url);
+    //KODE_Vst3DPrint(". email: '%s'\n",info->email);
+    //KODE_Vst3DPrint(". flags: %i\n",info->flags);
     return vst3_ResultOk;
   }
 
   //----------
 
   int32_t VST3_API countClasses() final {
-    KODE_Print(" -> 1\n");
+    KODE_Vst3Print(" -> 1\n");
     return 1;
   }
 
   //----------
 
   int32_t VST3_API getClassInfo(int32_t index, VST3_PClassInfo* info) final {
-    KODE_Print("index: %i",index);
+    KODE_Vst3Print("index: %i",index);
     switch (index) {
       case 0:
-        KODE_DPrint(" -> Ok\n");
+        KODE_Vst3DPrint(" -> Ok\n");
         memcpy(info->cid,MDescriptor->getLongId(),16);
         info->cardinality = VST3_PClassInfo::vst3_ManyInstances;
         strncpy(info->category,vst3_VstAudioEffectClass,VST3_PClassInfo::vst3_CategorySize);
         strncpy(info->name,MDescriptor->name,VST3_PClassInfo::vst3_NameSize);
-        //KODE_DPrint(". cid: ");   VST3_PrintIID(info->cid);   KODE_DPrint("\n");
-        //KODE_DPrint(". cardinality: %i (%s)\n",info->cardinality,info->cardinality?"ManyInstances":"");
-        //KODE_DPrint(". category: '%s'\n",info->category);
-        //KODE_DPrint(". name: '%s'\n",info->name);
+        //KODE_Vst3DPrint(". cid: ");   VST3_PrintIID(info->cid);   KODE_Vst3DPrint("\n");
+        //KODE_Vst3DPrint(". cardinality: %i (%s)\n",info->cardinality,info->cardinality?"ManyInstances":"");
+        //KODE_Vst3DPrint(". category: '%s'\n",info->category);
+        //KODE_Vst3DPrint(". name: '%s'\n",info->name);
         return vst3_ResultOk;
     }
-    KODE_DPrint(" -> False\n");
+    KODE_Vst3DPrint(" -> False\n");
     return vst3_ResultFalse;
   }
 
   //----------
 
   int32_t VST3_API createInstance(const char* cid, const char* _iid, void** obj) final {
-    KODE_Print("cid: ");
-    //KODE_DPrint(cid);
+    KODE_Vst3Print("cid: ");
+    //KODE_Vst3DPrint(cid);
     VST3_PrintIID(cid);
     if (VST3_iidEqual(MDescriptor->getLongId(),cid)) {
-      KODE_DPrint(" (%s) -> Ok\n",MDescriptor->name);
+      KODE_Vst3DPrint(" (%s) -> Ok\n",MDescriptor->name);
 
       //INSTANCE* instance = new INSTANCE(MDescriptor);
 
@@ -156,7 +156,7 @@ public:
       return vst3_ResultOk;
     }
     *obj = nullptr;
-    KODE_DPrint(" (unknown) -> False\n");
+    KODE_Vst3DPrint(" (unknown) -> False\n");
     return vst3_NotImplemented;
   }
 
@@ -165,7 +165,7 @@ public: // IPluginFactory2
 //------------------------------
 
   int32_t VST3_API getClassInfo2(int32_t index, VST3_PClassInfo2* info) final {
-    KODE_Print("index: %i",index);
+    KODE_Vst3Print("index: %i",index);
     switch (index) {
       case 0:
         memcpy(info->cid,MDescriptor->getLongId(),16);
@@ -182,16 +182,16 @@ public: // IPluginFactory2
         strcpy(info->vendor,MDescriptor->author);
         strcpy(info->version,MDescriptor->getVersionString());
         strcpy(info->sdkVersion,vst3_VstVersionString);
-        KODE_DPrint(" -> Ok\n");
-        //KODE_DPrint(". cid: ");   VST3_PrintIID(info->cid);   KODE_DPrint("\n");
-        //KODE_DPrint(". cardinality: %i (%s)\n",info->cardinality,info->cardinality?"ManyInstances":"");
-        //KODE_DPrint(". category: '%s'\n",info->category);
-        //KODE_DPrint(". name: '%s'\n",info->name);
-        //KODE_DPrint(". classFlags: %i\n",info->classFlags);
-        //KODE_DPrint(". subCategories: '%s'\n",info->subCategories);
+        KODE_Vst3DPrint(" -> Ok\n");
+        //KODE_Vst3DPrint(". cid: ");   VST3_PrintIID(info->cid);   KODE_Vst3DPrint("\n");
+        //KODE_Vst3DPrint(". cardinality: %i (%s)\n",info->cardinality,info->cardinality?"ManyInstances":"");
+        //KODE_Vst3DPrint(". category: '%s'\n",info->category);
+        //KODE_Vst3DPrint(". name: '%s'\n",info->name);
+        //KODE_Vst3DPrint(". classFlags: %i\n",info->classFlags);
+        //KODE_Vst3DPrint(". subCategories: '%s'\n",info->subCategories);
         return vst3_ResultOk;
     }
-    KODE_DPrint(" -> False\n");
+    KODE_Vst3DPrint(" -> False\n");
     return vst3_ResultFalse;
   }
 
@@ -200,14 +200,14 @@ public: // IPluginFactory3
 //------------------------------
 
   int32_t VST3_API getClassInfoUnicode(int32_t index, VST3_PClassInfoW* info) final {
-    KODE_Print("index: %i -> False\n",index);
+    KODE_Vst3Print("index: %i -> False\n",index);
     return vst3_ResultFalse;
   }
 
   //----------
 
   int32_t VST3_API setHostContext(VST3_FUnknown* context) final {
-    KODE_Print("context: %p -> Ok\n",context);
+    KODE_Vst3Print("context: %p -> Ok\n",context);
     MHostContext = context;
     return vst3_ResultOk;
   }
@@ -235,8 +235,7 @@ bool                          vst3_module_exit(void)                        asm 
   /*__attribute__((visibility("default")))*/            \
   __KODE_EXPORT                                         \
   VST3_IPluginFactory* VST3_API vst3_entrypoint() {     \
-    KODE_PRINT;                                         \
-    /*KODE_Print("\n");*/                               \
+    KODE_VST3PRINT;                                     \
     return new KODE_Vst3Plugin<D,I,E>();                \
   }                                                     \
                                                         \
@@ -246,8 +245,7 @@ bool                          vst3_module_exit(void)                        asm 
   /*__attribute__((visibility("default")))*/            \
   __KODE_EXPORT                                         \
   bool vst3_module_entry(void* sharedLibraryHandle)  {  \
-    KODE_PRINT;                                         \
-/*  KODE_Print("\n");                      */           \
+    KODE_VST3PRINT;                                     \
 /*    if (++counter == 1) {                    */       \
 /*      moduleHandle = sharedLibraryHandle;    */       \
 /*      return true;                           */       \
@@ -258,8 +256,7 @@ bool                          vst3_module_exit(void)                        asm 
   /*__attribute__((visibility("default")))*/            \
   __KODE_EXPORT                                         \
   bool vst3_module_exit(void) {                         \
-    KODE_PRINT;                                         \
-/*    KODE_Print("\n");                    */           \
+    KODE_VST3PRINT;                                     \
 /*    if (--counter == 0) {                    */       \
 /*      moduleHandle = nullptr;                */       \
 /*      return true;                           */       \

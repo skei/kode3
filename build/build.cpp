@@ -1,7 +1,7 @@
 
 
 
-#define KODE_PLUGIN_VST2
+#define KODE_PLUGIN_VST3
 //#define KODE_PLUGIN_ALL
 
 

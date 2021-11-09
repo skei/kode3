@@ -9,6 +9,8 @@
 
 //----------------------------------------------------------------------
 
+void KODE_NoPrint(const char*,...) {}
+
 #ifndef KODE_DEBUG
   #undef KODE_DEBUG_PRINT
   #undef KODE_DEBUG_CALLSTACK
@@ -58,7 +60,7 @@
 
 #else // KODE_DEBUG
 
-  void KODE_NoPrint(const char*,...) {}
+  //void KODE_NoPrint(const char*,...) {}
   #define KODE_Print  KODE_NoPrint
   #define KODE_DPrint KODE_NoPrint
   #define KODE_PRINT  {}

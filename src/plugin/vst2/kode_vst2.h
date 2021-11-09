@@ -19,16 +19,19 @@
 
 //----------------------------------------------------------------------
 
-//#ifdef KODE_DEBUG_VST2
-//  #define KODE_VST2TRACE KODE_TRACE
-//  #define KODE_Vst2Trace KODE_Trace
-//  #define KODE_Vst2DTrace KODE_DTrace
-//#else
-//  #define KODE_VST2TRACE
-//  #define KODE_Vst2Trace KODE_NoTrace
-//  #define KODE_Vst2DTrace KODE_NoTrace
-//
-//#endif
+#ifndef KODE_DEBUG
+  #undef KODE_DEBUG_VST2
+#endif
+
+#ifdef KODE_DEBUG_VST2
+  #define KODE_VST2PRINT  KODE_PRINT
+  #define KODE_Vst2Print  KODE_Print
+  #define KODE_Vst2DPrint KODE_DPrint
+#else
+  #define KODE_VST2PRINT
+  #define KODE_Vst2Print  KODE_NoPrint
+  #define KODE_Vst2DPrint KODE_NoPrint
+#endif
 
 //----------------------------------------------------------------------
 #endif

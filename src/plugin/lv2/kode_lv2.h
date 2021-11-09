@@ -18,6 +18,21 @@
 
 //----------
 
+#ifndef KODE_DEBUG
+  #undef KODE_DEBUG_LV2
+#endif
+
+#ifdef KODE_DEBUG_LV2
+  #define KODE_LV2PRINT  KODE_PRINT
+  #define KODE_Lv2Print  KODE_Print
+  #define KODE_Lv2DPrint KODE_DPrint
+#else
+  #define KODE_LV2PRINT
+  #define KODE_Lv2Print  KODE_NoPrint
+  #define KODE_Lv2DPrint KODE_NoPrint
+#endif
+
+
 #define KODE_LV2_MAX_URI_LENGTH     256
 #define KODE_LV2_MANIFEST_TTL_SIZE  65536
 #define KODE_LV2_PLUGIN_TTL_SIZE    65536

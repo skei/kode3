@@ -221,7 +221,7 @@ private: // lv2 callbacks
 
   /*
     todo: new/separate descriptor per instance?
-    (so we don't ned to keep the MDescriptor static..)
+    (so we don't need to keep the MDescriptor static..)
     we could return a struct...
 
     todo2: send the features pointer to the instance constructor, and
