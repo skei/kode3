@@ -1,15 +1,8 @@
 
-//#define KODE_PLUGIN_VST3
 #define KODE_PLUGIN_ALL
-
-
-
 #define KODE_DEBUG_PRINT
 #define KODE_DEBUG_PRINT_SOCKET
-
 // nc -U -l -k /tmp/kode.socket
-
-
 
 //----------
 
@@ -26,9 +19,9 @@ public:
   myDescriptor() {
     KODE_PRINT;
     #ifdef KODE_DEBUG
-    name    = "kode_debug";
+      name  = "kode_debug";
     #else
-    name    = "kode";
+      name  = "kode";
     #endif
     author  = "skei.audio";
     appendInput("input 1");
@@ -52,8 +45,18 @@ public:
     KODE_PRINT;
   }
 
-  bool on_plugin_init() final { return true; }
-  void on_plugin_destroy() final {}
+  virtual ~myInstance() {
+    KODE_PRINT;
+  }
+
+  bool on_plugin_init() final {
+    KODE_PRINT;
+    return true;
+  }
+
+  void on_plugin_destroy() final {
+    KODE_PRINT;
+  }
 
 };
 
@@ -74,4 +77,3 @@ public:
 //----------------------------------------------------------------------
 
 KODE_MAIN(myDescriptor,myInstance,myEditor)
-//KODE_MAIN(KODE_Descriptor,KODE_Instance,KODE_Editor)

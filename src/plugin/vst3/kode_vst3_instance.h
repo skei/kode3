@@ -488,7 +488,9 @@ public: // FUnknown
     const uint32_t r = --MRefCount;
     //KODE_Vst3Print("-> %i %s",r, (r==0) ? "(delete)\n" : "\n" );
     if (r == 0) {
-//      MInstance->on_plugin_close();
+
+      MInstance->on_plugin_destroy();
+
       delete this;
     };
     return r;
@@ -895,8 +897,8 @@ public: // IComponent
 
   int32_t VST3_API setActive(uint8_t state) final {
 
-//    if (state) on_plugin_activate();
-//    else on_plugin_deactivate();
+    if (state) MInstance->on_plugin_activate();
+    else MInstance->on_plugin_deactivate();
 
     //KODE_Vst3Print("state: %i -> Ok\n",state);
     return vst3_ResultOk;
@@ -1197,8 +1199,11 @@ public: // IAudioProcessor
 
   int32_t VST3_API setProcessing(uint8_t state) final {
     MIsProcessing = state;
-    //if (MIsProcessing) on_plugin_prepare(MSampleRate,MBlockSize);
+
+    if (MIsProcessing) MInstance->on_plugin_start_processing();
+    else  MInstance->on_plugin_stop_processing();
     //KODE_Vst3Print("state: %i -> Ok\n",state);
+
     return vst3_ResultOk;
   }
 

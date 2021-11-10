@@ -11,6 +11,11 @@
 //#define FILENAME "/home/skei/.vst3/u-he/Hive.vst3/Contents/x86_64-linux/Hive.so"  // symloink
 //#define FILENAME "/home/skei/.vst3/Instinct.vst3/Contents/x86_64-linux/Instinct.so" // vst3
 
+/*
+  https://github.com/free-audio/clap-host/blob/master/host/plugin-host.cc
+  line 86
+*/
+
 int main() {
   KODE_HostedClapPlugin* plugin = new KODE_HostedClapPlugin();
   if (plugin) {
@@ -19,7 +24,14 @@ int main() {
     plugin->loadLib(FILENAME);
     if (plugin) {
       KODE_DPrint("plugin loaded\n");
-      struct clap_plugin_entry* plugin_entry = (struct clap_plugin_entry*)plugin->getSymbol("clap_plugin_entry");
+
+      const struct clap_plugin_entry* plugin_entry =
+        (const struct clap_plugin_entry*)plugin->getSymbol("clap_plugin_entry");
+
+      //void* plugin_entry_ptr = plugin->getSymbol("clap_plugin_entry");
+      //const struct clap_plugin_entry* plugin_entry =
+      //  reinterpret_cast<const struct clap_plugin_entry *>(plugin_entry_ptr);
+
       if (plugin_entry) {
 
         KODE_DPrint("\n");
@@ -39,6 +51,9 @@ int main() {
 
         bool result = plugin_entry->init("./");
         KODE_DPrint("clap_plugin_entry->init() returned: %s\n", result?"true":"false");
+
+        // crashes:
+
         uint32_t num = plugin_entry->get_plugin_count();
         KODE_DPrint("clap_plugin_entry->get_plugin_count() returned: %i\n", num);
 

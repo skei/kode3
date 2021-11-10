@@ -147,9 +147,11 @@ public:
       KODE_Instance* instance = _kode_create_instance(MDescriptor);
       KODE_Vst3Instance* vst3_instance = new KODE_Vst3Instance(instance);
 
-//      instance->on_plugin_open();
+      instance->on_plugin_init(); //  ->on_plugin_destroy called in vst3_instance.release()
+
 //      instance->setDefaultParameterValues();
 //      instance->updateAllParameters();
+
 
       //*obj = (VST3_IComponent*)instance;
       *obj = (VST3_IComponent*)vst3_instance;
