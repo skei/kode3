@@ -7,6 +7,9 @@
 
 #include "kode.h"
 
+#define DR_WAV_IMPLEMENTATION
+//#include "extern/dr_wav.h"
+
 //----- clap -----
 
 #include "plugin/clap/kode_hosted_clap_instance.h"
@@ -41,16 +44,12 @@ void test_clap() {
     plugin->loadLib(CLAP_FILENAME);
     if (plugin) {
       KODE_DPrint("plugin loaded\n");
-
       const struct clap_plugin_entry* plugin_entry =
         (const struct clap_plugin_entry*)plugin->getSymbol("clap_plugin_entry");
-
       //void* plugin_entry_ptr = plugin->getSymbol("clap_plugin_entry");
       //const struct clap_plugin_entry* plugin_entry =
       //  reinterpret_cast<const struct clap_plugin_entry *>(plugin_entry_ptr);
-
       if (plugin_entry) {
-
         KODE_DPrint("\n");
         KODE_DPrint("clap_plugin_entry:               %p\n",plugin_entry);
         KODE_DPrint("  clap_version.major             %i\n",plugin_entry->clap_version.major);
@@ -65,26 +64,18 @@ void test_clap() {
         KODE_DPrint("  get_invalidation_source        %p\n",plugin_entry->get_invalidation_source);
         KODE_DPrint("  refresh                        %p\n",plugin_entry->refresh);
         KODE_DPrint("\n");
-
         bool result = plugin_entry->init("./");
         KODE_DPrint("clap_plugin_entry->init() returned: %s\n", result?"true":"false");
-
-        // crashes:
-
         uint32_t num = plugin_entry->get_plugin_count();
         KODE_DPrint("clap_plugin_entry->get_plugin_count() returned: %i\n", num);
-
       }
       else {
         KODE_DPrint("'clap_plugin_entry' symbol not found\n");
       }
-
       plugin->unloadLib();
       KODE_DPrint("plugin unloaded\n");
-
       delete plugin;
       KODE_DPrint("plugin deleted\n");
-
     }
     else {
       KODE_DPrint("error loading plugin\n");
@@ -110,18 +101,12 @@ void test_vst2() {
     plugin->loadLib(VST2_FILENAME);
     if (plugin) {
       KODE_DPrint("plugin loaded\n");
-
       typedef AEffect* (*VSTPluginMain)(audioMasterCallback audioMaster);
-
       VSTPluginMain vstpluginmain = (VSTPluginMain)plugin->getSymbol("VSTPluginMain");
       KODE_DPrint("vstpluginmain: %p\n", vstpluginmain);
-
       AEffect* aeffect = vstpluginmain(_audioMasterCallback); // nullptr = crash :-/
-
       KODE_DPrint("aeffect: %p\n", aeffect);
-
       if (aeffect) {
-
         KODE_DPrint("\n");
         KODE_DPrint("AEffect:                 %p\n",  aeffect);
         KODE_DPrint("  magic                  %08x\n",aeffect->magic);
@@ -140,18 +125,14 @@ void test_vst2() {
         KODE_DPrint("  processReplacing       %p\n",  aeffect->processReplacing);
         KODE_DPrint("  processDoubleReplacing %p\n",  aeffect->processDoubleReplacing);
         KODE_DPrint("\n");
-
       }
       else {
         KODE_DPrint("'VSTPluginMain' symbol not found\n");
       }
-
       plugin->unloadLib();
       KODE_DPrint("plugin unloaded\n");
-
       delete plugin;
       KODE_DPrint("plugin deleted\n");
-
     }
     else {
       KODE_DPrint("error loading plugin\n");

@@ -219,6 +219,7 @@
 		<Unit filename="../src/extern/clap/stream.h" />
 		<Unit filename="../src/extern/clap/string-sizes.h" />
 		<Unit filename="../src/extern/clap/version.h" />
+		<Unit filename="../src/extern/dr_wav.h" />
 		<Unit filename="../src/extern/vst2/aeffect.h" />
 		<Unit filename="../src/extern/vst2/aeffectx.h" />
 		<Unit filename="../src/extern/vst2/fst.h" />
