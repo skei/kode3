@@ -273,6 +273,7 @@
 		<Unit filename="../src/plugin/lv2/kode_lv2_instance.h" />
 		<Unit filename="../src/plugin/lv2/kode_lv2_plugin.h" />
 		<Unit filename="../src/plugin/lv2/kode_lv2_utils.h" />
+		<Unit filename="../src/plugin/vst2/kode_hosted_vst2_instance.h" />
 		<Unit filename="../src/plugin/vst2/kode_hosted_vst2_plugin.h" />
 		<Unit filename="../src/plugin/vst2/kode_vst2.h" />
 		<Unit filename="../src/plugin/vst2/kode_vst2_base.h" />
@@ -291,7 +292,7 @@
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
-		<Unit filename="test/test_clap_hosting.cpp">
+		<Unit filename="test/test_hosting.cpp">
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>

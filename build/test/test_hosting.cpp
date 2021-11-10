@@ -3,28 +3,41 @@
 //#define KODE_DEBUG_PRINT_SOCKET
 // nc -U -l -k /tmp/kode.socket
 
+//----------
+
 #include "kode.h"
+
+//----- clap -----
+
 #include "plugin/clap/kode_hosted_clap_instance.h"
 #include "plugin/clap/kode_hosted_clap_plugin.h"
 
 //#define FILENAME "/home/skei/.u-he/Hive/Hive.64.so"
-#define FILENAME "/DISKS/sda2/code/git/kode3/bin/kode_debug.so"
-
-
 //#define FILENAME "/home/skei/.vst3/u-he/Hive.vst3/Contents/x86_64-linux/Hive.so"  // symloink
 //#define FILENAME "/home/skei/.vst3/Instinct.vst3/Contents/x86_64-linux/Instinct.so" // vst3
+#define CLAP_FILENAME "/DISKS/sda2/code/git/kode3/bin/kode_debug.so"
+
+//----- vst2 -----
+
+#include "plugin/vst2/kode_hosted_vst2_instance.h"
+#include "plugin/vst2/kode_hosted_vst2_plugin.h"
+#define VST2_FILENAME "/DISKS/sda2/audio/vst/linux/tal/libTAL-NoiseMaker.so"
+
+//----------------------------------------------------------------------
+// clap
+//----------------------------------------------------------------------
 
 /*
   https://github.com/free-audio/clap-host/blob/master/host/plugin-host.cc
   line 86
 */
 
-int main() {
+void test_clap() {
   KODE_HostedClapPlugin* plugin = new KODE_HostedClapPlugin();
   if (plugin) {
     KODE_DPrint("plugin created\n");
-    KODE_DPrint("loading %s\n",FILENAME);
-    plugin->loadLib(FILENAME);
+    KODE_DPrint("loading %s\n",CLAP_FILENAME);
+    plugin->loadLib(CLAP_FILENAME);
     if (plugin) {
       KODE_DPrint("plugin loaded\n");
 
@@ -76,5 +89,66 @@ int main() {
       KODE_DPrint("error loading plugin\n");
     }
   }
+}
+
+//----------------------------------------------------------------------
+// vst2
+//----------------------------------------------------------------------
+
+void test_vst2() {
+  KODE_HostedVst2Plugin* plugin = new KODE_HostedVst2Plugin();
+  if (plugin) {
+    KODE_DPrint("plugin created\n");
+    KODE_DPrint("loading %s\n",VST2_FILENAME);
+    plugin->loadLib(VST2_FILENAME);
+    if (plugin) {
+      KODE_DPrint("plugin loaded\n");
+      AEffect* aeffect = (AEffect*)plugin->getSymbol("VSTPluginMain");
+      if (aeffect) {
+
+        KODE_DPrint("\n");
+        KODE_DPrint("AEffect:                 %p\n",  aeffect);
+        KODE_DPrint("  magic                  %08x\n",aeffect->magic);
+        KODE_DPrint("  uniqueID               %08x\n",aeffect->uniqueID);
+        KODE_DPrint("  numInputs              %i\n",  aeffect->numInputs);
+        KODE_DPrint("  numOutputs             %i\n",  aeffect->numOutputs);
+        KODE_DPrint("  numParams              %i\n",  aeffect->numParams);
+        KODE_DPrint("  numPrograms            %i\n",  aeffect->numPrograms);
+        KODE_DPrint("  version                %i\n",  aeffect->version);
+        KODE_DPrint("  initialDelay           %i\n",  aeffect->initialDelay);
+        KODE_DPrint("  object                 %p\n",  aeffect->object);
+        KODE_DPrint("  user                   %p\n",  aeffect->user);
+        KODE_DPrint("  dispatcher             %p\n",  aeffect->dispatcher);
+        KODE_DPrint("  setParameter           %p\n",  aeffect->setParameter);
+        KODE_DPrint("  getParameter           %p\n",  aeffect->getParameter);
+        KODE_DPrint("  processReplacing       %p\n",  aeffect->processReplacing);
+        KODE_DPrint("  processDoubleReplacing %p\n",  aeffect->processDoubleReplacing);
+        KODE_DPrint("\n");
+
+      }
+      else {
+        KODE_DPrint("'VSTPluginMain' symbol not found\n");
+      }
+
+      plugin->unloadLib();
+      KODE_DPrint("plugin unloaded\n");
+
+      delete plugin;
+      KODE_DPrint("plugin deleted\n");
+
+    }
+    else {
+      KODE_DPrint("error loading plugin\n");
+    }
+  }
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+int main() {
+  //test_clap();
+  test_vst2();
   return 0;
 }

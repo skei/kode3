@@ -1,6 +1,6 @@
 # depslib dependency file v1.0
-1636560547 source:/DISKS/sda2/code/git/kode3/build/build.cpp
-	"test/test_clap_hosting.cpp"
+1636571366 source:/DISKS/sda2/code/git/kode3/build/build.cpp
+	"test/test_hosting.cpp"
 
 1636545171 /DISKS/sda2/code/git/kode3/src/kode.h
 	<stdint.h>
@@ -365,7 +365,7 @@
 	"plugin/vst2/kode_vst2.h"
 	"plugin/vst2/kode_vst2_instance.h"
 
-1636017573 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2.h
+1636496842 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2.h
 	"kode.h"
 	"extern/vst2/aeffect.h"
 	"extern/vst2/aeffectx.h"
@@ -733,4 +733,22 @@
 1636540470 /DISKS/sda2/code/git/kode3/src/plugin/kode_hosted_instance.h
 	"kode.h"
 	"plugin/kode_instance.h"
+
+1636572308 /DISKS/sda2/code/git/kode3/build/test/test_hosting.cpp
+	"kode.h"
+	"plugin/clap/kode_hosted_clap_instance.h"
+	"plugin/clap/kode_hosted_clap_plugin.h"
+	"plugin/vst2/kode_hosted_vst2_instance.h"
+	"plugin/vst2/kode_hosted_vst2_plugin.h"
+
+1636571329 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_hosted_vst2_instance.h
+	"kode.h"
+	"plugin/kode_hosted_instance.h"
+	"plugin/vst2/kode_vst2.h"
+
+1636571289 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_hosted_vst2_plugin.h
+	"kode.h"
+	"plugin/kode_hosted_plugin.h"
+	"plugin/vst2/kode_vst2.h"
+	"plugin/vst2/kode_hosted_vst2_instance.h"
 
