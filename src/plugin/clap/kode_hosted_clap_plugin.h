@@ -29,13 +29,13 @@ public:
 
   KODE_HostedClapPlugin()
   : KODE_HostedPlugin() {
-    KODE_PRINT;
+    //KODE_PRINT;
   }
 
   //----------
 
   virtual ~KODE_HostedClapPlugin() {
-    KODE_PRINT;
+    //KODE_PRINT;
   }
 
 //------------------------------

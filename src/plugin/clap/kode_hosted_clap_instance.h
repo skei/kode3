@@ -30,13 +30,13 @@ public:
 
   KODE_HostedClapInstance(KODE_Descriptor* ADescriptor)
   : KODE_HostedInstance(ADescriptor) {
-    KODE_PRINT;
+    //KODE_PRINT;
   }
 
   //----------
 
   virtual ~KODE_HostedClapInstance() {
-    KODE_PRINT;
+    //KODE_PRINT;
   }
 
 

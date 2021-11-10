@@ -276,7 +276,7 @@
 	"plugin/kode_parameter.h"
 	"plugin/kode_preset.h"
 
-1636308972 /DISKS/sda2/code/git/kode3/src/plugin/kode_instance.h
+1636540470 /DISKS/sda2/code/git/kode3/src/plugin/kode_instance.h
 	"kode.h"
 	"plugin/kode_descriptor.h"
 	"plugin/kode_process_context.h"
@@ -566,7 +566,7 @@
 
 1635979251 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_base.h
 
-1636507068 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_hosted_clap_plugin.h
+1636540405 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_hosted_clap_plugin.h
 	"kode.h"
 	"plugin/kode_hosted_plugin.h"
 	"plugin/clap/kode_clap.h"
@@ -683,7 +683,7 @@
 	<cxxabi.h>
 	<execinfo.h>
 
-1636291030 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug_print.h
+1636540833 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug_print.h
 	<stdio.h>
 	<string.h>
 	<stdarg.h>
@@ -715,22 +715,22 @@
 1636218225 /DISKS/sda2/code/git/kode3/src/gui/kode_window.h
 	"kode.h"
 
-1636507101 /DISKS/sda2/code/git/kode3/build/test/test_clap_hosting.cpp
+1636542481 /DISKS/sda2/code/git/kode3/build/test/test_clap_hosting.cpp
 	"kode.h"
 	"plugin/clap/kode_hosted_clap_instance.h"
 	"plugin/clap/kode_hosted_clap_plugin.h"
 
-1636507058 /DISKS/sda2/code/git/kode3/src/plugin/kode_hosted_plugin.h
+1636540152 /DISKS/sda2/code/git/kode3/src/plugin/kode_hosted_plugin.h
 	<dlfcn.h>
 	"kode.h"
 	"plugin/kode_instance.h"
 
-1636506741 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_hosted_clap_instance.h
+1636540486 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_hosted_clap_instance.h
 	"kode.h"
 	"plugin/kode_hosted_instance.h"
 	"plugin/clap/kode_clap.h"
 
-1636503748 /DISKS/sda2/code/git/kode3/src/plugin/kode_hosted_instance.h
+1636540470 /DISKS/sda2/code/git/kode3/src/plugin/kode_hosted_instance.h
 	"kode.h"
 	"plugin/kode_instance.h"
 

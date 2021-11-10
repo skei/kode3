@@ -18,7 +18,17 @@ private:
   void* MLibHandle = nullptr;
 
 //------------------------------
-protected:
+public:
+//------------------------------
+
+  KODE_HostedPlugin() {
+  }
+
+  virtual ~KODE_HostedPlugin() {
+  }
+
+//------------------------------
+public:
 //------------------------------
 
   void* loadLib(const char* AFilename) {

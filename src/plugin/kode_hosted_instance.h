@@ -22,13 +22,13 @@ public:
 
   KODE_HostedInstance(KODE_Descriptor* ADescriptor)
   : KODE_Instance(ADescriptor) {
-    KODE_PRINT;
+    //KODE_PRINT;
   }
 
   //----------
 
   virtual ~KODE_HostedInstance() {
-    KODE_PRINT;
+    //KODE_PRINT;
   }
 
 //------------------------------
