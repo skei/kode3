@@ -56,10 +56,10 @@ class KODE_Descriptor {
 private:
 //------------------------------
 
-  uint8_t   MLongId[16];
-  uint8_t   MLongEditorId[16];
-  char      MVersionString[32];
-  char      MIdString[256];
+  uint8_t   MLongId[16] = {0};
+  uint8_t   MLongEditorId[16] = {0};
+  char      MVersionString[32] = {0};
+  char      MIdString[256] = {0};
 
 
 //------------------------------
@@ -122,6 +122,30 @@ public:
 public:
 //------------------------------
 
+  void print() {
+    KODE_DPrint("name          = %s\n",name);
+    KODE_DPrint("author        = %s\n",author);
+    KODE_DPrint("version       = 0x%08x\n",version);
+    KODE_DPrint("short_id      = 0x%08x (%c%c%c%c)\n",short_id,((short_id & 0xff000000) >> 24),((short_id & 0x00ff0000) >> 16),((short_id & 0x0000ff00) >> 8),(short_id & 0x000000ff));
+    KODE_DPrint("email         = %s\n",email);
+    KODE_DPrint("url           = %s\n",url);
+    KODE_DPrint("description   = %s\n",description);
+    KODE_DPrint("keywords      = %s\n",keywords);
+    KODE_DPrint("license_text  = %s\n",license_text);
+
+    KODE_DPrint("editorWidth   = %i\n",editorWidth);  // default width
+    KODE_DPrint("editorHeight  = %i\n",editorHeight);  // default height
+
+    KODE_DPrint("num inputs    = %i\n",inputs.size());
+    KODE_DPrint("num outputs   = %i\n",outputs.size());
+    KODE_DPrint("num params    = %i\n",parameters.size());
+
+  }
+
+//------------------------------
+public:
+//------------------------------
+
   uint8_t* getLongId() {
     uint32_t* ptr = (uint32_t*)MLongId;
     ptr[0] = KODE_MAGIC_K_PL;
@@ -145,22 +169,6 @@ public:
   //----------
 
     // 0x03030001 -> "3.3.1"
-
-  //const char* getVersionText() {
-  //  char temp[16];
-  //  uint32_t major = MVersion & 0xff000000;
-  //  uint32_t minor = MVersion & 0x00ff0000;
-  //  uint32_t build = MVersion & 0x0000ffff;
-  //  KODE_IntToString(temp,major);
-  //  strcpy(MVersionText,temp);
-  // strcat(MVersionText,".");
-  //  KODE_IntToString(temp,minor);
-  //  strcat(MVersionText,temp);
-  //  strcat(MVersionText,".");
-  //  KODE_IntToString(temp,build);
-  //  strcat(MVersionText,temp);
-  //  return MVersionText;
-  //}
 
   //char* getVersionString(char* buffer) {
   char* getVersionString() {

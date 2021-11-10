@@ -12,10 +12,12 @@
 class KODE_HostedPlugin {
 
 //------------------------------
-private:
+protected:
 //------------------------------
 
-  void* MLibHandle = nullptr;
+  const char* MFile       = "";
+  void*       MLibHandle  = nullptr;
+  bool        MLoaded     = false;
 
 //------------------------------
 public:
@@ -24,17 +26,45 @@ public:
   KODE_HostedPlugin() {
   }
 
+  //----------
+
+  KODE_HostedPlugin(const char* AFile) {
+    MFile = AFile;
+    //loadLib(AFile);
+    //MLibHandle = dlopen(MFile,RTLD_LAZY | RTLD_LOCAL ); // RTLD_NOW, RTLD_LAZY
+    MLibHandle = loadLib(MFile);
+    if (MLibHandle) MLoaded = true;
+  }
+
+  //----------
+
   virtual ~KODE_HostedPlugin() {
+    //unloadLib();
+    if (MLibHandle && MLoaded) {
+      //dlclose(MLibHandle);
+      unloadLib();
+    }
   }
 
 //------------------------------
-public:
+protected:
 //------------------------------
 
   void* loadLib(const char* AFilename) {
     MLibHandle = dlopen(AFilename,RTLD_LAZY | RTLD_LOCAL ); // RTLD_NOW, RTLD_LAZY
     return MLibHandle;
   }
+
+  //----------
+
+  void unloadLib() {
+    if (MLibHandle) {
+      dlclose(MLibHandle);
+      MLibHandle = nullptr;
+    }
+  }
+
+  //----------
 
   void* getSymbol(const char* ASymbol) {
     if (MLibHandle) {
@@ -43,12 +73,15 @@ public:
     return nullptr;
   }
 
-  void unloadLib() {
-    if (MLibHandle) {
-      dlclose(MLibHandle);
-      MLibHandle = nullptr;
-    }
+//------------------------------
+public:
+//------------------------------
+
+  virtual KODE_Descriptor* getDescriptor() {
+    return nullptr;
   }
+
+  //----------
 
   virtual KODE_HostedInstance* createInstance() {
     return nullptr;

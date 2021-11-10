@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1636571366 source:/DISKS/sda2/code/git/kode3/build/build.cpp
+1636587720 source:/DISKS/sda2/code/git/kode3/build/build.cpp
 	"test/test_hosting.cpp"
 
 1636545171 /DISKS/sda2/code/git/kode3/src/kode.h
@@ -269,7 +269,7 @@
 	"plugin/vst2/kode_vst2_plugin.h"
 	"plugin/vst3/kode_vst3_plugin.h"
 
-1636147941 /DISKS/sda2/code/git/kode3/src/plugin/kode_descriptor.h
+1636587550 /DISKS/sda2/code/git/kode3/src/plugin/kode_descriptor.h
 	"kode.h"
 	"base/kode_array.h"
 	"base/kode_utils.h"
@@ -566,10 +566,11 @@
 
 1635979251 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_base.h
 
-1636540405 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_hosted_clap_plugin.h
+1636587755 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_hosted_clap_plugin.h
 	"kode.h"
 	"plugin/kode_hosted_plugin.h"
 	"plugin/clap/kode_clap.h"
+	"plugin/clap/kode_clap_host.h"
 	"plugin/clap/kode_hosted_clap_instance.h"
 
 1636496143 /DISKS/sda2/code/git/kode3/src/base/kode_debug.h
@@ -720,7 +721,7 @@
 	"plugin/clap/kode_hosted_clap_instance.h"
 	"plugin/clap/kode_hosted_clap_plugin.h"
 
-1636540152 /DISKS/sda2/code/git/kode3/src/plugin/kode_hosted_plugin.h
+1636579772 /DISKS/sda2/code/git/kode3/src/plugin/kode_hosted_plugin.h
 	<dlfcn.h>
 	"kode.h"
 	"plugin/kode_instance.h"
@@ -734,7 +735,7 @@
 	"kode.h"
 	"plugin/kode_instance.h"
 
-1636574262 /DISKS/sda2/code/git/kode3/build/test/test_hosting.cpp
+1636584444 /DISKS/sda2/code/git/kode3/build/test/test_hosting.cpp
 	"kode.h"
 	"plugin/clap/kode_hosted_clap_instance.h"
 	"plugin/clap/kode_hosted_clap_plugin.h"
@@ -746,9 +747,14 @@
 	"plugin/kode_hosted_instance.h"
 	"plugin/vst2/kode_vst2.h"
 
-1636571289 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_hosted_vst2_plugin.h
+1636587664 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_hosted_vst2_plugin.h
 	"kode.h"
 	"plugin/kode_hosted_plugin.h"
 	"plugin/vst2/kode_vst2.h"
+	"plugin/vst2/kode_vst2_host.h"
 	"plugin/vst2/kode_hosted_vst2_instance.h"
+
+1636581537 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_host.h
+	"kode.h"
+	"plugin/vst2/kode_vst2.h"
 

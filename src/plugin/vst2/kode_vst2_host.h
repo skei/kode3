@@ -2,109 +2,109 @@
 #define kode_vst2_host_included
 //----------------------------------------------------------------------
 
-//----------------------------------------------------------------------
-#endif
+#include "kode.h"
+#include "plugin/vst2/kode_vst2.h"
 
-
-
-
-
-
-
-
-
-
-#if 0
-
-
-
-
-
-
-
+class KODE_Vst2Host {
 
 //------------------------------
-private: // host
+private:
 //------------------------------
 
-  //bool host_processEvents(VstEvents* events) {
+  audioMasterCallback   MAudioMaster  = nullptr;
+  //AEffect*              MAEffect      = nullptr;
+
+//------------------------------
+public:
+//------------------------------
+
+  KODE_Vst2Host(audioMasterCallback AAudioMaster/*, AEffect* AAEffect*/) {
+    MAudioMaster = AAudioMaster;
+  }
+
+//------------------------------
+private:
+//------------------------------
+
+  //bool processEvents(VstEvents* events) {
   //  if (MVstMaster) {
   //    if ((VstInt32)MVstMaster(&MVstEffect,audioMasterProcessEvents,0,0,events,0) == 1) return true;
   //  }
   //  return false;
   //}
 
-  void host_flushMidi() {
+  void flushMidi(AEffect* AAEffect, VstEvents* AVstEvents) {
     if (MAudioMaster) {
-      MAudioMaster(&MAEffect,audioMasterProcessEvents,0,0,(VstEvents*)&MVstEvents,0);
-      MVstEvents.numEvents = 0;
+      //MAudioMaster(MAEffect,audioMasterProcessEvents,0,0,(VstEvents*)&MVstEvents,0);
+      MAudioMaster(AAEffect,audioMasterProcessEvents,0,0,AVstEvents,0);
+      AVstEvents->numEvents = 0;
     }
   }
 
   //----------
 
-  //bool host_sizeWindow(KODE_int32 AWidth, KODE_int32 AHeight) {
+  //bool sizeWindow(KODE_int32 AWidth, KODE_int32 AHeight) {
   //  if (MVstMaster) {
   //    if ((VstInt32)MVstMaster(&MVstEffect,audioMasterSizeWindow,AWidth,AHeight,KODE_NULL,0) == 1) return true;
   //  }
   //  return false;
   //}
 
-  void host_resizeEditor(uint32_t AWidth, uint32_t AHeight) {
+  void resizeEditor(AEffect* AAEffect, uint32_t AWidth, uint32_t AHeight) {
     if (MAudioMaster) {
-      MAudioMaster(&MAEffect,audioMasterSizeWindow,AWidth,AHeight,0,0);
+      MAudioMaster(AAEffect,audioMasterSizeWindow,AWidth,AHeight,0,0);
     }
   }
 
   //----------
 
-  //bool host_canDo(const char* AText) {
+  //bool canDo(const char* AText) {
   //  if (MVstMaster) {
   //    if ( (VstInt32)MVstMaster(&MVstEffect,audioMasterCanDo,0,0,(void*)AText,0) == 1) return true;
   //  }
   //  return false;
   //}
 
-  //VstInt32 host_currentId(void) {
+  //VstInt32 currentId(void) {
   //  if (MVstMaster) {
   //    return (VstInt32)MVstMaster(&MVstEffect,audioMasterCurrentId,0,0,KODE_NULL,0);
   //  }
   //  return 0;
   //}
 
-  void host_updateInfo(void) {
+  void updateInfo(AEffect* AAEffect) {
 
     /*
 
     MHostCanDo = khc_none;
-    if (host_canDo("acceptIOChanges"))                MHostCanDo += khc_acceptIOChanges;
-  //if (host_canDo("asyncProcessing"))                MHostCanDo += khc_asyncProcessing;
-    if (host_canDo("closeFileSelector"))              MHostCanDo += khc_closeFileSelector;
-  //if (host_canDo("editFile"))                       MHostCanDo += khc_editFile;
-  //if (host_canDo("getChunkFile"))                   MHostCanDo += khc_getChunkFile;
-  //if (host_canDo("midiProgramNames"))               MHostCanDo += khc_midiProgramNames;
-  //if (host_canDo("NIMKPIVendorSpecificCallbacks"))  MHostCanDo += khc_nimkpi;
-    if (host_canDo("offline"))                        MHostCanDo += khc_offline;
-    if (host_canDo("openFileSelector"))               MHostCanDo += khc_openFileSelector;
-    if (host_canDo("receiveVstEvents"))               MHostCanDo += khc_receiveVstEvents;
-    if (host_canDo("receiveVstMidiEvent"))            MHostCanDo += khc_receiveVstMidiEvent;
-  //if (host_canDo("receiveVstTimeInfo"))             MHostCanDo += khc_receiveVstTimeInfo;
-    if (host_canDo("reportConnectionChanges"))        MHostCanDo += khc_reportConnectionChanges;
-    if (host_canDo("sendVstEvents"))                  MHostCanDo += khc_sendVstEvents;
-    if (host_canDo("sendVstMidiEvent"))               MHostCanDo += khc_sendVstMidiEvent;
-    if (host_canDo("sendVstMidiEventFlagIsRealtime")) MHostCanDo += khc_sendVstMidiEventFlagIsRealtime;
-    if (host_canDo("sendVstTimeInfo"))                MHostCanDo += khc_sendVstTimeInfo;
-    if (host_canDo("shellCategory"))                  MHostCanDo += khc_shellCategory;
-  //if (host_canDo("shellCategorycurID"))             MHostCanDo += khc_shellCategoryCurId;
-    if (host_canDo("sizeWindow"))                     MHostCanDo += khc_sizeWindow;
-    if (host_canDo("startStopProcess"))               MHostCanDo += khc_startStopProcess;
-  //if (host_canDo("supplyIdle"))                     MHostCanDo += khc_supplyIdle;
-  //if (host_canDo("supportShell"))                   MHostCanDo += khc_supportShell;
+    if (canDo("acceptIOChanges"))                MHostCanDo += khc_acceptIOChanges;
+  //if (canDo("asyncProcessing"))                MHostCanDo += khc_asyncProcessing;
+    if (canDo("closeFileSelector"))              MHostCanDo += khc_closeFileSelector;
+  //if (canDo("editFile"))                       MHostCanDo += khc_editFile;
+  //if (canDo("getChunkFile"))                   MHostCanDo += khc_getChunkFile;
+  //if (canDo("midiProgramNames"))               MHostCanDo += khc_midiProgramNames;
+  //if (canDo("NIMKPIVendorSpecificCallbacks"))  MHostCanDo += khc_nimkpi;
+    if (canDo("offline"))                        MHostCanDo += khc_offline;
+    if (canDo("openFileSelector"))               MHostCanDo += khc_openFileSelector;
+    if (canDo("receiveVstEvents"))               MHostCanDo += khc_receiveVstEvents;
+    if (canDo("receiveVstMidiEvent"))            MHostCanDo += khc_receiveVstMidiEvent;
+  //if (canDo("receiveVstTimeInfo"))             MHostCanDo += khc_receiveVstTimeInfo;
+    if (canDo("reportConnectionChanges"))        MHostCanDo += khc_reportConnectionChanges;
+    if (canDo("sendVstEvents"))                  MHostCanDo += khc_sendVstEvents;
+    if (canDo("sendVstMidiEvent"))               MHostCanDo += khc_sendVstMidiEvent;
+    if (canDo("sendVstMidiEventFlagIsRealtime")) MHostCanDo += khc_sendVstMidiEventFlagIsRealtime;
+    if (canDo("sendVstTimeInfo"))                MHostCanDo += khc_sendVstTimeInfo;
+    if (canDo("shellCategory"))                  MHostCanDo += khc_shellCategory;
+  //if (canDo("shellCategorycurID"))             MHostCanDo += khc_shellCategoryCurId;
+    if (canDo("sizeWindow"))                     MHostCanDo += khc_sizeWindow;
+    if (canDo("startStopProcess"))               MHostCanDo += khc_startStopProcess;
+  //if (canDo("supplyIdle"))                     MHostCanDo += khc_supplyIdle;
+  //if (canDo("supportShell"))                   MHostCanDo += khc_supportShell;
 
     MHostId = khi_unknown;
     char buffer[256];
     buffer[0] = 0;
-    host_getProductString(buffer);
+    getProductString(buffer);
   //if (KStrcmp("AudioMulch",buffer) == 0)              MHostId = khi_audiomulch;       // http://www.audiomulch.com/mulchnotes/mulchnote_2.htm
     if (KODE_Strcmp("Bitwig Studio",buffer) == 0)       MHostId = khi_bitwig;
     if (KODE_Strcmp("Carla",buffer) == 0)               MHostId = khi_carla;
@@ -121,17 +121,17 @@ private: // host
   //if (KStrcmp("Tracktion",buffer) == 0)               MHostId = khi_tracktion;        // https://github.com/osxmidi/LinVst/blob/master/linvst.cpp
   //if (KStrcmp("Waveform",buffer) == 0)                MHostId = khi_waveform;
 
-    MHostVersion = host_getVendorVersion();
-    MHostVstVer = host_version();
+    MHostVersion = getVendorVersion();
+    MHostVstVer = version();
 
-    //KODE_HostInfo* host_info;
-    MAudioMaster(MAEffect,audioMasterGetVendorString,0,0,MHostInfo.vendor,0);
-    MAudioMaster(MAEffect,audioMasterGetProductString,0,0,MHostInfo.product,0);
-    MHostInfo.version   = MAudioMaster(MAEffect,audioMasterGetVendorVersion,0,0,0,0);
-    MHostInfo.language  = MAudioMaster(MAEffect,audioMasterGetLanguage,0,0,0,0);
-    char* path = (char*)MAudioMaster(MAEffect,audioMasterGetDirectory,0,0,0,0);
+    //KODE_HostInfo* info;
+    MAudioMaster(AAEffect,audioMasterGetVendorString,0,0,MHostInfo.vendor,0);
+    MAudioMaster(AAEffect,audioMasterGetProductString,0,0,MHostInfo.product,0);
+    MHostInfo.version   = MAudioMaster(AAEffect,audioMasterGetVendorVersion,0,0,0,0);
+    MHostInfo.language  = MAudioMaster(AAEffect,audioMasterGetLanguage,0,0,0,0);
+    char* path = (char*)MAudioMaster(AAEffect,audioMasterGetDirectory,0,0,0,0);
     strcpy(MHostInfo.directory,path);
-    //if (MAudioMaster(&MAEffect,audioMasterCanDo,0,0,(char*)"acceptIOChanges",0) == 1) MHostInfo.canDo += khc_acceptIoChange;
+    //if (MAudioMaster(AAEffect,audioMasterCanDo,0,0,(char*)"acceptIOChanges",0) == 1) MHostInfo.canDo += khc_acceptIoChange;
 
     */
 
@@ -139,21 +139,21 @@ private: // host
 
   //----------
 
-  //void host_automate(VstInt32 AIndex, float AValue) {
+  //void automate(VstInt32 AIndex, float AValue) {
   //  if (MVstMaster) {
   //    //KODE_VST2TRACE;
   //    MVstMaster(&MVstEffect,audioMasterAutomate,AIndex,0,KODE_NULL,AValue);
   //  }
   //}
 
-  //bool host_beginEdit(VstInt32 AIndex) {
+  //bool beginEdit(VstInt32 AIndex) {
   //  if (MVstMaster) {
   //    if ( (VstInt32)MVstMaster(&MVstEffect,audioMasterBeginEdit,AIndex,0,KODE_NULL,0) == 1) return true;
   //  }
   //  return false;
   //}
 
-  //bool host_endEdit(VstInt32 AIndex) {
+  //bool endEdit(VstInt32 AIndex) {
   //  if (MVstMaster) {
   //    if ((VstInt32)MVstMaster(&MVstEffect,audioMasterEndEdit,AIndex,0,KODE_NULL,0) == 1) return true;
   //  }
@@ -161,11 +161,11 @@ private: // host
   //}
 
 
-  void host_updateParameter(uint32_t AIndex, float AValue) {
+  void updateParameter(AEffect* AAEffect, uint32_t AIndex, float AValue) {
     if (MAudioMaster) {
-      MAudioMaster(&MAEffect,audioMasterBeginEdit,AIndex,0,0,0);
-      MAudioMaster(&MAEffect,audioMasterAutomate,AIndex,0,0,AValue);
-      MAudioMaster(&MAEffect,audioMasterEndEdit,AIndex,0,0,0);
+      MAudioMaster(AAEffect,audioMasterBeginEdit,AIndex,0,0,0);
+      MAudioMaster(AAEffect,audioMasterAutomate,AIndex,0,0,AValue);
+      MAudioMaster(AAEffect,audioMasterEndEdit,AIndex,0,0,0);
     }
   }
 
@@ -234,100 +234,94 @@ private: // host
     };
   */
 
-  void host_updateTime() {
-    VstIntPtr mask = 0xffff;
-    VstIntPtr result = MAudioMaster(&MAEffect,audioMasterGetTime,0,mask,0,0);
-    VstTimeInfo* timeinfo = (VstTimeInfo*)result;
-    if (timeinfo) {
-      MTempo          = timeinfo->tempo;
-      MTimeSigNum     = timeinfo->timeSigNumerator;
-      MTimeSigDenom   = timeinfo->timeSigDenominator;
-      MSamplePos      = timeinfo->samplePos;
-      MBeatPos        = timeinfo->ppqPos;
-
-      //MNanoSeconds    = timeinfo->nanoSeconds;
-      //MSampleRate     = timeinfo->sampleRate;
-      //MPPQBarStart    = timeinfo->barStartPos;
-      //MPPOCycleStart  = timeinfo->cycleStartPos;
-      //MPPQCycleEnd    = timeinfo->cycleEndPos;
-      //MPlayState      = timeinfo->flags & 127;
-
-      //if (timeinfo->flags & kVstTransportChanged) {
-        MPlayState = KODE_PLUGIN_PLAYSTATE_NONE;
-
-        if (timeinfo->flags & kVstTransportPlaying)     MPlayState |= KODE_PLUGIN_PLAYSTATE_PLAYING;
-        if (timeinfo->flags & kVstTransportRecording)   MPlayState |= KODE_PLUGIN_PLAYSTATE_RECORDING;
-        if (timeinfo->flags & kVstTransportCycleActive) MPlayState |= KODE_PLUGIN_PLAYSTATE_LOOPING;
-
-        MPrevPlayState = MPlayState;
-
-      //}
-
-    }
+  void updateTime(AEffect* AAEffect) {
+//    VstIntPtr mask = 0xffff;
+//    VstIntPtr result = MAudioMaster(AAEffect,audioMasterGetTime,0,mask,0,0);
+//    VstTimeInfo* timeinfo = (VstTimeInfo*)result;
+//    if (timeinfo) {
+//      MTempo          = timeinfo->tempo;
+//      MTimeSigNum     = timeinfo->timeSigNumerator;
+//      MTimeSigDenom   = timeinfo->timeSigDenominator;
+//      MSamplePos      = timeinfo->samplePos;
+//      MBeatPos        = timeinfo->ppqPos;
+//      //MNanoSeconds    = timeinfo->nanoSeconds;
+//      //MSampleRate     = timeinfo->sampleRate;
+//      //MPPQBarStart    = timeinfo->barStartPos;
+//      //MPPOCycleStart  = timeinfo->cycleStartPos;
+//      //MPPQCycleEnd    = timeinfo->cycleEndPos;
+//      //MPlayState      = timeinfo->flags & 127;
+//      //if (timeinfo->flags & kVstTransportChanged) {
+//        MPlayState = KODE_PLUGIN_PLAYSTATE_NONE;
+//        if (timeinfo->flags & kVstTransportPlaying)     MPlayState |= KODE_PLUGIN_PLAYSTATE_PLAYING;
+//        if (timeinfo->flags & kVstTransportRecording)   MPlayState |= KODE_PLUGIN_PLAYSTATE_RECORDING;
+//        if (timeinfo->flags & kVstTransportCycleActive) MPlayState |= KODE_PLUGIN_PLAYSTATE_LOOPING;
+//        MPrevPlayState = MPlayState;
+//      //}
+//    }
   }
 
   //----------
   //----------
   //----------
 
-  uint32_t host_getAutomationState() {
-    return MAudioMaster(&MAEffect,audioMasterGetAutomationState,0,0,0,0);
+  uint32_t getAutomationState(AEffect* AAEffect) {
+    return MAudioMaster(AAEffect,audioMasterGetAutomationState,0,0,0,0);
   }
 
   //----------
 
-  uint32_t host_getBlockSize() {
-    return MAudioMaster(&MAEffect,audioMasterGetBlockSize,0,0,0,0);
+  uint32_t getBlockSize(AEffect* AAEffect) {
+    return MAudioMaster(AAEffect,audioMasterGetBlockSize,0,0,0,0);
   }
 
   //----------
 
-  uint32_t host_getInputLatency() {
-    return MAudioMaster(&MAEffect,audioMasterGetInputLatency,0,0,0,0);
+  uint32_t getInputLatency(AEffect* AAEffect) {
+    return MAudioMaster(AAEffect,audioMasterGetInputLatency,0,0,0,0);
   }
 
   //----------
 
-  uint32_t host_getOutputLatency() {
-    return MAudioMaster(&MAEffect,audioMasterGetOutputLatency,0,0,0,0);
+  uint32_t getOutputLatency(AEffect* AAEffect) {
+    return MAudioMaster(AAEffect,audioMasterGetOutputLatency,0,0,0,0);
   }
 
   //----------
 
-  uint32_t host_getProcessLevel() {
-    return MAudioMaster(&MAEffect,audioMasterGetCurrentProcessLevel,0,0,0,0);
+  uint32_t getProcessLevel(AEffect* AAEffect) {
+    return MAudioMaster(AAEffect,audioMasterGetCurrentProcessLevel,0,0,0,0);
   }
 
   //----------
 
-  uint32_t host_getSampleRate() {
-    return MAudioMaster(&MAEffect,audioMasterGetSampleRate,0,0,0,0);
+  uint32_t getSampleRate(AEffect* AAEffect) {
+    return MAudioMaster(AAEffect,audioMasterGetSampleRate,0,0,0,0);
   }
 
   //----------
 
-  void host_idle(void) {
-    if (MAudioMaster) MAudioMaster(&MAEffect,audioMasterIdle,0,0,KODE_NULL,0);
+  void idle(AEffect* AAEffect) {
+    if (MAudioMaster) MAudioMaster(AAEffect,audioMasterIdle,0,0,nullptr,0);
   }
 
   //----------
 
-  bool host_ioChanged() {
-    if (MAudioMaster(&MAEffect,audioMasterIOChanged,0,0,0,0) == 1) return true;
+  bool ioChanged(AEffect* AAEffect) {
+    if (MAudioMaster(AAEffect,audioMasterIOChanged,0,0,0,0) == 1) return true;
     return false;
   }
 
   //----------
 
-  void host_updateDisplay() {
-    MAudioMaster(&MAEffect,audioMasterUpdateDisplay,0,0,0,0);
+  void updateDisplay(AEffect* AAEffect) {
+    MAudioMaster(AAEffect,audioMasterUpdateDisplay,0,0,0,0);
   }
 
   //----------
 
-  VstInt32 host_version(void) {
+  VstInt32 version(AEffect* AAEffect) {
     VstInt32 result = 1;
-    if (MAudioMaster) result = (VstInt32)MAudioMaster(&MAEffect,audioMasterVersion,0,0,KODE_NULL,0);
+    if (MAudioMaster) result = (VstInt32)MAudioMaster(AAEffect,audioMasterVersion,0,0,nullptr,0);
     if (result==0) result = 1; // old (!version)
     return result;
   }
@@ -345,5 +339,5 @@ private: // host
 
 };
 
-
-#endif // 0
+//----------------------------------------------------------------------
+#endif
