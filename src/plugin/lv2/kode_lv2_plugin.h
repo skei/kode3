@@ -8,18 +8,6 @@
 
 //----------------------------------------------------------------------
 
-#ifdef KODE_DEBUG
-  #define KODE_LV2PRINT  KODE_PRINT
-  #define KODE_Lv2Print  KODE_Print
-  #define KODE_Lv2DPrint KODE_DPrint
-#else
-  #define KODE_LV2PRINT
-  #define KODE_Lv2Print  KODE_NoPrint
-  #define KODE_Lv2DPrint KODE_NoPrint
-#endif
-
-//----------------------------------------------------------------------
-
 KODE_Descriptor* kode_lv2_get_descriptor();
 
 //static LV2UI_Idle_Interface _lv2_idle_interface;

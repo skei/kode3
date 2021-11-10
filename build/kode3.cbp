@@ -13,9 +13,9 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-fno-pie" />
 					<Add option="-rdynamic" />
 					<Add option="-Wl,-Bsymbolic" />
-					<Add option="-fno-pie" />
 					<Add option="-DKODE_EXE" />
 					<Add option="-DKODE_DEBUG" />
 				</Compiler>
@@ -31,14 +31,12 @@
 				<Compiler>
 					<Add option="-O3" />
 					<Add option="-O2" />
-					<Add option="-msse4" />
-					<Add option="-fpmath=sse" />
 					<Add option="-fno-pie" />
 					<Add option="-DKODE_EXE" />
 				</Compiler>
 				<Linker>
-					<Add option="-no-pie" />
 					<Add option="-s" />
+					<Add option="-no-pie" />
 				</Linker>
 			</Target>
 			<Target title="exe sanitize">
@@ -48,9 +46,9 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-fno-pie" />
 					<Add option="-rdynamic" />
 					<Add option="-Wl,-Bsymbolic" />
-					<Add option="-fno-pie" />
 					<Add option="-fsanitize=address" />
 					<Add option="-DKODE_EXE" />
 					<Add option="-DKODE_DEBUG" />
@@ -85,9 +83,6 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-fPIC" />
-					<Add option="-msse4" />
-					<Add option="-fpmath=sse" />
-					<Add option="-fno-pie" />
 					<Add option="-DKODE_LIB" />
 				</Compiler>
 				<Linker>
@@ -245,6 +240,7 @@
 		<Unit filename="../src/plugin/clap/kode_clap_host.h" />
 		<Unit filename="../src/plugin/clap/kode_clap_instance.h" />
 		<Unit filename="../src/plugin/clap/kode_clap_plugin.h" />
+		<Unit filename="../src/plugin/clap/kode_hosted_clap_instance.h" />
 		<Unit filename="../src/plugin/clap/kode_hosted_clap_plugin.h" />
 		<Unit filename="../src/plugin/dssi/kode_dssi.h" />
 		<Unit filename="../src/plugin/dssi/kode_dssi_host.h" />
@@ -258,6 +254,7 @@
 		<Unit filename="../src/plugin/kode_descriptor.h" />
 		<Unit filename="../src/plugin/kode_editor.h" />
 		<Unit filename="../src/plugin/kode_host.h" />
+		<Unit filename="../src/plugin/kode_hosted_instance.h" />
 		<Unit filename="../src/plugin/kode_hosted_plugin.h" />
 		<Unit filename="../src/plugin/kode_instance.h" />
 		<Unit filename="../src/plugin/kode_parameter.h" />
@@ -290,6 +287,14 @@
 		<Unit filename="../src/plugin/vst3/kode_vst3_plugin.h" />
 		<Unit filename="../src/plugin/vst3/kode_vst3_utils.h" />
 		<Unit filename="build.cpp" />
+		<Unit filename="test/test1.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="test/test_clap_hosting.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

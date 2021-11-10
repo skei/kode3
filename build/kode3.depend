@@ -1,7 +1,6 @@
 # depslib dependency file v1.0
-1636161621 source:/DISKS/sda2/code/git/kode3/build/build.cpp
-	"kode.h"
-	"plugin/kode_plugin.h"
+1636506136 source:/DISKS/sda2/code/git/kode3/build/build.cpp
+	"test/test_clap_hosting.cpp"
 
 1636147928 /DISKS/sda2/code/git/kode3/src/kode.h
 	<stdint.h>
@@ -277,7 +276,7 @@
 	"plugin/kode_parameter.h"
 	"plugin/kode_preset.h"
 
-1636162718 /DISKS/sda2/code/git/kode3/src/plugin/kode_instance.h
+1636308972 /DISKS/sda2/code/git/kode3/src/plugin/kode_instance.h
 	"kode.h"
 	"plugin/kode_descriptor.h"
 	"plugin/kode_process_context.h"
@@ -296,7 +295,7 @@
 	"plugin/clap/kode_clap_host.h"
 	"plugin/clap/kode_clap_instance.h"
 
-1636217496 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap.h
+1636496958 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap.h
 	"kode.h"
 	"extern/clap/all.h"
 
@@ -567,12 +566,13 @@
 
 1635979251 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_base.h
 
-1635985053 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_hosted_clap_plugin.h
-	<dlfcn.h>
+1636507068 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_hosted_clap_plugin.h
 	"kode.h"
+	"plugin/kode_hosted_plugin.h"
 	"plugin/clap/kode_clap.h"
+	"plugin/clap/kode_hosted_clap_instance.h"
 
-1636150537 /DISKS/sda2/code/git/kode3/src/base/kode_debug.h
+1636496143 /DISKS/sda2/code/git/kode3/src/base/kode_debug.h
 	"base/debug/kode_debug_print.h"
 	"base/debug/kode_debug_callstack.h"
 	"base/debug/kode_debug_crash_handler.h"
@@ -683,7 +683,7 @@
 	<cxxabi.h>
 	<execinfo.h>
 
-1636133597 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug_print.h
+1636291030 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug_print.h
 	<stdio.h>
 	<string.h>
 	<stdarg.h>
@@ -714,4 +714,23 @@
 
 1636218225 /DISKS/sda2/code/git/kode3/src/gui/kode_window.h
 	"kode.h"
+
+1636507101 /DISKS/sda2/code/git/kode3/build/test/test_clap_hosting.cpp
+	"kode.h"
+	"plugin/clap/kode_hosted_clap_instance.h"
+	"plugin/clap/kode_hosted_clap_plugin.h"
+
+1636507058 /DISKS/sda2/code/git/kode3/src/plugin/kode_hosted_plugin.h
+	<dlfcn.h>
+	"kode.h"
+	"plugin/kode_instance.h"
+
+1636506741 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_hosted_clap_instance.h
+	"kode.h"
+	"plugin/kode_hosted_instance.h"
+	"plugin/clap/kode_clap.h"
+
+1636503748 /DISKS/sda2/code/git/kode3/src/plugin/kode_hosted_instance.h
+	"kode.h"
+	"plugin/kode_instance.h"
 

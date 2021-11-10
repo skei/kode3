@@ -2,59 +2,62 @@
 #define kode_hosted_clap_plugin_included
 //----------------------------------------------------------------------
 
-#include <dlfcn.h>
-
 #include "kode.h"
+#include "plugin/kode_hosted_plugin.h"
 #include "plugin/clap/kode_clap.h"
+#include "plugin/clap/kode_hosted_clap_instance.h"
+
+//const char* PLUGIN_FILE = "/home/skei/.vst3/u-he/ZebraCM.vst3/Contents/x86_64-linux/ZebraCM.so";
 
 //----------------------------------------------------------------------
 
-class KODE_HostedClapPlugin {
+class KODE_HostedClapPlugin
+: public KODE_HostedPlugin {
 
 //------------------------------
 private:
 //------------------------------
 
-  void* MLibHandle  = nullptr;
+  KODE_Descriptor*  MDescriptor = nullptr;
+
+//  void*                     MLibHandle        = nullptr;
+//  clap_plugin*              MClapPlugin       = nullptr;
+//  clap_plugin_descriptor*   MClapDescriptor   = nullptr;
+//  struct clap_plugin_entry* MClapPluginEntry  = nullptr;
 
 //------------------------------
 public:
 //------------------------------
 
-  KODE_HostedClapPlugin() {
+  KODE_HostedClapPlugin()
+  : KODE_HostedPlugin() {
+    KODE_PRINT;
   }
 
-  KODE_HostedClapPlugin(const char* APath) {
-    load(APath);
-  }
+  //----------
 
   virtual ~KODE_HostedClapPlugin() {
+    KODE_PRINT;
   }
 
 //------------------------------
 public:
 //------------------------------
 
-  bool load(const char* AFilePath) {
-    MLibHandle = dlopen(AFilePath,RTLD_LAZY | RTLD_LOCAL ); // RTLD_NOW, RTLD_LAZY
-    return (MLibHandle != nullptr);
+  KODE_HostedInstance* createInstance() final {
+    KODE_HostedClapInstance* instance = new KODE_HostedClapInstance(MDescriptor);
+    return instance;
   }
 
-  //----------
 
-  void unload() {
-    dlclose(MLibHandle);
-    MLibHandle = nullptr;
-  }
 
-  //----------
+//------------------------------
+public:
+//------------------------------
 
-  void* getSymbol(const char* ASymbol) {
-    void* result = dlsym(MLibHandle,ASymbol);
-    return result;
-  }
-
-  //----------
+//------------------------------
+public:
+//------------------------------
 
     /*
     struct clap_plugin_entry CLAP_ENTRY_STRUCT asm("clap_plugin_entry") = {
@@ -70,27 +73,14 @@ public:
     };
     */
 
-  void test() {
-    const char*     PATH = "/home/skei/.vst3/u-he/ZebraCM.vst3/Contents/x86_64-linux/";
-    const char* FILENAME = "/home/skei/.vst3/u-he/ZebraCM.vst3/Contents/x86_64-linux/ZebraCM.so";
-    printf("KODE_HostedClapPlugin.test()\n");
-    printf("* loading '%s'\n",FILENAME);
-    KODE_HostedClapPlugin* plugin = new KODE_HostedClapPlugin();
-    bool loaded = plugin->load(FILENAME);
-    printf("* load: %s\n",(loaded) ? "true" : "false");
-    struct clap_plugin_entry* plugin_entry = (struct clap_plugin_entry*)plugin->getSymbol("clap_plugin_entry");
-    printf("* getSymbol 'clap_plugin_entry': %p\n",plugin_entry);
-    uint32_t major = plugin_entry->clap_version.major;
-    uint32_t minor = plugin_entry->clap_version.minor;
-    uint32_t revision = plugin_entry->clap_version.revision;
-    printf("* clap_version(%i,%i,%i)\n",major,minor,revision);
-    bool initialized = plugin_entry->init(PATH);
-    printf("* initialized: %s\n",(initialized) ? "true" : "false");
-    uint32_t count = plugin_entry->get_plugin_count();                    // crash !!!
-    printf("* get_plugin_count %i\n",count);
-    plugin_entry->deinit();
-    delete plugin;
-  }
+  bool clap_init(const char *plugin_path) { return false; }
+  void clap_deinit() {}
+  uint32_t clap_get_plugin_count() { return 0; }
+  const clap_plugin_descriptor* clap_get_plugin_descriptor(uint32_t index) { return nullptr; }
+  const clap_plugin* clap_create_plugin(const clap_host* host, const char* plugin_id) { return nullptr; }
+  uint32_t clap_get_invalidation_sources_count() { return 0; }
+  const clap_plugin_invalidation_source* clap_get_invalidation_sources(uint32_t index) { return nullptr; }
+  void clap_refresh() {}
 
 };
 
