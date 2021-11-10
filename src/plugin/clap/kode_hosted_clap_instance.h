@@ -8,8 +8,6 @@
 #include "plugin/kode_hosted_instance.h"
 #include "plugin/clap/kode_clap.h"
 
-//const char* PLUGIN_FILE = "/home/skei/.vst3/u-he/ZebraCM.vst3/Contents/x86_64-linux/ZebraCM.so";
-
 //----------------------------------------------------------------------
 
 class KODE_HostedClapInstance
