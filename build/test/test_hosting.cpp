@@ -21,6 +21,7 @@
 
 #include "plugin/vst2/kode_hosted_vst2_instance.h"
 #include "plugin/vst2/kode_hosted_vst2_plugin.h"
+
 #define VST2_FILENAME "/DISKS/sda2/audio/vst/linux/tal/libTAL-NoiseMaker.so"
 
 //----------------------------------------------------------------------
@@ -95,6 +96,12 @@ void test_clap() {
 // vst2
 //----------------------------------------------------------------------
 
+VstIntPtr _audioMasterCallback(AEffect* effect, VstInt32 opcode, VstInt32 index, VstIntPtr value, void* ptr, float opt) {
+  KODE_PRINT;
+  return 1;
+}
+
+
 void test_vst2() {
   KODE_HostedVst2Plugin* plugin = new KODE_HostedVst2Plugin();
   if (plugin) {
@@ -103,7 +110,16 @@ void test_vst2() {
     plugin->loadLib(VST2_FILENAME);
     if (plugin) {
       KODE_DPrint("plugin loaded\n");
-      AEffect* aeffect = (AEffect*)plugin->getSymbol("VSTPluginMain");
+
+      typedef AEffect* (*VSTPluginMain)(audioMasterCallback audioMaster);
+
+      VSTPluginMain vstpluginmain = (VSTPluginMain)plugin->getSymbol("VSTPluginMain");
+      KODE_DPrint("vstpluginmain: %p\n", vstpluginmain);
+
+      AEffect* aeffect = vstpluginmain(_audioMasterCallback); // nullptr = crash :-/
+
+      KODE_DPrint("aeffect: %p\n", aeffect);
+
       if (aeffect) {
 
         KODE_DPrint("\n");
