@@ -7,7 +7,10 @@
 #include "plugin/clap/kode_hosted_clap_instance.h"
 #include "plugin/clap/kode_hosted_clap_plugin.h"
 
-#define FILENAME "/home/skei/.u-he/Hive/Hive.64.so"
+//#define FILENAME "/home/skei/.u-he/Hive/Hive.64.so"
+#define FILENAME "/DISKS/sda2/code/git/kode3/bin/kode_debug.so"
+
+
 //#define FILENAME "/home/skei/.vst3/u-he/Hive.vst3/Contents/x86_64-linux/Hive.so"  // symloink
 //#define FILENAME "/home/skei/.vst3/Instinct.vst3/Contents/x86_64-linux/Instinct.so" // vst3
 
@@ -36,9 +39,9 @@ int main() {
 
         KODE_DPrint("\n");
         KODE_DPrint("clap_plugin_entry:               %p\n",plugin_entry);
-        KODE_DPrint("  clap_version.major             %p\n",plugin_entry->clap_version.major);
-        KODE_DPrint("  clap_version.minor             %p\n",plugin_entry->clap_version.minor);
-        KODE_DPrint("  clap_version.revision          %p\n",plugin_entry->clap_version.revision);
+        KODE_DPrint("  clap_version.major             %i\n",plugin_entry->clap_version.major);
+        KODE_DPrint("  clap_version.minor             %i\n",plugin_entry->clap_version.minor);
+        KODE_DPrint("  clap_version.revision          %i\n",plugin_entry->clap_version.revision);
         KODE_DPrint("  init                           %p\n",plugin_entry->init);
         KODE_DPrint("  deinit                         %p\n",plugin_entry->deinit);
         KODE_DPrint("  get_plugin_count               %p\n",plugin_entry->get_plugin_count);
