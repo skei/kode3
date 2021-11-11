@@ -3,11 +3,14 @@
 //#define KODE_DEBUG_PRINT_SOCKET
 // nc -U -l -k /tmp/kode.socket
 
-//#define CLAP_FILENAME "/home/skei/.vst3/u-he/Hive.vst3/Contents/x86_64-linux/Hive.so"  // symloink
-#define CLAP_FILENAME "/DISKS/sda2/code/git/kode3/bin/kode_debug.so"
+#define FILENAME      "/DISKS/sda2/code/git/kode3/bin/kode_debug.so"
+#define CLAP_FILENAME FILENAME
+#define VST2_FILENAME FILENAME
 
+//#define CLAP_FILENAME "/home/skei/.vst3/u-he/Hive.vst3/Contents/x86_64-linux/Hive.so"  // symloink
+//#define CLAP_FILENAME "/DISKS/sda2/code/git/kode3/bin/kode_debug.so"
 //#define VST2_FILENAME "/DISKS/sda2/audio/vst/linux/tal/libTAL-NoiseMaker.so"
-#define VST2_FILENAME "/DISKS/sda2/audio/vst/linux/gvst/GBand.so"
+//#define VST2_FILENAME "/DISKS/sda2/audio/vst/linux/gvst/GBand.so"
 
 //----------
 
@@ -26,6 +29,11 @@
 //----------------------------------------------------------------------
 
 int main() {
+
+  KODE_HostedPlugin* plugin1 = new KODE_HostedVst2Plugin(CLAP_FILENAME);
+  KODE_HostedInstance* instance1 = plugin1->createInstance();
+  delete instance1;
+  delete plugin1;
 
   KODE_HostedPlugin* plugin2 = new KODE_HostedClapPlugin(CLAP_FILENAME);
   KODE_HostedInstance* instance2 = plugin2->createInstance();
