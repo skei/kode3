@@ -8,7 +8,7 @@
 
 //----------------------------------------------------------------------
 
-//#ifdef KODE_DEBUG_CRASH_HANDLER
+#ifdef KODE_DEBUG_CRASH_HANDLER
 
 
   #include <signal.h>
@@ -60,9 +60,8 @@
   //----------
 
   void kode_crash_handler_callback(int sig) {
-    KODE_DPrint("ERROR: %i %s\n",sig,KODE_SignalNames[sig]);
-    KODE_DumpCallStack;
-    //KODE_DumpCallStackSkip(0); // 2
+    KODE_DPrint("\nkode_crash_handler_callback %i %s\n",sig,KODE_SignalNames[sig]);
+    KODE_DumpCallStackSkip(0); // 2
     exit(1); //_exit(1);
   }
 
@@ -72,10 +71,8 @@
     signal(SIGSEGV,kode_crash_handler_callback);
   }
 
-  //----------
-
   bool KODE_initCrashHandlers() {
-    //for (int i=0; i<32; i++) KODE_InitCrashHandler(i);
+    //for (int i=0; i<32; i++) KODE_InitSignalHandler(i);
     KODE_InitCrashHandler(SIGILL);
     KODE_InitCrashHandler(SIGABRT);
     KODE_InitCrashHandler(SIGFPE);
@@ -92,7 +89,7 @@
 
   bool kode_is_crash_handler_initialized = KODE_initCrashHandlers();
 
-//#endif // KODE_DEBUG_CRASH_HANDLER
+#endif // KODE_DEBUG_CRASH_HANDLER
 
 //----------------------------------------------------------------------
 #endif

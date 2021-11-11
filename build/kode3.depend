@@ -1,14 +1,9 @@
 # depslib dependency file v1.0
-1636594606 source:/DISKS/sda2/code/git/kode3/build/build.cpp
+1636636031 source:/DISKS/sda2/code/git/kode3/build/build.cpp
 	"test/test_hosting.cpp"
 
-1636545171 /DISKS/sda2/code/git/kode3/src/kode.h
-	<stdint.h>
-	<stdio.h>
-	<stdlib.h>
-	<memory.h>
-	"base/kode_system.h"
-	"base/kode_debug.h"
+1636635535 /DISKS/sda2/code/git/kode3/src/kode.h
+	"base/kode_base.h"
 
 1635970350 /DISKS/sda2/code/git/kode3/src/kode_plugin.h
 	"kode.h"
@@ -269,10 +264,10 @@
 	"plugin/vst2/kode_vst2_plugin.h"
 	"plugin/vst3/kode_vst3_plugin.h"
 
-1636587550 /DISKS/sda2/code/git/kode3/src/plugin/kode_descriptor.h
+1636635452 /DISKS/sda2/code/git/kode3/src/plugin/kode_descriptor.h
 	"kode.h"
-	"base/kode_array.h"
-	"base/kode_utils.h"
+	"base/types/kode_array.h"
+	"base/utils/kode_utils.h"
 	"plugin/kode_parameter.h"
 	"plugin/kode_preset.h"
 
@@ -644,13 +639,13 @@
 1636129665 /DISKS/sda2/code/git/kode3/src/base/kode_array.h
 	<stdlib.h>
 
-1636216939 /DISKS/sda2/code/git/kode3/src/plugin/kode_parameter.h
+1636635457 /DISKS/sda2/code/git/kode3/src/plugin/kode_parameter.h
 	<stdio.h>
-	"base/kode_array.h"
+	"base/types/kode_array.h"
 
-1636029591 /DISKS/sda2/code/git/kode3/src/plugin/kode_preset.h
+1636635461 /DISKS/sda2/code/git/kode3/src/plugin/kode_preset.h
 	"kode.h"
-	"base/kode_array.h"
+	"base/types/kode_array.h"
 
 1636133813 /DISKS/sda2/code/git/kode3/src/base/kode_debug_memory.h
 	<regex>
@@ -685,10 +680,9 @@
 	<cxxabi.h>
 	<execinfo.h>
 
-1636540833 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug_print.h
-	<stdio.h>
-	<string.h>
+1633363540 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug_print.h
 	<stdarg.h>
+	"base/kode_stdlib.h"
 	<sys/time.h>
 	<sys/syscall.h>
 	<sys/unistd.h>
@@ -696,18 +690,17 @@
 	<sys/socket.h>
 	<sys/un.h>
 
-1636149882 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug_callstack.h
+1630363812 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug_callstack.h
 	<stdio.h>
 	<sys/unistd.h>
 	<cxxabi.h>
 	<execinfo.h>
 
-1636133813 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug_memory.h
-	<regex>
+1633363760 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug_memory.h
 
 1636150641 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug_stacktrace.h
 
-1636150735 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug_crash_handler.h
+1613248911 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug_crash_handler.h
 	<signal.h>
 
 1636218100 /DISKS/sda2/code/git/kode3/src/gui/kode_widget.h
@@ -736,7 +729,7 @@
 	"kode.h"
 	"plugin/kode_instance.h"
 
-1636596410 /DISKS/sda2/code/git/kode3/build/test/test_hosting.cpp
+1636636089 /DISKS/sda2/code/git/kode3/build/test/test_hosting.cpp
 	"kode.h"
 	"plugin/clap/kode_hosted_clap_instance.h"
 	"plugin/clap/kode_hosted_clap_plugin.h"
@@ -762,4 +755,178 @@
 1636551486 /DISKS/sda2/code/git/kode3/build/test/test1.cpp
 	"kode.h"
 	"plugin/kode_plugin.h"
+
+1612114660 /DISKS/sda2/code/git/kode3/src/base/kode_base.h
+	"base/kode_config.h"
+	"base/kode_defines.h"
+	"base/kode_attributes.h"
+	"base/kode_const.h"
+	"base/kode_enums.h"
+	"base/types/kode_types.h"
+	"base/kode_stdlib.h"
+	"base/debug/kode_debug.h"
+	"base/system/kode_system.h"
+	"base/utils/kode_utils.h"
+
+1633367323 /DISKS/sda2/code/git/kode3/src/base/kode_config.h
+
+1636636076 /DISKS/sda2/code/git/kode3/src/base/kode_defines.h
+
+1612057072 /DISKS/sda2/code/git/kode3/src/base/kode_attributes.h
+
+1633367380 /DISKS/sda2/code/git/kode3/src/base/kode_const.h
+
+1631729341 /DISKS/sda2/code/git/kode3/src/base/kode_enums.h
+
+1630413032 /DISKS/sda2/code/git/kode3/src/base/types/kode_types.h
+	<stdint.h>
+	"base/types/kode_array.h"
+	"base/types/kode_assoc_array.h"
+	"base/types/kode_buffer.h"
+	"base/types/kode_complex.h"
+	"base/types/kode_list.h"
+	"base/types/kode_queue.h"
+	"base/types/kode_stack.h"
+	"base/types/kode_tree.h"
+	"base/types/kode_color.h"
+	"base/types/kode_matrix.h"
+	"base/types/kode_point.h"
+	"base/types/kode_quaternion.h"
+	"base/types/kode_rect.h"
+	"base/types/kode_string.h"
+	"base/types/kode_vector.h"
+
+1630363597 /DISKS/sda2/code/git/kode3/src/base/types/kode_array.h
+	"base/utils/kode_integer_math.h"
+	"base/kode_stdlib.h"
+
+1636635493 /DISKS/sda2/code/git/kode3/src/base/utils/kode_integer_math.h
+	"kode.h"
+	<math.h>
+
+1630363906 /DISKS/sda2/code/git/kode3/src/base/kode_stdlib.h
+	<inttypes.h>
+	<memory.h>
+	<stdio.h>
+	<stdlib.h>
+
+1630413046 /DISKS/sda2/code/git/kode3/src/base/types/kode_assoc_array.h
+	"kode_array.h"
+
+1630363739 /DISKS/sda2/code/git/kode3/src/base/types/kode_buffer.h
+	"kode.h"
+	"base/utils/kode_integer_math.h"
+
+1630412916 /DISKS/sda2/code/git/kode3/src/base/types/kode_complex.h
+
+1630412826 /DISKS/sda2/code/git/kode3/src/base/types/kode_list.h
+
+1630363540 /DISKS/sda2/code/git/kode3/src/base/types/kode_queue.h
+	"kode.h"
+
+1630366530 /DISKS/sda2/code/git/kode3/src/base/types/kode_stack.h
+
+1612057072 /DISKS/sda2/code/git/kode3/src/base/types/kode_tree.h
+
+1631898684 /DISKS/sda2/code/git/kode3/src/base/types/kode_color.h
+	"kode.h"
+
+1630412892 /DISKS/sda2/code/git/kode3/src/base/types/kode_matrix.h
+	"kode_vector.h"
+
+1633103424 /DISKS/sda2/code/git/kode3/src/base/types/kode_vector.h
+	"kode.h"
+	"base/utils/kode_math.h"
+	<math.h>
+
+1630112260 /DISKS/sda2/code/git/kode3/src/base/utils/kode_math.h
+	<math.h>
+	<stdlib.h>
+	"kode.h"
+
+1634333992 /DISKS/sda2/code/git/kode3/src/base/types/kode_point.h
+
+1630412938 /DISKS/sda2/code/git/kode3/src/base/types/kode_quaternion.h
+
+1634166232 /DISKS/sda2/code/git/kode3/src/base/types/kode_rect.h
+	"kode.h"
+
+1630583979 /DISKS/sda2/code/git/kode3/src/base/types/kode_string.h
+	"kode.h"
+	"base/types/kode_buffer.h"
+	"base/utils/kode_strutils.h"
+	"kode.h"
+	"base/types/kode_buffer.h"
+	"base/utils/kode_convert.h"
+	"base/utils/kode_strutils.h"
+
+1633365814 /DISKS/sda2/code/git/kode3/src/base/utils/kode_strutils.h
+	"kode.h"
+	"base/utils/kode_random.h"
+	<iconv.h>
+
+1633365509 /DISKS/sda2/code/git/kode3/src/base/utils/kode_random.h
+	"kode.h"
+	<stdlib.h>
+	<stdint.h>
+	<stdint.h>
+	<stdint.h>
+
+1612057072 /DISKS/sda2/code/git/kode3/src/base/utils/kode_convert.h
+	<stdio.h>
+	<stdlib.h>
+
+1613066598 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug.h
+	"base/debug/kode_debug_print.h"
+	"base/debug/kode_debug_assert.h"
+	"base/debug/kode_debug_callstack.h"
+	"base/debug/kode_debug_crash_handler.h"
+	"base/debug/kode_debug_memory.h"
+
+1612057072 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug_assert.h
+	<assert.h>
+
+1612057072 /DISKS/sda2/code/git/kode3/src/base/system/kode_system.h
+	"base/system/kode_atomic.h"
+	"base/system/kode_cpu.h"
+	"base/system/kode_file.h"
+	"base/system/kode_library.h"
+	"base/system/kode_lock.h"
+	"base/system/kode_memory.h"
+	"base/system/kode_simd.h"
+	"base/system/kode_thread.h"
+	"base/system/kode_time.h"
+
+1630413395 /DISKS/sda2/code/git/kode3/src/base/system/kode_atomic.h
+
+1630414194 /DISKS/sda2/code/git/kode3/src/base/system/kode_cpu.h
+	<unistd.h>
+	<emmintrin.h>
+
+1612057072 /DISKS/sda2/code/git/kode3/src/base/system/kode_file.h
+
+1630413460 /DISKS/sda2/code/git/kode3/src/base/system/kode_library.h
+	<dlfcn.h>
+
+1612057072 /DISKS/sda2/code/git/kode3/src/base/system/kode_lock.h
+	"kode.h"
+	<pthread.h>
+
+1630363500 /DISKS/sda2/code/git/kode3/src/base/system/kode_memory.h
+	"kode.h"
+
+1630413408 /DISKS/sda2/code/git/kode3/src/base/system/kode_simd.h
+
+1612057072 /DISKS/sda2/code/git/kode3/src/base/system/kode_thread.h
+	<pthread.h>
+	"base/system/kode_time.h"
+
+1633512641 /DISKS/sda2/code/git/kode3/src/base/system/kode_time.h
+	<sys/time.h>
+	<signal.h>
+	<errno.h>
+	"base/kode_const.h"
+	"base/utils/kode_math.h"
+
+1612057072 /DISKS/sda2/code/git/kode3/src/base/utils/kode_utils.h
 

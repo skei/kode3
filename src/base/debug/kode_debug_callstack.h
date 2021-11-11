@@ -2,7 +2,7 @@
 #define kode_debug_callstack_included
 //----------------------------------------------------------------------
 
-//#ifdef KODE_DEBUG_CALLSTACK
+#ifdef KODE_DEBUG_CALLSTACK
 
   #include <stdio.h>
   #include <sys/unistd.h>
@@ -195,18 +195,18 @@
       kode_debug_callstack_print(adr,num,2,s); \
     }
 
-//#else // KODE_DEBUG_CALLSTACK
-//
-//  struct KODE_CallStackSymbol {};
-//  struct KODE_CallStackStringBuffer {};
-//  /*_KODE_ALWAYS_INLINE*/ int kode_callstack(int skip_frames, void** addresses, int num_addresses) { return 0; }
-//  /*_KODE_ALWAYS_INLINE*/ int KODE_CallStackSymbols(void** addresses, KODE_CallStackSymbol* out_syms, int num_addresses, char* memory, int mem_size) { return 0; }
-//  /*_KODE_ALWAYS_INLINE*/ void KODE_PrintCallStack(void** AAddresses=nullptr, int ANumAddresses=0) {}
-//
-//  #define KODE_DumpCallStack {}
-//  #define KODE_DumpCallStackSkip(s) {}
-//
-//#endif // KODE_DEBUG_CALLSTACK
+#else // KODE_DEBUG_CALLSTACK
+
+  struct KODE_CallStackSymbol {};
+  struct KODE_CallStackStringBuffer {};
+  /*_KODE_ALWAYS_INLINE*/ int kode_callstack(int skip_frames, void** addresses, int num_addresses) { return 0; }
+  /*_KODE_ALWAYS_INLINE*/ int KODE_CallStackSymbols(void** addresses, KODE_CallStackSymbol* out_syms, int num_addresses, char* memory, int mem_size) { return 0; }
+  /*_KODE_ALWAYS_INLINE*/ void KODE_PrintCallStack(void** AAddresses=nullptr, int ANumAddresses=0) {}
+
+  #define KODE_DumpCallStack {}
+  #define KODE_DumpCallStackSkip(s) {}
+
+#endif // KODE_DEBUG_CALLSTACK
 
 //----------------------------------------------------------------------
 #endif

@@ -1,5 +1,8 @@
 
-#define KODE_PLUGIN_NONE
+#define KODE_NO_PLUGIN
+#define KODE_NO_GUI
+
+//#define KODE_PLUGIN_NONE
 //#define KODE_DEBUG_PRINT_SOCKET
 // nc -U -l -k /tmp/kode.socket
 

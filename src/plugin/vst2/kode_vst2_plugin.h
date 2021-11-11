@@ -156,7 +156,7 @@ AEffect* kode_vst2_entrypoint(audioMasterCallback audioMaster) asm ("VSTPluginMa
   KODE_Vst2Plugin<D,I,E> VST2_PLUGIN;                               \
                                                                     \
   /*__attribute__((visibility("default")))*/                        \
-  __KODE_EXPORT                                                     \
+  __KODE_DLLEXPORT                                                     \
   AEffect* kode_vst2_entrypoint(audioMasterCallback audioMaster) {  \
     printf("VST2\n");                                               \
     if (!audioMaster(0,audioMasterVersion,0,0,0,0)) return 0;       \

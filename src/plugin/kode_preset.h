@@ -3,7 +3,7 @@
 //----------------------------------------------------------------------
 
 #include "kode.h"
-#include "base/kode_array.h"
+#include "base/types/kode_array.h"
 
 class KODE_Preset {
 };

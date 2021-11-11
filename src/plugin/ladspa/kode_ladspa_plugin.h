@@ -271,7 +271,7 @@ const LADSPA_Descriptor* kode_ladspa_entrypoint(unsigned long Index) KODE_LADSPA
   KODE_LadspaPlugin<D,I,E> _LADSPA_PLUGIN;                                \
                                                                           \
   /*__attribute__((visibility("default")))*/                              \
-  __KODE_EXPORT                                                           \
+  __KODE_DLLEXPORT                                                           \
   const LADSPA_Descriptor* kode_ladspa_entrypoint(unsigned long Index) {  \
     printf("LADSPA\n");                                                   \
     return _LADSPA_PLUGIN.entrypoint(Index);                              \

@@ -11,7 +11,7 @@
   #include "plugin/kode_editor.h"
 #endif
 
-#include "base/kode_queue.h"
+#include "base/types/kode_queue.h"
 
 #include "plugin/kode_instance.h"
 #include "plugin/kode_process_context.h"

@@ -1,0 +1,199 @@
+#ifndef kode_xcb_image_included
+#define kode_xcb_image_included
+//----------------------------------------------------------------------
+
+#if 0
+
+/*
+  todo:
+
+  * if bitmap.stride != width * 4, copy to temporary buffer
+
+*/
+
+#include "kode.h"
+#include "gfx/kode_bitmap.h"
+#include "gui/kode_drawable.h"
+//#include "gui/kode_gui_base.h"
+#include "gui/base/kode_base_image.h"
+//#include "gui/base/kode_base_surface.h"
+//#include "gui/base/kode_base_painter.h"
+//#include "gui/base/kode_base_window.h"
+
+#ifdef KODE_USE_CAIRO
+#include "gui/cairo/kode_cairo.h"
+#endif
+
+//----------------------------------------------------------------------
+
+class KODE_XcbImage
+: public KODE_BaseImage
+, public KODE_Drawable {
+
+//------------------------------
+private:
+//------------------------------
+
+  xcb_image_t*      MImage            = KODE_NULL;
+  KODE_Drawable*    MTarget           = KODE_NULL;
+  xcb_connection_t* MTargetConnection = KODE_NULL;
+  xcb_visualid_t    MTargetVisual     = XCB_NONE;
+  xcb_drawable_t    MTargetDrawable   = XCB_NONE;
+  uint32_t          MWidth            = 0;
+  uint32_t          MHeight           = 0;
+  uint32_t          MDepth            = 0;
+  KODE_Bitmap*      MBitmap           = KODE_NULL;
+  bool              MAllocated        = false;
+
+//------------------------------
+public:
+//------------------------------
+
+  KODE_XcbImage(KODE_Drawable* ATarget, uint32_t AWidth, uint32_t AHeight, uint32_t ADepth=32)
+  : KODE_BaseImage(ATarget,AWidth,AHeight,ADepth) {
+    MTarget           = ATarget;
+    MTargetConnection = MTarget->getXcbConnection();
+    MTargetVisual     = MTarget->getXcbVisual();
+    MTargetDrawable   = MTarget->getXcbDrawable();
+    MWidth            = AWidth;
+    MHeight           = AHeight;
+    MDepth            = ADepth;
+    MBitmap           = KODE_New KODE_Bitmap(AWidth,AHeight);
+    MAllocated        = true;
+    create_xcb_image(ATarget);
+  }
+
+  //----------
+
+  KODE_XcbImage(KODE_Drawable* ATarget, KODE_Bitmap* ABitmap)
+  : KODE_BaseImage(ATarget,ABitmap) {
+    MTarget           = ATarget;
+    MTargetConnection = MTarget->getXcbConnection();
+    MTargetVisual     = MTarget->getXcbVisual();
+    MTargetDrawable   = MTarget->getXcbDrawable();
+    MWidth            = MBitmap->getWidth();
+    MHeight           = MBitmap->getHeight();
+    MDepth            = MBitmap->getDepth();
+    MBitmap           = ABitmap;
+    MAllocated        = false;
+    create_xcb_image(ATarget);
+  }
+
+  //----------
+
+  virtual ~KODE_XcbImage() {
+    destroy_xcb_image();
+    if (MBitmap && MAllocated) KODE_Delete MBitmap;
+  }
+
+
+//------------------------------
+public: // drawable
+//------------------------------
+
+  bool              isImage()           final { return true; }
+
+  uint32_t          getWidth()          final { return MWidth; }
+  uint32_t          getHeight()         final { return MHeight; }
+  uint32_t          getDepth()          final { return MDepth; }
+
+  KODE_Bitmap*      getBitmap()         final { return MBitmap; }
+
+  #ifdef KODE_USE_XCB
+  xcb_connection_t* getXcbConnection()  final { return MTargetConnection; }
+  xcb_visualid_t    getXcbVisual()      final { return MTargetVisual; }
+  xcb_image_t*      getXcbImage()       final { return MImage; }
+  #endif
+
+//------------------------------
+private:
+//------------------------------
+
+  /*
+    //http://tronche.com/gui/x/xlib/utilities/XCreateImage.html
+    does not allocate space for the image itself
+    initializes the structure byte-order, bit-order, and bitmap-unit values from the display
+
+    //http://www.sbin.org/doc/Xlib/chapt_06.html
+    XCreateImage()
+    Allocates memory for an XImage structure and sets various members.
+    Note that it uses the server's data format, which is often not appropriate.
+    The byte- and bit-order fields should usually be changed directly to the client-native format.
+    However, then the call _XInitImageFuncPtrs(image) should be issued to reset the mapping
+    to the appropriate versions of the functions for manipulating the image.
+    This call is supposed to be private to Xlib and, therefore, should be watched for changes
+    in later releases, but this is currently the accepted method.
+
+  */
+
+  void create_xcb_image(KODE_Drawable* ATarget/*, KODE_Bitmap* ABitmap*/) {
+    uint32_t  width = MBitmap->getWidth(); // MWidth;
+    uint32_t  height = MBitmap->getHeight(); // MHeight;
+    uint32_t* buffer = MBitmap->getBuffer();
+    uint32_t  bufferSize = MBitmap->getBufferSize();
+    MImage = xcb_image_create(
+      width,                          // width      width in pixels.
+      height,                         // height     height in pixels.
+      XCB_IMAGE_FORMAT_Z_PIXMAP,      // format
+      32,                             // xpad       scanline pad (8,16,32)
+      24,                             // depth      (1,4,8,16,24 zpixmap),    (1 xybitmap), (anything xypixmap)
+      32,                             // bpp        (1,4,8,16,24,32 zpixmap,  (1 xybitmap), (anything xypixmap)
+      32,                             // unit       unit of image representation, in bits (8,16,32)
+      XCB_IMAGE_ORDER_LSB_FIRST,      // byte_order
+      XCB_IMAGE_ORDER_LSB_FIRST,      // bit_order
+      buffer,           // base       The base address of malloced image data
+      bufferSize,       // bytes      The size in bytes of the storage pointed to by base.
+                                      //            If base == 0 and bytes == ~0 and data == 0, no storage will be auto-allocated.
+      (uint8_t*)buffer  // data       The image data. If data is null and bytes != ~0, then an attempt will be made
+                                      //            to fill in data; from base if it is non-null (and bytes is large enough), else
+                                      //            by mallocing sufficient storage and filling in base.
+    );
+
+    xcb_flush(MTargetConnection);
+
+  }
+
+  //----------
+
+  /*
+    //http://www.sbin.org/doc/Xlib/chapt_06.html
+    XDestroyImage()
+    Frees the data field in an image structure if the image structure was
+    allocated in the application. If the image was created using
+    XCreateImage(), XGetImage(), or XGetSubImage(), XDestroyImage() frees
+    both the data and the image structure. Note that if the image data is
+    stored in static memory in the application, it cannot be freed.
+    To free an image created with XCreateImage() that has statically
+    allocated data, you must set NULL into the data field before calling
+    XDestroyImage().
+  */
+
+  void destroy_xcb_image() {
+    //MImage->data = nullptr; // crash
+    MImage->base = nullptr;
+    xcb_image_destroy(MImage);
+  }
+
+//------------------------------
+public:
+//------------------------------
+
+  #ifdef KODE_USE_CAIRO
+  cairo_surface_t* createCairoSurface() {
+    cairo_surface_t* surface = cairo_image_surface_create_for_data(
+      (uint8_t*)MBitmap->getBuffer(),   // unsigned char *data,
+      CAIRO_FORMAT_ARGB32,              // cairo_format_t format,
+      MBitmap->getWidth(),              // int width,
+      MBitmap->getHeight(),             // int height,
+      MBitmap->getStride()              // int stride);
+    );
+    return surface;
+  }
+  #endif
+
+};
+
+#endif // 0
+
+//----------------------------------------------------------------------
+#endif

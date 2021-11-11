@@ -1,0 +1,60 @@
+#ifndef kode_image_included
+#define kode_image_included
+//----------------------------------------------------------------------
+
+#if 0
+
+#include "kode.h"
+//#include "gui/kode_gui_implementation.h"
+
+#ifdef KODE_USE_XCB
+  #include "gui/xcb/kode_xcb_image.h"
+#endif
+
+#ifdef KODE_GUI_XCB
+  typedef KODE_XcbImage KODE_ImplementedImage;
+#endif
+
+//----------------------------------------------------------------------
+
+class KODE_Image
+: public KODE_ImplementedImage {
+
+//------------------------------
+public:
+//------------------------------
+
+  KODE_Image(KODE_Drawable* AOwner, uint32_t AWidth, uint32_t AHeight, uint32_t ADepth=32)
+  : KODE_ImplementedImage(AOwner,AWidth,AHeight,ADepth) {
+  }
+
+  //----------
+
+  KODE_Image(KODE_Drawable* AOwner, KODE_Bitmap* ABitmap)
+  : KODE_XcbImage(AOwner,ABitmap) {
+  }
+
+  //----------
+
+//  KODE_Image(KODE_Drawable* AOwner, uint8_t* buffer, uint32_t len)
+//  : KODE_XcbImage(AOwner,ABitmap) {
+//
+//    MBitmap = KODE_New KODE_Bitmap(sa_logo_40_trans_black,sa_logo_40_trans_black_size);
+//    MBitmap->premultAlpha(0x999999);
+//    MSurface = KODE_New KODE_Surface(ATarget,MBitmap->getWidth(),MBitmap->getHeight());
+//    KODE_Painter* painter = KODE_New KODE_Painter(MSurface);
+//    painter->uploadBitmap(0,0,MBitmap);
+//  }
+
+
+  //----------
+
+  virtual ~KODE_Image() {
+  }
+
+};
+
+#endif // 0
+
+//----------------------------------------------------------------------
+#endif

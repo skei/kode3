@@ -354,7 +354,7 @@ const DSSI_Descriptor* kode_dssi_entrypoint(unsigned long Index) KODE_DSSI_MAIN_
   KODE_DssiPlugin<D,I,E> _DSSI_PLUGIN;                                \
                                                                       \
   /*__attribute__((visibility("default")))*/                          \
-  __KODE_EXPORT                                                    \
+  __KODE_DLLEXPORT                                                    \
   const DSSI_Descriptor* kode_dssi_entrypoint(unsigned long Index) {  \
     return _DSSI_PLUGIN.entrypoint(Index);                            \
   }

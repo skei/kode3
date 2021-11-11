@@ -4,7 +4,7 @@
 
 #include <stdio.h> // sprintf
 
-#include "base/kode_array.h"
+#include "base/types/kode_array.h"
 
 //----------------------------------------------------------------------
 //

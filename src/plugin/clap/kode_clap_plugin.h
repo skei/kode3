@@ -285,7 +285,7 @@ void clap_entry_refresh_callback(void) {
 //warning: ‘visibility’ attribute ignored [-Wattributes]|
 
 //__attribute__((visibility("default")))
-__KODE_EXPORT
+__KODE_DLLEXPORT
 struct clap_plugin_entry CLAP_ENTRY_STRUCT asm("clap_plugin_entry") = {
   CLAP_VERSION,
   clap_entry_init_callback,

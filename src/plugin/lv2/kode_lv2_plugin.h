@@ -450,7 +450,7 @@ void                    kode_lv2_export_ttl(void) asm             ("lv2_export_t
   /*KODE_Lv2Editor            _KODE_LV2_Editor;*/                     \
                                                                       \
   /*__attribute__((visibility("default")))*/                          \
-  __KODE_EXPORT                                                       \
+  __KODE_DLLEXPORT                                                       \
   const LV2_Descriptor* kode_lv2_entrypoint(unsigned long Index) {    \
     printf("LV2\n");                                                  \
     /*KODE_Lv2Print("Index %i\n",Index);*/                            \
@@ -458,7 +458,7 @@ void                    kode_lv2_export_ttl(void) asm             ("lv2_export_t
   }                                                                   \
                                                                       \
   /*__attribute__((visibility("default")))*/                          \
-  __KODE_EXPORT                                                       \
+  __KODE_DLLEXPORT                                                       \
   const LV2UI_Descriptor* kode_lv2ui_entrypoint(uint32_t index) {     \
     printf("LV2UI\n");                                                \
     /*KODE_Lv2Print("index %i\n",index);*/                            \
