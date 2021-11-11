@@ -24,13 +24,14 @@ plugin toolkit/framework..
 
 - xcb
 - cairo
+- (ctx)
 
-# plans, todo, in progress, ..
+# notes, considerations, ..
 
-- plugin wrappers
-- plugin hosting
-- modular graph
-- runtime codegen
-- compile, export
-- tick processing
+- header-only
+- low-level, un-modern c++
+- no build system
+- no external dependencies (almost)
+- no vst2/vst3 sdk needed (depends)
+- 'fat' plugins
 
