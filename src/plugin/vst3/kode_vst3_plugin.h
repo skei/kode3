@@ -152,7 +152,6 @@ public:
 //      instance->setDefaultParameterValues();
 //      instance->updateAllParameters();
 
-
       //*obj = (VST3_IComponent*)instance;
       *obj = (VST3_IComponent*)vst3_instance;
       return vst3_ResultOk;
@@ -235,7 +234,7 @@ bool                          vst3_module_exit(void)                        asm 
 #define KODE_VST3_MAIN(D,I,E)                           \
                                                         \
   /*__attribute__((visibility("default")))*/            \
-  __KODE_DLLEXPORT                                         \
+  __KODE_DLLEXPORT                                      \
   VST3_IPluginFactory* VST3_API vst3_entrypoint() {     \
     KODE_VST3PRINT;                                     \
     return new KODE_Vst3Plugin<D,I,E>();                \
@@ -245,7 +244,7 @@ bool                          vst3_module_exit(void)                        asm 
 /*  static int counter {0};                    */       \
                                                         \
   /*__attribute__((visibility("default")))*/            \
-  __KODE_DLLEXPORT                                         \
+  __KODE_DLLEXPORT                                      \
   bool vst3_module_entry(void* sharedLibraryHandle)  {  \
     KODE_VST3PRINT;                                     \
 /*    if (++counter == 1) {                    */       \
@@ -256,7 +255,7 @@ bool                          vst3_module_exit(void)                        asm 
   }                                                     \
                                                         \
   /*__attribute__((visibility("default")))*/            \
-  __KODE_DLLEXPORT                                         \
+  __KODE_DLLEXPORT                                      \
   bool vst3_module_exit(void) {                         \
     KODE_VST3PRINT;                                     \
 /*    if (--counter == 0) {                    */       \

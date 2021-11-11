@@ -76,12 +76,12 @@ public:
   */
 
   bool clap_instance_start_processing() {
-    MInstance->on_plugin_start_processing();
+    MInstance->on_plugin_startProcessing();
     return true;
   }
 
   void clap_instance_stop_processing() {
-    MInstance->on_plugin_stop_processing();
+    MInstance->on_plugin_stopProcessing();
   }
 
   /*

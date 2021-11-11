@@ -525,11 +525,15 @@ public: // vst2
           if (!MIsEditorOpen) {
             MIsEditorOpen = true;
             //MEditor = (KODE_Editor*)MInstance->on_openEditor(ptr);
-//            MEditor = MInstance->openEditor(ptr);
+
+            MEditor = MInstance->on_plugin_openEditor(/*ptr*/);
+
             //MInstance->copyParameterValuesToEditor(MEditor);
             // MEditor->on_realign(true);
 
-//            MEditor->open();
+            uint32_t width = MDescriptor->editorWidth;
+            uint32_t height = MDescriptor->editorHeight;
+            MEditor->open(width,height,ptr);
 
             return 1;
           }
@@ -550,11 +554,11 @@ public: // vst2
             MIsEditorOpen = false;
             if (MEditor) {
 
-//              MEditor->close();
+              MEditor->close();
 
               //MInstance->on_closeEditor(MEditor);
 
-//              MInstance->closeEditor(MEditor);
+              MInstance->on_plugin_closeEditor();
 
               MEditor = nullptr;
               return 1;
@@ -584,7 +588,7 @@ public: // vst2
           if (MIsEditorOpen) {
             //KODE_Assert(MEditor);
 
-//            MInstance->on_updateEditor(MEditor);
+            MInstance->on_plugin_updateEditor();
 
             updateEditorInIdle();
           }
@@ -644,7 +648,7 @@ public: // vst2
         //else return MInstance->on_saveProgram((void**)ptr);
         {
           void* buffer = nullptr;
-          uint32_t size = MInstance->on_plugin_save_state(&buffer,0);
+          uint32_t size = MInstance->on_plugin_saveState(&buffer,0);
           if ((size == 0) && (buffer == nullptr)) {
             buffer = MInstance->getParameterValueBuffer();
             size = MDescriptor->parameters.size() * sizeof(float);

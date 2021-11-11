@@ -29,17 +29,15 @@ public:
     if (descriptor) {
       KODE_Instance* instance = _kode_create_instance(descriptor); // new INSTANCE(descriptor);
       if (instance) {
-        //KODE_ExeInstance* exe_instance = new KODE_ExeInstance(instance);
-        KODE_Editor* editor = _kode_create_editor(instance); // new EDITOR(instacne);
-        if (editor) {
-          //editor->create(parent);
-          //editor->open(640,480);
-          //editor->eventLoop();
-          //editor->close();
-          //editor->destroy();
-          delete editor;
+        if (descriptor->options.has_editor) {
+          KODE_Editor* editor = instance->on_plugin_openEditor(/*nullptr*/);
+          if (editor) {
+            editor->open(640,480,nullptr);
+            editor->eventLoop();
+            editor->close();
+            instance->on_plugin_closeEditor();
+          }
         }
-        //delete exe_instance;
         delete instance;
       }
       //delete descriptor; // deleted by KODE_Instance

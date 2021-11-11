@@ -651,7 +651,7 @@ public: // IPluginBase
     }
     //KODE_Vst3Print(" -> Ok\n");
 
-//    MInstance->on_plugin_initialize();
+    MInstance->on_plugin_init();
 
     return vst3_ResultOk;
   }
@@ -667,7 +667,7 @@ public: // IPluginBase
   int32_t VST3_API terminate() final {
     //KODE_Vst3Print(" -> Ok\n");
 
-//    on_plugin_terminate();
+    MInstance->on_plugin_destroy();
 
     return vst3_ResultOk;
   }
@@ -969,7 +969,7 @@ public: // IComponent
         // use static, pre malloc'd buffer?
         void* ptr = malloc(size);
         state->read(&ptr,size,&num_read);
-        MInstance->on_plugin_load_state(size,ptr,0);
+        MInstance->on_plugin_loadState(size,ptr,0);
         free(ptr);
         break;
       }
@@ -1006,7 +1006,9 @@ public: // IComponent
     uint32_t  mode    = 0;
     void*     ptr     = nullptr;
     uint32_t  size    = 0;;
-//    size = on_plugin_saveState(&ptr,0);
+
+    size = MInstance->on_plugin_saveState(&ptr,0);
+
     if ((size == 0) && (ptr == nullptr)) {
       //ptr = getParameterValues();
       ptr = MParameterValues;
@@ -1200,8 +1202,9 @@ public: // IAudioProcessor
   int32_t VST3_API setProcessing(uint8_t state) final {
     MIsProcessing = state;
 
-    if (MIsProcessing) MInstance->on_plugin_start_processing();
-    else  MInstance->on_plugin_stop_processing();
+    if (MIsProcessing) MInstance->on_plugin_startProcessing();
+    else  MInstance->on_plugin_stopProcessing();
+
     //KODE_Vst3Print("state: %i -> Ok\n",state);
 
     return vst3_ResultOk;
@@ -2005,9 +2008,9 @@ public: // IPlugView
     //KODE_Vst3Print("parent: %p type: %s",parent,type);
     #ifndef KODE_NO_GUI
       if (MDescriptor->options.has_editor) {
+        uint32_t w = MDescriptor->editorWidth;
+        uint32_t h = MDescriptor->editorHeight;
         if (MPlugFrame) {
-          uint32_t w = MDescriptor->editorWidth;
-          uint32_t h = MDescriptor->editorHeight;
           VST3_ViewRect r;
           r.left    = 0;
           r.top     = 0;
@@ -2015,9 +2018,13 @@ public: // IPlugView
           r.bottom  = h;
           MPlugFrame->resizeView(this,&r);
         }
-//        MEditor = (KODE_Editor*)on_plugin_openEditor(parent);
+
+        MEditor = MInstance->on_plugin_openEditor(); // (parent);
+
 //        updateAllEditorParameters(MEditor,false);
-//        MEditor->open();
+
+        MEditor->open(w,h,parent);
+
         //if (MRunLoop)
         MRunLoop->registerTimer(this,KODE_VST3_TIMER_MS);
         //MRunLoop->registerEventHandler(this,0);
@@ -2043,8 +2050,8 @@ public: // IPlugView
       //if (MRunLoop)
       MRunLoop->unregisterTimer(this);
 
-//      MEditor->close();
-//      on_plugin_closeEditor(MEditor);
+      MEditor->close();
+      MInstance->on_plugin_closeEditor();
 
       MEditor = nullptr;
       //KODE_Vst3Print(" -> Ok\n");
@@ -2190,7 +2197,7 @@ public: // ITimerHandler
     #ifndef KODE_NO_GUI
       if (MEditor) {
 
-//        on_plugin_updateEditor(MEditor);
+        MInstance->on_plugin_updateEditor();
 
       }
       flushParametersToHost();

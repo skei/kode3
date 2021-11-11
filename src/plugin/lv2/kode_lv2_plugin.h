@@ -29,11 +29,11 @@ private:
 
   // TODO: pointers, initialize when needed
 
-  DESCRIPTOR        MDescriptor                         = {};
-  LV2_Descriptor    MLv2Descriptor                      = {0};
-  LV2UI_Descriptor  MLv2UIDescriptor                    = {0};
-  char              MLv2Uri[KODE_LV2_MAX_URI_LENGTH]    = {0};
-  char              MLv2UIUri[KODE_LV2_MAX_URI_LENGTH]  = {0};
+  DESCRIPTOR        MDescriptor                           = {};
+  LV2_Descriptor    MLv2Descriptor                        = {0};
+  LV2UI_Descriptor  MLv2UIDescriptor                      = {0};
+  char              MLv2Uri[KODE_LV2_MAX_URI_LENGTH+1]    = {0};
+  char              MLv2UIUri[KODE_LV2_MAX_URI_LENGTH+1]  = {0};
 
   //static LV2UI_Idle_Interface _lv2_idle_interface;
   //static LV2UI_Resize         _lv2_resize;
