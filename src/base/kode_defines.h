@@ -150,8 +150,8 @@
 #ifndef KODE_GUI_DEFINED
   #warning no gui type defined!
   #undef KODE_USE_XCB
-  //#undef KODE_USE_CAIRO
-  #define KODE_NO_GUI
+  #undef KODE_USE_CAIRO
+  //#define KODE_NO_GUI
   //#define KODE_USE_XCB
   //#define KODE_GUI_XCB
 #endif

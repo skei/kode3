@@ -263,6 +263,21 @@ enum KODE_ETextAlignment {
 };
 
 //----------------------------------------------------------------------
+//
+// audio
+//
+//----------------------------------------------------------------------
+
+enum KODE_EPluginPortType {
+  KODE_PLUGIN_PORT_AUDIO = 0,
+  KODE_PLUGIN_PORT_MIDI  = 1,
+};
+
+enum KODE_EPluginPortDirection {
+  KODE_PLUGIN_PORT_INPUT   = 0,
+  KODE_PLUGIN_PORT_OUTPUT  = 1,
+};
+
 
 //----------------------------------------------------------------------
 #endif

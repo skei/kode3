@@ -10,15 +10,15 @@
 
 //----------------------------------------------------------------------
 
-enum KODE_EPortType {
-  KODE_PORT_AUDIO = 0,
-  KODE_PORT_MIDI  = 1,
-};
-
-enum KODE_EPortDirection {
-  KODE_PORT_INPUT   = 0,
-  KODE_PORT_OUTPUT  = 1,
-};
+//enum KODE_EPortType {
+//  KODE_PORT_AUDIO = 0,
+//  KODE_PORT_MIDI  = 1,
+//};
+//
+//enum KODE_EPortDirection {
+//  KODE_PORT_INPUT   = 0,
+//  KODE_PORT_OUTPUT  = 1,
+//};
 
 struct KODE_PluginPort {
   const char* name;
@@ -201,7 +201,7 @@ public:
   }
 
   void appendInput(const char* AName) {
-    KODE_PluginPort* port = new KODE_PluginPort(AName,KODE_PORT_AUDIO,1,KODE_PORT_INPUT);
+    KODE_PluginPort* port = new KODE_PluginPort(AName,KODE_PLUGIN_PORT_AUDIO,1,KODE_PLUGIN_PORT_INPUT);
     inputs.append(port);
   }
 
@@ -217,7 +217,7 @@ public:
   }
 
   void appendOutput(const char* AName) {
-    KODE_PluginPort* port = new KODE_PluginPort(AName,KODE_PORT_AUDIO,1,KODE_PORT_OUTPUT);
+    KODE_PluginPort* port = new KODE_PluginPort(AName,KODE_PLUGIN_PORT_AUDIO,1,KODE_PLUGIN_PORT_OUTPUT);
     outputs.append(port);
   }
 

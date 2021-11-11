@@ -31,6 +31,9 @@ public:
     appendOutput("output 1");
     appendOutput("output 2");
     appendParameter( new KODE_Parameter() );
+    //options.has_editor = true;
+    //editorWidth= 400;
+    //editorWidth= 300;
   }
 
 };

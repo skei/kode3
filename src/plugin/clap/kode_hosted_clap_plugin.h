@@ -74,7 +74,8 @@ public:
       //KODE_Print("clap_entry %p\n",clap_entry);
       if (clap_entry) {
         // TODO
-        bool result = clap_entry->init("./");
+        //bool result =
+        clap_entry->init("./");
         const clap_plugin_descriptor* clap_descriptor = clap_entry->get_plugin_descriptor(0);
         //KODE_Print("clap_descriptor %p\n",clap_descriptor);
         MDescriptor->name         = clap_descriptor->name;
