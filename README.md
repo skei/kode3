@@ -24,3 +24,13 @@ plugin toolkit/framework..
 
 - xcb
 - cairo
+
+# plans, todo, in progress, ..
+
+- plugin wrappers
+- plugin hosting
+- modular graph
+- runtime codegen
+- compile, export
+- tick processing
+
