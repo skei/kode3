@@ -159,6 +159,7 @@
 		<Unit filename="../../clap/include/clap/stream.h" />
 		<Unit filename="../../clap/include/clap/string-sizes.h" />
 		<Unit filename="../../clap/include/clap/version.h" />
+		<Unit filename="../README.md" />
 		<Unit filename="../src/audio/kode_audio_io.h" />
 		<Unit filename="../src/audio/kode_mid_file.h" />
 		<Unit filename="../src/audio/kode_midi_io.h" />

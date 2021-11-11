@@ -19,13 +19,8 @@ class KODE_HostedClapPlugin
 private:
 //------------------------------
 
-  KODE_Descriptor*  MDescriptor                             = nullptr;
-  KODE_ClapHost*    MHost                                   = nullptr;
-
-//  void*                     MLibHandle        = nullptr;
-//  clap_plugin*              MClapPlugin       = nullptr;
-//  clap_plugin_descriptor*   MClapDescriptor   = nullptr;
-//  struct clap_plugin_entry* MClapPluginEntry  = nullptr;
+  KODE_Descriptor*  MDescriptor = nullptr;
+  KODE_ClapHost*    MHost       = nullptr;
 
 //------------------------------
 public:
@@ -55,9 +50,8 @@ public:
   KODE_HostedClapPlugin(const char* AFile)
   : KODE_HostedPlugin(AFile) {
     loadPlugin(AFile);
-    KODE_Print("MDescriptor %p\n",MDescriptor);
+    //KODE_Print("MDescriptor %p\n",MDescriptor);
     MDescriptor->print();
-    KODE_PRINT;
 
   }
 
@@ -74,24 +68,23 @@ public:
 
   void loadPlugin(const char* AFile) {
     MDescriptor = new KODE_Descriptor();
-    KODE_DPrint("loading %s\n",CLAP_FILENAME);
+    //KODE_DPrint("loading %s\n",CLAP_FILENAME);
     if (MLibHandle) {
-
       const struct clap_plugin_entry* clap_entry = (const struct clap_plugin_entry*)getSymbol("clap_plugin_entry");
-      KODE_Print("clap_entry %p\n",clap_entry);
-
+      //KODE_Print("clap_entry %p\n",clap_entry);
       if (clap_entry) {
+        // TODO
+        bool result = clap_entry->init("./");
         const clap_plugin_descriptor* clap_descriptor = clap_entry->get_plugin_descriptor(0);
-        KODE_Print("clap_descriptor %p\n",clap_descriptor);
-        //MDescriptor = initDescriptor();
-        MDescriptor->name         = "name";//clap_descriptor->name;
-        MDescriptor->author       = "vendor";//clap_descriptor->vendor;
+        //KODE_Print("clap_descriptor %p\n",clap_descriptor);
+        MDescriptor->name         = clap_descriptor->name;
+        MDescriptor->author       = clap_descriptor->vendor;
         MDescriptor->version      = 0; // clap_descriptor->version
         MDescriptor->short_id     = 0;  // clap_descriptor->id;
         MDescriptor->email        = "";
-        MDescriptor->url          = "url";//clap_descriptor->url;
-        MDescriptor->description  = "description";//clap_descriptor->description;
-        MDescriptor->keywords     = "keywords";//clap_descriptor->keywords;
+        MDescriptor->url          = clap_descriptor->url;
+        MDescriptor->description  = clap_descriptor->description;
+        MDescriptor->keywords     = clap_descriptor->keywords;
         MDescriptor->license_text = "";
         MDescriptor->editorWidth  = 0;
         MDescriptor->editorHeight = 0;
@@ -100,32 +93,20 @@ public:
 //        for (int32_t i=0; i<MAEffect->numParams; i++) MDescriptor->appendParameter(new KODE_Parameter());
         if (clap_descriptor->plugin_type & CLAP_PLUGIN_INSTRUMENT) {
           MDescriptor->options.is_synth = true;
+          MDescriptor->options.can_receive_midi = true;
         }
-        if (clap_descriptor->plugin_type & CLAP_PLUGIN_AUDIO_EFFECT) {
-          MDescriptor->options.is_synth = false;
-        }
+        //if (clap_descriptor->plugin_type & CLAP_PLUGIN_AUDIO_EFFECT) {
+        //  MDescriptor->options.is_synth = false;
+        //}
         if (clap_descriptor->plugin_type & CLAP_PLUGIN_EVENT_EFFECT) {
           MDescriptor->options.can_send_midi = true;
           MDescriptor->options.can_receive_midi = true;
         }
         if (clap_descriptor->plugin_type & CLAP_PLUGIN_ANALYZER) {
         }
-        //KODE_PRINT;
-        //if (MAEffect->flags & effFlagsCanReplacing) {}
-        //if (MAEffect->flags & effFlagsCanDoubleReplacing) {}
-        //if (MAEffect->flags & effFlagsNoSoundInStop) {}
       }
     }
   }
-
-//          MAEffect->dispatcher(MAEffect,effGetEffectName,0,0,MEffectName,0);
-//          MAEffect->dispatcher(MAEffect,effGetVendorString,0,0,MVendorString,0);
-//          MAEffect->dispatcher(MAEffect,effGetProductString,0,0,MProductString,0);
-//          MVersion = MAEffect->dispatcher(MAEffect,effGetVendorVersion,0,0,0,0);
-//          MUniqueId = MAEffect->uniqueID;
-//        }
-//      }
-//    }
 
 //------------------------------
 public:

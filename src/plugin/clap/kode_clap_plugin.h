@@ -34,13 +34,13 @@ public:
     MDescriptor = _kode_create_descriptor();
     MClapDescriptor = (clap_plugin_descriptor*)malloc(sizeof(clap_plugin_descriptor));
     MClapDescriptor->clap_version = CLAP_VERSION;
-    MClapDescriptor->id           = "";//MDescriptor->getId();
-    MClapDescriptor->name         = "";//MDescriptor->name;
-    MClapDescriptor->vendor       = "";//MDescriptor->author;
-    MClapDescriptor->url          = "";//MDescriptor->url;
+    MClapDescriptor->id           = MDescriptor->getIdString();
+    MClapDescriptor->name         = MDescriptor->name;
+    MClapDescriptor->vendor       = MDescriptor->author;
+    MClapDescriptor->url          = MDescriptor->url;
     MClapDescriptor->manual_url   = "";
     MClapDescriptor->support_url  = "";
-    MClapDescriptor->version      = "";//MDescriptor->getVersion();
+    MClapDescriptor->version      = MDescriptor->getVersionString();
     MClapDescriptor->description  = "";
     MClapDescriptor->keywords     = "";
     MClapDescriptor->plugin_type  = CLAP_PLUGIN_AUDIO_EFFECT;
@@ -223,7 +223,7 @@ KODE_ClapPlugin KODE_GLOBAL_CLAP_PLUGIN;
 
 static // ?
 bool clap_entry_init_callback(const char *plugin_path) {
-  printf("CLAP\n");
+  //printf("CLAP\n");
   return KODE_GLOBAL_CLAP_PLUGIN.clap_entry_init(plugin_path);
 }
 
