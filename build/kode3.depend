@@ -1,6 +1,6 @@
 # depslib dependency file v1.0
-1636636031 source:/DISKS/sda2/code/git/kode3/build/build.cpp
-	"test/test_hosting.cpp"
+1636639606 source:/DISKS/sda2/code/git/kode3/build/build.cpp
+	"test/test1.cpp"
 
 1636635535 /DISKS/sda2/code/git/kode3/src/kode.h
 	"base/kode_base.h"
@@ -251,7 +251,7 @@
 
 1635969975 /DISKS/sda2/code/git/kode3/src/kode_vst3.h
 
-1635978125 /DISKS/sda2/code/git/kode3/src/plugin/kode_plugin.h
+1636660572 /DISKS/sda2/code/git/kode3/src/plugin/kode_plugin.h
 	"kode.h"
 	"plugin/kode_descriptor.h"
 	"plugin/kode_instance.h"
@@ -264,26 +264,26 @@
 	"plugin/vst2/kode_vst2_plugin.h"
 	"plugin/vst3/kode_vst3_plugin.h"
 
-1636635452 /DISKS/sda2/code/git/kode3/src/plugin/kode_descriptor.h
+1636639597 /DISKS/sda2/code/git/kode3/src/plugin/kode_descriptor.h
 	"kode.h"
 	"base/types/kode_array.h"
 	"base/utils/kode_utils.h"
 	"plugin/kode_parameter.h"
 	"plugin/kode_preset.h"
 
-1636540470 /DISKS/sda2/code/git/kode3/src/plugin/kode_instance.h
+1636660410 /DISKS/sda2/code/git/kode3/src/plugin/kode_instance.h
 	"kode.h"
 	"plugin/kode_descriptor.h"
+	"plugin/kode_editor.h"
 	"plugin/kode_process_context.h"
 
-1636218363 /DISKS/sda2/code/git/kode3/src/plugin/kode_editor.h
+1636661661 /DISKS/sda2/code/git/kode3/src/plugin/kode_editor.h
 	"kode.h"
-	"plugin/kode_instance.h"
 	"plugin/kode_parameter.h"
 	"gui/kode_widget.h"
 	"gui/kode_window.h"
 
-1636594588 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_plugin.h
+1636635764 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_plugin.h
 	"kode.h"
 	"plugin/kode_plugin.h"
 	"plugin/clap/kode_clap.h"
@@ -294,13 +294,13 @@
 	"kode.h"
 	"extern/clap/all.h"
 
-1636234511 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_instance.h
+1636660422 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_instance.h
 	"kode_clap.h"
 	"plugin/kode_descriptor.h"
 	"plugin/kode_instance.h"
 	"plugin/kode_editor.h"
 
-1636238296 /DISKS/sda2/code/git/kode3/src/plugin/dssi/kode_dssi_plugin.h
+1636635771 /DISKS/sda2/code/git/kode3/src/plugin/dssi/kode_dssi_plugin.h
 	"kode.h"
 	"plugin/kode_descriptor.h"
 	"plugin/dssi/kode_dssi.h"
@@ -312,7 +312,7 @@
 	"kode.h"
 	<dssi.h>
 
-1636152634 /DISKS/sda2/code/git/kode3/src/plugin/exe/kode_exe_plugin.h
+1636661628 /DISKS/sda2/code/git/kode3/src/plugin/exe/kode_exe_plugin.h
 	"kode.h"
 	"plugin/kode_plugin.h"
 	"plugin/exe/kode_exe.h"
@@ -321,7 +321,7 @@
 
 1636149426 /DISKS/sda2/code/git/kode3/src/plugin/exe/kode_exe_instance.h
 
-1636238452 /DISKS/sda2/code/git/kode3/src/plugin/ladspa/kode_ladspa_plugin.h
+1636635776 /DISKS/sda2/code/git/kode3/src/plugin/ladspa/kode_ladspa_plugin.h
 	"kode.h"
 	"plugin/kode_descriptor.h"
 	"plugin/ladspa/kode_ladspa.h"
@@ -336,7 +336,7 @@
 	"kode.h"
 	<ladspa.h>
 
-1636503538 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_plugin.h
+1636661733 /DISKS/sda2/code/git/kode3/src/plugin/lv2/kode_lv2_plugin.h
 	"plugin/lv2/kode_lv2.h"
 	"plugin/lv2/kode_lv2_instance.h"
 	"plugin/lv2/kode_lv2_utils.h"
@@ -354,7 +354,7 @@
 	<lv2/urid/urid.h>
 	<lv2/lv2plug.in/ns/extensions/ui/ui.h>
 
-1636308972 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_plugin.h
+1636635797 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_plugin.h
 	"kode.h"
 	"plugin/kode_descriptor.h"
 	"plugin/vst2/kode_vst2.h"
@@ -365,7 +365,7 @@
 	"extern/vst2/aeffect.h"
 	"extern/vst2/aeffectx.h"
 
-1636551435 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_plugin.h
+1636635812 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_plugin.h
 	"kode.h"
 	"plugin/vst3/kode_vst3.h"
 	"plugin/vst3/kode_vst3_instance.h"
@@ -617,14 +617,14 @@
 1440689074 /DISKS/sda2/code/git/kode3/src/extern/vst2/aeffectx.h
 	"aeffect.h"
 
-1636308890 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_instance.h
+1636660428 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_instance.h
 	"kode.h"
 	"plugin/kode_instance.h"
 	"plugin/kode_process_context.h"
 
-1636551579 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_instance.h
+1636660450 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_instance.h
 	"plugin/kode_editor.h"
-	"base/kode_queue.h"
+	"base/types/kode_queue.h"
 	"plugin/kode_instance.h"
 	"plugin/kode_process_context.h"
 	"plugin/vst3/kode_vst3.h"
@@ -703,12 +703,19 @@
 1613248911 /DISKS/sda2/code/git/kode3/src/base/debug/kode_debug_crash_handler.h
 	<signal.h>
 
-1636218100 /DISKS/sda2/code/git/kode3/src/gui/kode_widget.h
+1636635717 /DISKS/sda2/code/git/kode3/src/gui/kode_widget.h
 	"kode.h"
-	"base/kode_array.h"
+	"gui/kode_painter.h"
+	"gui/kode_surface.h"
+	"gui/base/kode_base_window.h"
+	"plugin/kode_parameter.h"
 
-1636218225 /DISKS/sda2/code/git/kode3/src/gui/kode_window.h
+1633294886 /DISKS/sda2/code/git/kode3/src/gui/kode_window.h
 	"kode.h"
+	"gui/kode_painter.h"
+	"gui/kode_surface.h"
+	"gui/kode_widget.h"
+	"gui/xcb/kode_xcb_window.h"
 
 1636560685 /DISKS/sda2/code/git/kode3/build/test/test_clap_hosting.cpp
 	"kode.h"
@@ -752,7 +759,7 @@
 	"kode.h"
 	"plugin/vst2/kode_vst2.h"
 
-1636551486 /DISKS/sda2/code/git/kode3/build/test/test1.cpp
+1636661454 /DISKS/sda2/code/git/kode3/build/test/test1.cpp
 	"kode.h"
 	"plugin/kode_plugin.h"
 
@@ -768,15 +775,15 @@
 	"base/system/kode_system.h"
 	"base/utils/kode_utils.h"
 
-1633367323 /DISKS/sda2/code/git/kode3/src/base/kode_config.h
+1636659017 /DISKS/sda2/code/git/kode3/src/base/kode_config.h
 
-1636636076 /DISKS/sda2/code/git/kode3/src/base/kode_defines.h
+1636639769 /DISKS/sda2/code/git/kode3/src/base/kode_defines.h
 
 1612057072 /DISKS/sda2/code/git/kode3/src/base/kode_attributes.h
 
 1633367380 /DISKS/sda2/code/git/kode3/src/base/kode_const.h
 
-1631729341 /DISKS/sda2/code/git/kode3/src/base/kode_enums.h
+1636639584 /DISKS/sda2/code/git/kode3/src/base/kode_enums.h
 
 1630413032 /DISKS/sda2/code/git/kode3/src/base/types/kode_types.h
 	<stdint.h>
@@ -929,4 +936,233 @@
 	"base/utils/kode_math.h"
 
 1612057072 /DISKS/sda2/code/git/kode3/src/base/utils/kode_utils.h
+
+1636132365 source:/DISKS/sda2/code/git/kode3/src/extern/choc/javascript/duktape/duktape.c
+	"duktape.h"
+	<stdio.h>
+	<stdlib.h>
+	<stdarg.h>
+	<string.h>
+
+1636132365 /DISKS/sda2/code/git/kode3/src/extern/choc/javascript/duktape/duktape.h
+	"duk_config.h"
+
+1636132365 /DISKS/sda2/code/git/kode3/src/extern/choc/javascript/duktape/duk_config.h
+	<sys/isa_defs.h>
+	<TargetConditionals.h>
+	<architecture/byte_order.h>
+	<sys/param.h>
+	<sys/time.h>
+	<time.h>
+	<sys/types.h>
+	<machine/endian.h>
+	<sys/param.h>
+	<sys/time.h>
+	<time.h>
+	<sys/types.h>
+	<sys/endian.h>
+	<sys/param.h>
+	<sys/time.h>
+	<time.h>
+	<sys/types.h>
+	<sys/endian.h>
+	<sys/param.h>
+	<sys/time.h>
+	<time.h>
+	<time.h>
+	<time.h>
+	<time.h>
+	<windows.h>
+	<windows.h>
+	<endian.h>
+	<sys/param.h>
+	<sys/time.h>
+	<time.h>
+	<sys/types.h>
+	<sys/param.h>
+	<sys/time.h>
+	<time.h>
+	<sys/types.h>
+	<sys/param.h>
+	<sys/time.h>
+	<time.h>
+	<sys/types.h>
+	<endian.h>
+	<sys/param.h>
+	<sys/time.h>
+	<time.h>
+	<stdint.h>
+	<sys/types.h>
+	<endian.h>
+	<stdint.h>
+	<sys/param.h>
+	<sys/time.h>
+	<time.h>
+	<sys/types.h>
+	<endian.h>
+	<stdint.h>
+	<sys/param.h>
+	<sys/time.h>
+	<time.h>
+	<sys/types.h>
+	<sys/param.h>
+	<sys/param.h>
+	<sys/time.h>
+	<time.h>
+	<sys/param.h>
+	<sys/time.h>
+	<time.h>
+	<sys/param.h>
+	<sys/time.h>
+	<time.h>
+	<sys/types.h>
+	<endian.h>
+	<sys/param.h>
+	<sys/time.h>
+	<time.h>
+	<sys/types.h>
+	<endian.h>
+	<sys/param.h>
+	<sys/time.h>
+	<time.h>
+	<time.h>
+	<sys/time.h>
+	<time.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdarg.h>
+	<setjmp.h>
+	<stddef.h>
+	<math.h>
+	<limits.h>
+	<stdint.h>
+	<inttypes.h>
+	<exception>
+	<stdexcept>
+
+1630688369 /DISKS/sda2/code/git/kode3/src/gui/kode_painter.h
+	"kode.h"
+	"base/types/kode_stack.h"
+	"gui/cairo/kode_cairo_painter.h"
+	"gui/xcb/kode_xcb_painter.h"
+
+1630688344 /DISKS/sda2/code/git/kode3/src/gui/cairo/kode_cairo_painter.h
+	"kode.h"
+	"gfx/kode_bitmap.h"
+	"gui/kode_drawable.h"
+	"gui/kode_window.h"
+	"gui/cairo/kode_cairo.h"
+	"gui/xcb/kode_xcb_painter.h"
+
+1630363540 /DISKS/sda2/code/git/kode3/src/gfx/kode_bitmap.h
+	"kode.h"
+	"base/utils/kode_bgra.h"
+	"base/utils/kode_integer_math.h"
+	"base/utils/kode_math.h"
+	"extern/stb/stb_image.h"
+	"extern/stb/stb_truetype.h"
+	"gui/cairo/kode_cairo.h"
+	"gfx/kode_bitmap_draw.h"
+	"gfx/kode_bitmap_font.h"
+	"gfx/kode_bitmap_proc.h"
+	"gfx/kode_bitmap_gen.h"
+
+1613255813 /DISKS/sda2/code/git/kode3/src/base/utils/kode_bgra.h
+	"kode_math.h"
+
+1612057073 /DISKS/sda2/code/git/kode3/src/extern/stb/stb_image.h
+	"stb_image.h"
+	<stdio.h>
+	<stdlib.h>
+	<stdarg.h>
+	<stddef.h>
+	<stdlib.h>
+	<string.h>
+	<limits.h>
+	<math.h>
+	<stdio.h>
+	<assert.h>
+	<stdint.h>
+	<emmintrin.h>
+	<intrin.h>
+	<arm_neon.h>
+
+1612057073 /DISKS/sda2/code/git/kode3/src/extern/stb/stb_truetype.h
+	"stb_truetype.h"
+	<stdio.h>
+	"stb_truetype.h"
+	<math.h>
+	<math.h>
+	<math.h>
+	<math.h>
+	<math.h>
+	<stdlib.h>
+	<assert.h>
+	<string.h>
+	<string.h>
+
+1630362708 /DISKS/sda2/code/git/kode3/src/gui/cairo/kode_cairo.h
+	"kode.h"
+	<cairo/cairo.h>
+	<cairo/cairo-xcb.h>
+
+1612109254 /DISKS/sda2/code/git/kode3/src/gfx/kode_bitmap_draw.h
+
+1612109254 /DISKS/sda2/code/git/kode3/src/gfx/kode_bitmap_font.h
+
+1613254855 /DISKS/sda2/code/git/kode3/src/gfx/kode_bitmap_proc.h
+
+1629748550 /DISKS/sda2/code/git/kode3/src/gfx/kode_bitmap_gen.h
+
+1630380257 /DISKS/sda2/code/git/kode3/src/gui/kode_drawable.h
+	"gui/xcb/kode_xcb.h"
+	"gui/cairo/kode_cairo.h"
+
+1612057073 /DISKS/sda2/code/git/kode3/src/gui/xcb/kode_xcb.h
+	"kode.h"
+	<xcb/xcb.h>
+	<xcb/xcb_cursor.h>
+	<xcb/xcb_image.h>
+	<xcb/xcb_keysyms.h>
+	<xcb/xcb_util.h>
+	<xcb/xproto.h>
+
+1630379866 /DISKS/sda2/code/git/kode3/src/gui/kode_surface.h
+	"kode.h"
+	"gui/xcb/kode_xcb_surface.h"
+
+1630374955 /DISKS/sda2/code/git/kode3/src/gui/xcb/kode_xcb_surface.h
+	"gui/kode_drawable.h"
+	"gui/base/kode_base_surface.h"
+	"gui/cairo/kode_cairo.h"
+
+1628640433 /DISKS/sda2/code/git/kode3/src/gui/base/kode_base_surface.h
+	"kode.h"
+	"gui/kode_drawable.h"
+
+1633300540 /DISKS/sda2/code/git/kode3/src/gui/xcb/kode_xcb_window.h
+	"kode.h"
+	"gui/kode_drawable.h"
+	"gui/base/kode_base_window.h"
+	"gui/xcb/kode_xcb.h"
+	"gui/xcb/kode_xcb_utils.h"
+	"gui/cairo/kode_cairo.h"
+
+1630956921 /DISKS/sda2/code/git/kode3/src/gui/base/kode_base_window.h
+	"kode.h"
+
+1636639971 /DISKS/sda2/code/git/kode3/src/gui/xcb/kode_xcb_utils.h
+	"kode.h"
+	"gui/xcb/kode_xcb.h"
+
+1632749753 /DISKS/sda2/code/git/kode3/src/gui/xcb/kode_xcb_painter.h
+	"gui/base/kode_base_painter.h"
+	"gui/xcb/kode_xcb_utils.h"
+	"gui/cairo/kode_cairo.h"
+
+1631226138 /DISKS/sda2/code/git/kode3/src/gui/base/kode_base_painter.h
+	"kode.h"
+	"gfx/kode_bitmap.h"
+	"gui/kode_drawable.h"
 
