@@ -35,3 +35,9 @@ plugin toolkit/framework..
 - no vst2/vst3 sdk needed (depends)
 - 'fat' plugins
 
+# roadmap
+
+- make it work
+- make it right
+- make it fast, small, stable, bugfree, pretty, etc..
+
