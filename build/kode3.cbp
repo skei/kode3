@@ -248,7 +248,6 @@
 		<Unit filename="../src/base/kode_color.h" />
 		<Unit filename="../src/base/kode_config.h" />
 		<Unit filename="../src/base/kode_const.h" />
-		<Unit filename="../src/base/kode_debug.h" />
 		<Unit filename="../src/base/kode_defines.h" />
 		<Unit filename="../src/base/kode_enums.h" />
 		<Unit filename="../src/base/kode_global.h" />
