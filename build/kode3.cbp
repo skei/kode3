@@ -122,49 +122,6 @@
 			<Add library="SDL2_image" />
 			<Add library="SDL2_mixer" />
 		</Linker>
-		<Unit filename="../../clap/include/clap/all.h" />
-		<Unit filename="../../clap/include/clap/audio-buffer.h" />
-		<Unit filename="../../clap/include/clap/chmap.h" />
-		<Unit filename="../../clap/include/clap/clap.h" />
-		<Unit filename="../../clap/include/clap/color.h" />
-		<Unit filename="../../clap/include/clap/events.h" />
-		<Unit filename="../../clap/include/clap/ext/audio-ports-config.h" />
-		<Unit filename="../../clap/include/clap/ext/audio-ports.h" />
-		<Unit filename="../../clap/include/clap/ext/draft/check-for-update.h" />
-		<Unit filename="../../clap/include/clap/ext/draft/file-reference.h" />
-		<Unit filename="../../clap/include/clap/ext/draft/midi-mappings.h" />
-		<Unit filename="../../clap/include/clap/ext/draft/preset-load.h" />
-		<Unit filename="../../clap/include/clap/ext/draft/quick-controls.h" />
-		<Unit filename="../../clap/include/clap/ext/draft/thread-pool.h" />
-		<Unit filename="../../clap/include/clap/ext/draft/track-info.h" />
-		<Unit filename="../../clap/include/clap/ext/draft/tuning.h" />
-		<Unit filename="../../clap/include/clap/ext/draft/vst2-convert.h" />
-		<Unit filename="../../clap/include/clap/ext/draft/vst3-convert.h" />
-		<Unit filename="../../clap/include/clap/ext/event-filter.h" />
-		<Unit filename="../../clap/include/clap/ext/fd-support.h" />
-		<Unit filename="../../clap/include/clap/ext/gui-cocoa.h" />
-		<Unit filename="../../clap/include/clap/ext/gui-free-standing.h" />
-		<Unit filename="../../clap/include/clap/ext/gui-win32.h" />
-		<Unit filename="../../clap/include/clap/ext/gui-x11.h" />
-		<Unit filename="../../clap/include/clap/ext/gui.h" />
-		<Unit filename="../../clap/include/clap/ext/latency.h" />
-		<Unit filename="../../clap/include/clap/ext/log.h" />
-		<Unit filename="../../clap/include/clap/ext/note-name.h" />
-		<Unit filename="../../clap/include/clap/ext/params.h" />
-		<Unit filename="../../clap/include/clap/ext/render.h" />
-		<Unit filename="../../clap/include/clap/ext/state.h" />
-		<Unit filename="../../clap/include/clap/ext/thread-check.h" />
-		<Unit filename="../../clap/include/clap/ext/timer-support.h" />
-		<Unit filename="../../clap/include/clap/fixedpoint.h" />
-		<Unit filename="../../clap/include/clap/hash.h" />
-		<Unit filename="../../clap/include/clap/host.h" />
-		<Unit filename="../../clap/include/clap/id.h" />
-		<Unit filename="../../clap/include/clap/macros.h" />
-		<Unit filename="../../clap/include/clap/plugin.h" />
-		<Unit filename="../../clap/include/clap/process.h" />
-		<Unit filename="../../clap/include/clap/stream.h" />
-		<Unit filename="../../clap/include/clap/string-sizes.h" />
-		<Unit filename="../../clap/include/clap/version.h" />
 		<Unit filename="../README.md" />
 		<Unit filename="../src/audio/analysis/kode_beat_detector.h" />
 		<Unit filename="../src/audio/analysis/kode_envelope_detector.h" />
@@ -202,12 +159,9 @@
 		<Unit filename="../src/audio/filters/kode_svf_filter.h" />
 		<Unit filename="../src/audio/io/kode_jack.h" />
 		<Unit filename="../src/audio/io/kode_portaudio.h" />
-		<Unit filename="../src/audio/kode_audio_io.h" />
 		<Unit filename="../src/audio/kode_audio_math.h" />
 		<Unit filename="../src/audio/kode_audio_utils.h" />
-		<Unit filename="../src/audio/kode_mid_file.h" />
-		<Unit filename="../src/audio/kode_midi_io.h" />
-		<Unit filename="../src/audio/kode_wav_file.h" />
+		<Unit filename="../src/audio/kode_midi_file.h" />
 		<Unit filename="../src/audio/modulation/kode_envelope.h" />
 		<Unit filename="../src/audio/modulation/kode_lfo.h" />
 		<Unit filename="../src/audio/processing/kode_convolution.h" />
@@ -241,7 +195,6 @@
 		<Unit filename="../src/base/debug/kode_debug_crash_handler.h" />
 		<Unit filename="../src/base/debug/kode_debug_memory.h" />
 		<Unit filename="../src/base/debug/kode_debug_print.h" />
-		<Unit filename="../src/base/debug/kode_debug_stacktrace.h" />
 		<Unit filename="../src/base/kode_array.h" />
 		<Unit filename="../src/base/kode_attributes.h" />
 		<Unit filename="../src/base/kode_base.h" />
@@ -331,6 +284,8 @@
 		<Unit filename="../src/extern/choc/javascript/duktape/duk_config.h" />
 		<Unit filename="../src/extern/choc/javascript/duktape/duktape.c">
 			<Option compilerVar="CC" />
+			<Option compile="0" />
+			<Option link="0" />
 		</Unit>
 		<Unit filename="../src/extern/choc/javascript/duktape/duktape.h" />
 		<Unit filename="../src/extern/choc/math/choc_MathHelpers.h" />
@@ -400,6 +355,21 @@
 		<Unit filename="../src/extern/dr_wav.h" />
 		<Unit filename="../src/extern/mayer_fft/mayer_fft.c.h" />
 		<Unit filename="../src/extern/mayer_fft/mayer_fft.h" />
+		<Unit filename="../src/extern/newpixie/crc32.h" />
+		<Unit filename="../src/extern/newpixie/dir.h" />
+		<Unit filename="../src/extern/newpixie/ease.h" />
+		<Unit filename="../src/extern/newpixie/file_util.h" />
+		<Unit filename="../src/extern/newpixie/frametimer.h" />
+		<Unit filename="../src/extern/newpixie/img.h" />
+		<Unit filename="../src/extern/newpixie/mid.h" />
+		<Unit filename="../src/extern/newpixie/mmap.h" />
+		<Unit filename="../src/extern/newpixie/paldither.h" />
+		<Unit filename="../src/extern/newpixie/palettize.h" />
+		<Unit filename="../src/extern/newpixie/palrle.h" />
+		<Unit filename="../src/extern/newpixie/pixelfont.h" />
+		<Unit filename="../src/extern/newpixie/thread.h" />
+		<Unit filename="../src/extern/newpixie/tml.h" />
+		<Unit filename="../src/extern/newpixie/tsf.h" />
 		<Unit filename="../src/extern/pffft/fftpack.c.h" />
 		<Unit filename="../src/extern/pffft/fftpack.h" />
 		<Unit filename="../src/extern/pffft/pffft.c.h" />
@@ -516,6 +486,9 @@
 		<Unit filename="../src/gui/xcb/kode_xcb_utils.h" />
 		<Unit filename="../src/gui/xcb/kode_xcb_window.h" />
 		<Unit filename="../src/kode.h" />
+		<Unit filename="../src/midi/kode_midi.h" />
+		<Unit filename="../src/midi/kode_midi_file.h" />
+		<Unit filename="../src/midi/kode_midi_player.h" />
 		<Unit filename="../src/plugin/clap/kode_clap.h" />
 		<Unit filename="../src/plugin/clap/kode_clap_host.h" />
 		<Unit filename="../src/plugin/clap/kode_clap_instance.h" />
@@ -578,6 +551,10 @@
 			<Option link="0" />
 		</Unit>
 		<Unit filename="test/test_hosting.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="test/test_midi.cpp">
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>

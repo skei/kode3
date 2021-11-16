@@ -14,6 +14,8 @@
 class myDescriptor
 : public KODE_Descriptor {
 
+private:
+
 public:
 
   myDescriptor() {

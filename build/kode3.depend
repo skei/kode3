@@ -1,6 +1,6 @@
 # depslib dependency file v1.0
-1636639606 source:/DISKS/sda2/code/git/kode3/build/build.cpp
-	"test/test1.cpp"
+1636982918 source:/DISKS/sda2/code/git/kode3/build/build.cpp
+	"test/test_midi.cpp"
 
 1636635535 /DISKS/sda2/code/git/kode3/src/kode.h
 	"base/kode_base.h"
@@ -251,7 +251,7 @@
 
 1635969975 /DISKS/sda2/code/git/kode3/src/kode_vst3.h
 
-1636660572 /DISKS/sda2/code/git/kode3/src/plugin/kode_plugin.h
+1636663384 /DISKS/sda2/code/git/kode3/src/plugin/kode_plugin.h
 	"kode.h"
 	"plugin/kode_descriptor.h"
 	"plugin/kode_instance.h"
@@ -271,7 +271,7 @@
 	"plugin/kode_parameter.h"
 	"plugin/kode_preset.h"
 
-1636660410 /DISKS/sda2/code/git/kode3/src/plugin/kode_instance.h
+1636664910 /DISKS/sda2/code/git/kode3/src/plugin/kode_instance.h
 	"kode.h"
 	"plugin/kode_descriptor.h"
 	"plugin/kode_editor.h"
@@ -312,7 +312,7 @@
 	"kode.h"
 	<dssi.h>
 
-1636661628 /DISKS/sda2/code/git/kode3/src/plugin/exe/kode_exe_plugin.h
+1636662441 /DISKS/sda2/code/git/kode3/src/plugin/exe/kode_exe_plugin.h
 	"kode.h"
 	"plugin/kode_plugin.h"
 	"plugin/exe/kode_exe.h"
@@ -365,7 +365,7 @@
 	"extern/vst2/aeffect.h"
 	"extern/vst2/aeffectx.h"
 
-1636635812 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_plugin.h
+1636662620 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_plugin.h
 	"kode.h"
 	"plugin/vst3/kode_vst3.h"
 	"plugin/vst3/kode_vst3_instance.h"
@@ -617,12 +617,12 @@
 1440689074 /DISKS/sda2/code/git/kode3/src/extern/vst2/aeffectx.h
 	"aeffect.h"
 
-1636660428 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_instance.h
+1636662448 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_instance.h
 	"kode.h"
 	"plugin/kode_instance.h"
 	"plugin/kode_process_context.h"
 
-1636660450 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_instance.h
+1636663025 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_instance.h
 	"plugin/kode_editor.h"
 	"base/types/kode_queue.h"
 	"plugin/kode_instance.h"
@@ -759,9 +759,12 @@
 	"kode.h"
 	"plugin/vst2/kode_vst2.h"
 
-1636661454 /DISKS/sda2/code/git/kode3/build/test/test1.cpp
+1636796776 /DISKS/sda2/code/git/kode3/build/test/test1.cpp
 	"kode.h"
 	"plugin/kode_plugin.h"
+	"midi/kode_midi.h"
+	"midi/kode_midi_file.h"
+	"midi/kode_midi_player.h"
 
 1612114660 /DISKS/sda2/code/git/kode3/src/base/kode_base.h
 	"base/kode_config.h"
@@ -775,13 +778,13 @@
 	"base/system/kode_system.h"
 	"base/utils/kode_utils.h"
 
-1636659017 /DISKS/sda2/code/git/kode3/src/base/kode_config.h
+1636756297 /DISKS/sda2/code/git/kode3/src/base/kode_config.h
 
 1636639769 /DISKS/sda2/code/git/kode3/src/base/kode_defines.h
 
 1612057072 /DISKS/sda2/code/git/kode3/src/base/kode_attributes.h
 
-1633367380 /DISKS/sda2/code/git/kode3/src/base/kode_const.h
+1637022624 /DISKS/sda2/code/git/kode3/src/base/kode_const.h
 
 1636639584 /DISKS/sda2/code/git/kode3/src/base/kode_enums.h
 
@@ -1165,4 +1168,20 @@
 	"kode.h"
 	"gfx/kode_bitmap.h"
 	"gui/kode_drawable.h"
+
+1636737887 /DISKS/sda2/code/git/kode3/src/audio/kode_midi.h
+	"kode.h"
+
+1637009292 /DISKS/sda2/code/git/kode3/src/midi/kode_midi.h
+	"kode.h"
+
+1637028452 /DISKS/sda2/code/git/kode3/src/midi/kode_midi_file.h
+	"kode.h"
+
+1636756537 /DISKS/sda2/code/git/kode3/src/midi/kode_midi_player.h
+	"kode.h"
+
+1637018744 /DISKS/sda2/code/git/kode3/build/test/test_midi.cpp
+	"kode.h"
+	"midi/kode_midi_file.h"
 
