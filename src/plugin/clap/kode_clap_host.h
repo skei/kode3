@@ -44,6 +44,7 @@ public:
   // [thread-safe]
 
   const void* get_extension(const char *extension_id) {
+    KODE_ClapPrint("%s\n",extension_id);
     return MClapHost->get_extension(MClapHost,extension_id);
   }
 
@@ -54,6 +55,7 @@ public:
   // [thread-safe]
 
   void request_restart() {
+    KODE_CLAPPRINT;
     MClapHost->request_restart(MClapHost);
   }
 
@@ -64,6 +66,7 @@ public:
   // [thread-safe]
 
   void request_process() {
+    KODE_CLAPPRINT;
     MClapHost->request_process(MClapHost);
   }
 
@@ -73,6 +76,7 @@ public:
   // [thread-safe]
 
   void request_callback() {
+    KODE_CLAPPRINT;
     MClapHost->request_callback(MClapHost);
   }
 

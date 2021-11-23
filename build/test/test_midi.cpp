@@ -10,8 +10,8 @@
 KODE_MidiFile*  midifile = nullptr;
 
 //#define MIDIFILE "/DISKS/sda2/code/git/kode3/bin/data/Jambala8.mid"
-#define MIDIFILE "/DISKS/sda2/code/git/kode3/bin/data/larry.mid"
-//#define MIDIFILE "/DISKS/sda2/code/git/kode3/bin/data/stranded.mid"
+//#define MIDIFILE "/DISKS/sda2/code/git/kode3/bin/data/larry.mid"
+#define MIDIFILE "/DISKS/sda2/code/git/kode3/bin/data/stranded.mid"
 
 //----------------------------------------------------------------------
 

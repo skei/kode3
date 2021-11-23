@@ -7,6 +7,7 @@
 // nc -U -l -k /tmp/kode.socket
 
 #define FILENAME      "/DISKS/sda2/code/git/kode3/bin/kode_debug.so"
+
 #define CLAP_FILENAME FILENAME
 #define VST2_FILENAME FILENAME
 

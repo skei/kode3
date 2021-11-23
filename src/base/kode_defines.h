@@ -86,6 +86,11 @@
     #define KODE_PLUGIN_DEFINED
   #endif
 
+  #ifdef KODE_PLUGIN_CLAP
+    #define KODE_PLUGIN_DEFINED
+    #define KODE_CLAP
+  #endif
+
   #ifdef KODE_PLUGIN_DSSI
     #define KODE_PLUGIN_DEFINED
     #define KODE_DSSI

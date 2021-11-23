@@ -5,6 +5,10 @@
 // http://www.somascape.org/midi/tech/mfile.html
 // http://www.music.mcgill.ca/~ich/classes/mumt306/StandardMIDIfileformat.html
 
+/*
+  does a FF03 break the 'current' track? (it looks like so in Jambala8.mid)
+*/
+
 //----------------------------------------------------------------------
 
 #include "kode.h"
@@ -30,7 +34,7 @@ struct KODE_MidiFileEvent {
   uint8_t   msg3    = 0;
   uint32_t  offset  = 0;
   uint32_t  datalen = 0;
-  char*     data    = nullptr;
+  uint8_t*  data    = nullptr;
 
   KODE_MidiFileEvent() {
     type    = 0;
@@ -56,16 +60,16 @@ struct KODE_MidiFileEvent {
     if (data) free(data);
   }
 
-  void setData(uint8_t* ptr, int length) {
+  void setData(uint8_t* ptr, uint32_t length) {
     if (data) free(data);
-    data = (char*)malloc(length);
+    data = (uint8_t*)malloc(length);
     datalen = length;
     memcpy(data,ptr,length);
   }
 
-  void setText(uint8_t* ptr, int length) {
+  void setText(uint8_t* ptr, uint32_t length) {
     if (data) free(data);
-    data = (char*)malloc(length+1);
+    data = (uint8_t*)malloc(length+1);
     datalen = length;
     memcpy(data,ptr,length);
     data[length] = 0;
@@ -73,7 +77,7 @@ struct KODE_MidiFileEvent {
 
   void setData(uint8_t v1,uint8_t v2=0,uint8_t v3=0,uint8_t v4=0,uint8_t v5=0) {
     if (data) free(data);
-    data = (char*)malloc(5);
+    data = (uint8_t*)malloc(5);
     datalen = 5;
     data[0] = v1;
     data[1] = v2;
@@ -114,7 +118,7 @@ struct KODE_MidiFileTrack {
   }
 
   // assume non-zero terminated
-  void setName(const char* ptr, int length) {
+  void setName(const char* ptr, uint32_t length) {
     if (name) free(name);
     name = (char*)malloc(length+1);
     memcpy(name,ptr,length);
@@ -156,7 +160,7 @@ struct KODE_MidiSequence {
     }
   }
 
-  void setName(const char* ptr, int length) {
+  void setName(const char* ptr, uint32_t length) {
     if (name) free(name);
     name = (char*)malloc(length+1);
     memcpy(name,ptr,length);
@@ -189,6 +193,10 @@ private:
 
   KODE_MidiSequence*  MSequence             = nullptr;
   KODE_MidiFileTrack* MCurrentTrack         = nullptr;
+
+  uint32_t            MSplitTracks          = 0;
+  uint32_t            MNumTrackEvents       = 0;
+
 
 //------------------------------
 public:
@@ -287,13 +295,13 @@ public:
   void print_event(uint32_t i, KODE_MidiFileEvent* event) {
     if (event->msg1 < 0xF0) {
       switch (event->msg1 & 0xF0) {
-        case 0x80: KODE_DPrint("%i : %02X %02X %02X note off [ofs %i]\n",i,event->msg1,event->msg2,event->msg3,event->offset); break;
-        case 0x90: KODE_DPrint("%i : %02X %02X %02X note on [ofs %i]\n",i,event->msg1,event->msg2,event->msg3,event->offset); break;
+        case 0x80: KODE_DPrint("%i : %02X %02X %02X note off [ofs %i]\n",               i,event->msg1,event->msg2,event->msg3,event->offset); break;
+        case 0x90: KODE_DPrint("%i : %02X %02X %02X note on [ofs %i]\n",                i,event->msg1,event->msg2,event->msg3,event->offset); break;
         case 0xA0: KODE_DPrint("%i : %02X %02X %02X polyphonic key pressure [ofs %i]\n",i,event->msg1,event->msg2,event->msg3,event->offset); break;
-        case 0xB0: KODE_DPrint("%i : %02X %02X %02X control change[ofs %i]\n",i,event->msg1,event->msg2,event->msg3,event->offset); break;
-        case 0xC0: KODE_DPrint("%i : %02X %02X -- program change [ofs %i]\n",i,event->msg1,event->msg2,event->offset); break;
-        case 0xD0: KODE_DPrint("%i : %02X %02X -- channel pressuer [ofs %i]\n",i,event->msg1,event->msg2,event->offset); break;
-        case 0xE0: KODE_DPrint("%i : %02X %02X %02X pitch wheel [ofs %i]\n",i,event->msg1,event->msg2,event->msg3,event->offset); break;
+        case 0xB0: KODE_DPrint("%i : %02X %02X %02X control change [ofs %i]\n",         i,event->msg1,event->msg2,event->msg3,event->offset); break;
+        case 0xC0: KODE_DPrint("%i : %02X %02X -- program change [ofs %i]\n",           i,event->msg1,event->msg2,event->offset); break;
+        case 0xD0: KODE_DPrint("%i : %02X %02X -- channel pressuer [ofs %i]\n",         i,event->msg1,event->msg2,event->offset); break;
+        case 0xE0: KODE_DPrint("%i : %02X %02X %02X pitch wheel [ofs %i]\n",            i,event->msg1,event->msg2,event->msg3,event->offset); break;
         default:   KODE_DPrint("%i : unknown event [ofs %i]\n",i,event->offset); break;
       }
     } // < f0
@@ -301,21 +309,21 @@ public:
       if (event->msg1 < 0xFF) {
         //KODE_DPrint("%i : %02X %02X %02X [%i]\n",i,event->msg1,event->msg2,event->msg3,event->offset);
         switch (event->msg1) {
-          case 0xF0: KODE_DPrint("%i : %02X -- -- [ofs %i] sysex (size %i)\n",i, event->offset,event->datalen); break;
-          case 0xF1: KODE_DPrint("%i : %02X -- -- [ofs %i] ?\n",i, event->offset); break;
-          case 0xF2: KODE_DPrint("%i : %02X -- -- [ofs %i] ?\n",i, event->offset); break;
-          case 0xF3: KODE_DPrint("%i : %02X -- -- [ofs %i] ?\n",i, event->offset); break;
-          case 0xF4: KODE_DPrint("%i : %02X -- -- [ofs %i] ?\n",i, event->offset); break;
-          case 0xF5: KODE_DPrint("%i : %02X -- -- [ofs %i] ?\n",i, event->offset); break;
-          case 0xF6: KODE_DPrint("%i : %02X -- -- [ofs %i] ?\n",i, event->offset); break;
-          case 0xF7: KODE_DPrint("%i : %02X -- -- [ofs %i] sysex (size %i)\n",i, event->offset,event->datalen); break;
-          case 0xF8: KODE_DPrint("%i : %02X -- -- [ofs %i] timing clock\n",i, event->offset); break;
-          case 0xF9: KODE_DPrint("%i : %02X -- -- [ofs %i] undefined\n",i, event->offset); break;
-          case 0xFA: KODE_DPrint("%i : %02X -- -- [ofs %i] start\n",i, event->offset); break;
-          case 0xFB: KODE_DPrint("%i : %02X -- -- [ofs %i] continue\n",i, event->offset); break;
-          case 0xFC: KODE_DPrint("%i : %02X -- -- [ofs %i] stop\n",i, event->offset); break;
-          case 0xFD: KODE_DPrint("%i : %02X -- -- [ofs %i] undefined\n",i, event->offset); break;
-          case 0xFE: KODE_DPrint("%i : %02X -- -- [ofs %i] active sensing\n",i, event->offset); break;
+          case 0xF0: KODE_DPrint("%i : F0 -- -- [ofs %i] sysex (size %i)\n",i, event->offset,event->datalen); break;
+          case 0xF1: KODE_DPrint("%i : F1 -- -- [ofs %i] ?\n",              i, event->offset); break;
+          case 0xF2: KODE_DPrint("%i : F2 -- -- [ofs %i] ?\n",              i, event->offset); break;
+          case 0xF3: KODE_DPrint("%i : F3 -- -- [ofs %i] ?\n",              i, event->offset); break;
+          case 0xF4: KODE_DPrint("%i : F4 -- -- [ofs %i] ?\n",              i, event->offset); break;
+          case 0xF5: KODE_DPrint("%i : F5 -- -- [ofs %i] ?\n",              i, event->offset); break;
+          case 0xF6: KODE_DPrint("%i : F6 -- -- [ofs %i] ?\n",              i, event->offset); break;
+          case 0xF7: KODE_DPrint("%i : F7 -- -- [ofs %i] sysex (size %i)\n",i, event->offset,event->datalen); break;
+          case 0xF8: KODE_DPrint("%i : F8 -- -- [ofs %i] timing clock\n",   i, event->offset); break;
+          case 0xF9: KODE_DPrint("%i : F9 -- -- [ofs %i] undefined\n",      i, event->offset); break;
+          case 0xFA: KODE_DPrint("%i : FA -- -- [ofs %i] start\n",          i, event->offset); break;
+          case 0xFB: KODE_DPrint("%i : FB -- -- [ofs %i] continue\n",       i, event->offset); break;
+          case 0xFC: KODE_DPrint("%i : FC -- -- [ofs %i] stop\n",           i, event->offset); break;
+          case 0xFD: KODE_DPrint("%i : FD -- -- [ofs %i] undefined\n",      i, event->offset); break;
+          case 0xFE: KODE_DPrint("%i : FE -- -- [ofs %i] active sensing\n", i, event->offset); break;
           default:   KODE_DPrint("%i : ? [ofs %i]\n",i,event->offset); break;
         } // switch
       } // < ff
@@ -345,7 +353,7 @@ public:
             break;
           case 0x21:
             v1 = event->data[0];
-            KODE_DPrint("%i : FF%02X [ofs %i] midi port: ? (size %i)\n",i, event->msg2,event->offset,event->datalen);
+            KODE_DPrint("%i : FF%02X [ofs %i] midi port: %i (size %i)\n",i, event->msg2,event->offset,v1,event->datalen);
             break;
           case 0x2f:
             KODE_DPrint("%i : FF%02X [ofs %i] end of track (size %i)\n",i, event->msg2,event->offset,event->datalen);
@@ -514,7 +522,7 @@ private:
     MSequence->format     = v1;
     MSequence->num_tracks = v2;
     MSequence->tpq        = v3;
-    MSequence->setName("",0);
+    //MSequence->setName("",0);
     //KODE_DPrint("  0x%04x: format (%i)\n",v1,v1);
     //KODE_DPrint("  0x%04x: num tracks (%i)\n",v2,v2);
     //KODE_DPrint("  0x%04x: ticks per quarter note (%i)\n",v3,v3);
@@ -534,8 +542,16 @@ private:
       <Track Chunk> = <chunk type><length><MTrk event>+
 */
 
+  void start_new_track() {
+    KODE_MidiFileTrack* track = new KODE_MidiFileTrack();
+    MSequence->tracks.append(track);
+    MCurrentTrack = track;
+    MCurrentTrack->setName("",0);
+  }
+
   void read_tracks() {
     //KODE_DPrint("tracks:\n");
+    MSplitTracks = 0;
     for (uint32_t i=0; i<MSequence->num_tracks; i++) {
       //KODE_DPrint("Track %i:\n",i);
       uint32_t id = read_uint(); // "MTrk" (4D,54,72,6B)
@@ -543,13 +559,20 @@ private:
       if (id != 0x4d54726b) { ERROR("  Error: wrong track header id 0x%08x (wants 0x4d54726b)\n",i,id); return; }
       uint32_t size = read_uint();
       //KODE_DPrint("  0x%08x %i : track.size\n",size,size);
-      KODE_MidiFileTrack* track = new KODE_MidiFileTrack();
-      MSequence->tracks.append(track);
-      MCurrentTrack = track;
-      MCurrentTrack->setName("",0);
+
+      start_new_track();
+      //KODE_MidiFileTrack* track = new KODE_MidiFileTrack();
+      //MSequence->tracks.append(track);
+      //MCurrentTrack = track;
+      //MCurrentTrack->setName("",0);
+
       uint32_t num_events = read_track_events(size);
       MCurrentTrack->num_events = num_events;
       //if (MCurrentTrack->name == nullptr) MCurrentTrack->setName("",0);
+
+      i += MSplitTracks;
+      MSplitTracks = 0;
+
     }
   }
   //----------
@@ -569,15 +592,16 @@ private:
 */
 
   uint32_t read_track_events(uint32_t ASize) {
-    uint32_t num_events = 0;
+    MNumTrackEvents = 0;//uint32_t num_events = 0;
     MTrackStartPtr = MBufferPtr;
     MEndOfTrack = false;
     while (MEndOfTrack == false) {
       uint32_t delta_time = read_variable();
       read_event(delta_time);
-      num_events += 1;
+      //num_events += 1;
+      MNumTrackEvents += 1;
     }
-    return num_events;
+    return MNumTrackEvents;
   }
 //------------------------------
 private:
@@ -711,6 +735,7 @@ private:
 
       case 0xF0:
         length = read_variable();
+        //KODE_Print("F0 sysex length %i\n",length);
         midi_event = new KODE_MidiFileEvent(ADeltaTime,AEvent,0,0);
         midi_event->setData(MBufferPtr,length);
         MCurrentTrack->events.append(midi_event);
@@ -736,6 +761,7 @@ private:
       case 0xF7:
         // F0 <length> <bytes to be transmitted after F0>
         length = read_variable();
+        //KODE_Print("F7 sysex length %i\n",length);
         midi_event = new KODE_MidiFileEvent(ADeltaTime,AEvent,0,0);
         midi_event->setData(MBufferPtr,length);
         MCurrentTrack->events.append(midi_event);
@@ -906,12 +932,21 @@ private:
         number.
       */
 
+      // Sequence Number and Sequence/Track Name events, if present, must appear at time 0
+
       case 0x00:
+
+//MCurrentTrack->num_events = MNumTrackEvents;
+//start_new_track();
+//MNumTrackEvents = 1;
+//MSplitTracks += 1;
+
         length = read_variable();
         KODE_Assert(length == 2);
         v1 = read_byte();
         v2 = read_byte();
         //v = (v1<<8) + v2;
+
         midi_event = new KODE_MidiFileEvent(ADeltaTime,AEvent,meta,0);
         midi_event->setData(v1,v2);
         MCurrentTrack->events.append(midi_event);
@@ -967,7 +1002,15 @@ private:
         of the sequence. Otherwise, the name of the track.
       */
 
+      // Sequence Number and Sequence/Track Name events, if present, must appear at time 0
+
       case 0x03:
+
+//MCurrentTrack->num_events = MNumTrackEvents - 1;
+//start_new_track();
+//MNumTrackEvents = 1;
+//MSplitTracks += 1;
+
         length = read_variable();
         ptr = (char*)read_data(length);
         midi_event = new KODE_MidiFileEvent(ADeltaTime,AEvent,meta,0);

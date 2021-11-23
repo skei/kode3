@@ -1,5 +1,7 @@
 
-#define KODE_PLUGIN_ALL
+#define KODE_PLUGIN_CLAP
+#define KODE_DEBUG_CLAP
+
 #define KODE_GUI_XCB
 #define KODE_DEBUG_PRINT_SOCKET
 // nc -U -l -k /tmp/kode.socket
@@ -19,7 +21,7 @@ private:
 public:
 
   myDescriptor() {
-    //KODE_PRINT;
+    KODE_PRINT;
     #ifdef KODE_DEBUG
       name  = "kode_debug";
     #else
@@ -37,7 +39,7 @@ public:
   }
 
   virtual ~myDescriptor() {
-    //KODE_PRINT;
+    KODE_PRINT;
   }
 
 };
@@ -57,12 +59,12 @@ public:
 
   myInstance(KODE_Descriptor* ADescriptor)
   : KODE_Instance(ADescriptor) {
-    //KODE_PRINT;
+    KODE_PRINT;
     MDescriptor = ADescriptor;
   }
 
   virtual ~myInstance() {
-    //KODE_PRINT;
+    KODE_PRINT;
   }
 
   bool on_plugin_init() final { return true; }
@@ -101,11 +103,11 @@ public:
 
   myEditor(KODE_EditorListener* AListener)
   : KODE_Editor(AListener) {
-    //KODE_PRINT;
+    KODE_PRINT;
   }
 
   virtual ~myEditor() {
-    //KODE_PRINT;
+    KODE_PRINT;
   }
 
 };
