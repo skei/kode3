@@ -28,7 +28,19 @@ public:
 //------------------------------
 
   /*
+    This interface is the entry point of the dynamic library.
+
+    There is an invalidation mechanism for the set of plugins which is based on
+    files. The host can watch the plugin DSO's mtime and a set of files's mtime
+    provided by get_clap_invalidation_source().
+
+    The set of plugins must not change, except during a call to refresh() by
+    the host.
+
+    Every methods must be thread-safe.
   */
+
+  //----------
 
   bool clap_entry_init(const char *plugin_path) {
     KODE_CLAPPRINT;
@@ -43,7 +55,7 @@ public:
     MClapDescriptor->support_url  = "";
     MClapDescriptor->version      = MDescriptor->getVersionString();
     MClapDescriptor->description  = "";
-    MClapDescriptor->keywords     = "";
+    MClapDescriptor->keywords     = ""; // Arbitrary list of keywords, separated by `;'
     MClapDescriptor->plugin_type  = CLAP_PLUGIN_AUDIO_EFFECT;
     return true;
   }
@@ -100,21 +112,16 @@ public:
 
   const clap_plugin* clap_entry_create_plugin(const clap_host* host, const char* plugin_id) {
     KODE_ClapPrint("%s\n",plugin_id);
-
     KODE_ClapHost* my_host = new KODE_ClapHost(host);
-
     //if (!my_host) {
     //  printf("error creatinge KODE_ClapHost\n");
     //}
-
     //if (host) {
     //  host->get_extension(host,"hello? are you there?");
     //}
-
     clap_plugin*        plugin        = (clap_plugin*)malloc(sizeof(clap_plugin));
     KODE_Instance*      instance      = _kode_create_instance(MDescriptor);  // deleted by KODE_ClapInstance destructor
     KODE_ClapInstance*  clap_instance = new KODE_ClapInstance(instance,my_host);
-
     plugin->desc              = MClapDescriptor;
     plugin->plugin_data       = clap_instance;
     plugin->init              = clap_instance_init_callback;
@@ -337,6 +344,8 @@ struct clap_plugin_entry CLAP_ENTRY_STRUCT asm("clap_plugin_entry") = {
 //
 //
 //----------------------------------------------------------------------
+
+// nothing to do here..
 
 #define KODE_CLAP_MAIN(D,I,E)
 
