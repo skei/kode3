@@ -198,7 +198,7 @@ public:
     if (AButton == KODE_BUTTON_LEFT) {
       if (MDblClickReset) {
         if ((ATimeStamp - MPrevClickTime) < KODE_GUI_DBLCLICK_MS) {
-          if (getParameter()) setValue( getParameter()->getDefValue() );
+          if (getParameter()) setValue( getParameter()->def_value );
           else setValue( getDefaultValue() );
           update();
           redraw();

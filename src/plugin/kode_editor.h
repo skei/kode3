@@ -26,6 +26,8 @@
 //
 //typedef KODE_Array<KODE_Control*> KODE_ControlArray;
 
+//----------
+
 class KODE_EditorListener {
   virtual void on_editor_updateparameter(uint32_t AIndex, float AValue) {}
   virtual void on_editor_resize(uint32_t AWidth, uint32_t AHeight) {}
@@ -40,12 +42,12 @@ private:
 //------------------------------
 
   KODE_EditorListener*  MListener   = nullptr;
+  KODE_Descriptor*      MDescriptor = nullptr;
+  bool                  MIsOpen     = false;
+  KODE_Window*          MWindow     = nullptr;
 
-  KODE_Descriptor*  MDescriptor = nullptr;
-  //KODE_Instance*    MInstance   = nullptr;
-  KODE_Window*      MWindow     = nullptr;
   //KODE_ControlArray MControls   = {};
-  //float             MScale      = 1.0;
+  float                 MScale      = 1.0;
 
 //------------------------------
 public:
@@ -55,8 +57,6 @@ public:
     KODE_PRINT;
     MListener = AListener;
     MDescriptor = ADescriptor;
-    //MInstance = AInstance;
-    //MDescriptor = AInstance->getDescriptor();
   }
 
   //----------
@@ -70,6 +70,21 @@ public:
   }
 
 //------------------------------
+//
+//------------------------------
+
+  KODE_Window* getWindow() { return MWindow; }
+
+//------------------------------
+public:
+//------------------------------
+
+  //virtual void on_editor_create() {}
+  //virtual void on_editor_destroy() {}
+  //virtual void on_editor_open() {}
+  //virtual void on_editor_close() {}
+
+//------------------------------
 public:
 //------------------------------
 
@@ -78,18 +93,37 @@ public:
     MWindow = new KODE_Window(MDescriptor->editorWidth,MDescriptor->editorHeight,"test",(void*)window);
     MWindow->setFillBackground(true);
     MWindow->open();
+    MIsOpen = true;
   }
+
+  //----------
 
   void show() {
     KODE_PRINT;
+    if (MIsOpen) return;
   }
 
+  //----------
+
   void hide() {
-    if (MWindow) {
+    if (MIsOpen && MWindow) {
       delete MWindow;
       MWindow = nullptr;
+      MIsOpen = false;
     }
     KODE_PRINT;
+  }
+
+  //----------
+
+  void setScale(float AScale) {
+    MScale = AScale;
+  }
+
+  //----------
+
+  bool resize(uint32_t width, uint32_t height) {
+    return false;
   }
 
 //------------------------------

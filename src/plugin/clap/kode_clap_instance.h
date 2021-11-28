@@ -20,6 +20,7 @@ private:
   KODE_ProcessContext   MProcessContext = {};
   KODE_ClapHost*        MHost           = nullptr;
   KODE_Editor*          MEditor         = nullptr;
+  bool                  MEditorIsOpen   = false;
 
 //------------------------------
 public:
@@ -111,8 +112,36 @@ public:
   */
 
   clap_process_status clap_instance_process(const clap_process *process) {
-    //KODE_CLAPPRINT;
+
+    KODE_Assert(process);
+    KODE_Assert(process->audio_inputs);
+    KODE_Assert(process->audio_outputs);
+    KODE_Assert(process->transport);
+
+    MProcessContext.mode          = 0;
+    MProcessContext.offset        = 0;
+    MProcessContext.numsamples    = process->frames_count;
+    MProcessContext.numinputs     = process->audio_inputs_count;
+    MProcessContext.numoutputs    = process->audio_outputs_count;
+
+    MProcessContext.inputs[0]     = process->audio_inputs[0].data32[0];
+    MProcessContext.inputs[1]     = process->audio_inputs[0].data32[1];
+    MProcessContext.outputs[0]    = process->audio_outputs[0].data32[0];
+    MProcessContext.outputs[1]    = process->audio_outputs[0].data32[1];
+    MProcessContext.samplerate    = 48000;
+
+    MProcessContext.tempo         = process->transport->tempo;
+    MProcessContext.timesignum    = process->transport->tsig_num;
+    MProcessContext.timesigdenom  = process->transport->tsig_denom;
+    MProcessContext.samplepos     = process->steady_time;
+    MProcessContext.beatpos       = process->transport->song_pos_beats;
+    MProcessContext.playstate     = KODE_PLUGIN_PLAYSTATE_NONE;
+    if (process->transport->flags & CLAP_TRANSPORT_IS_PLAYING) MProcessContext.playstate |= KODE_PLUGIN_PLAYSTATE_PLAYING;
+    if (process->transport->flags & CLAP_TRANSPORT_IS_RECORDING) MProcessContext.playstate |= KODE_PLUGIN_PLAYSTATE_RECORDING;
+    if (process->transport->flags & CLAP_TRANSPORT_IS_LOOP_ACTIVE) MProcessContext.playstate |= KODE_PLUGIN_PLAYSTATE_LOOPING;
+
     MInstance->on_plugin_process(&MProcessContext);
+
     return CLAP_PROCESS_CONTINUE;
   }
 
@@ -156,44 +185,54 @@ public: // extensions
 
   uint32_t clap_audio_ports_config_count() {
     KODE_CLAPPRINT;
-    return 0;
+    return 1;
   }
 
   bool clap_audio_ports_config_get(uint32_t index, clap_audio_ports_config *config) {
-    KODE_CLAPPRINT;
-    //config->id                    = 0;
-    //strcpy(config->name,"name");
-    //config->input_channel_count   = 2;
-    //config->input_channel_map     = CLAP_CHMAP_STEREO;
-    //config->output_channel_count  = 2;
-    //config->output_channel_map    = CLAP_CHMAP_STEREO;
+    KODE_ClapPrint("%i\n",index);
+    switch(index) {
+      case 0:
+        config->id                    = 0;
+        strcpy(config->name,"ports");
+        config->input_channel_count   = 2;
+        config->input_channel_map     = CLAP_CHMAP_STEREO;
+        config->output_channel_count  = 2;
+        config->output_channel_map    = CLAP_CHMAP_STEREO;
+        return true;
+    }
     return false;
   }
 
   bool clap_audio_ports_config_select(clap_id config_id) {
-    KODE_CLAPPRINT;
-    return false;
+    KODE_ClapPrint("%i\n",config_id);
+    return true;
   }
 
   //--------------------
-  // clap.audio-ports_kode_create_editor
+  // clap.audio-ports
   //--------------------
 
   uint32_t clap_audio_ports_count(bool is_input) {
-    return 0;
+    KODE_CLAPPRINT;
+    return 1;
   }
 
   bool clap_audio_ports_get(uint32_t index, bool is_input, clap_audio_port_info *info) {
-    //info->id
-    //info->name
-    //channel_count;
-    //channel_map;
-    //sample_size
-    //is_main
-    //is_cv
-    //in_place
+    KODE_ClapPrint("%i\n",index);
+    switch(index) {
+      case 0:
+        info->id = 0;
+        strcpy(info->name,"ports");
+        info->channel_count = 2;
+        info->channel_map = CLAP_CHMAP_STEREO;
+        info->sample_size = 32;
+        info->is_main = true;
+        info->is_cv = false;
+        info->in_place = true;
+        return true;
+    };
     return false;
-  };
+  }
 
   //--------------------
   // clap.event-filter
@@ -229,19 +268,32 @@ public: // extensions
   // clap.gui
   //--------------------
 
+  /*
+    the editor doesn't have a window yet!
+  */
+
   bool clap_gui_create() {
     KODE_CLAPPRINT;
+    MEditorIsOpen = false;
     MEditor = _kode_create_editor(MInstance,MDescriptor);
-    return true;
+    return MInstance->on_plugin_createEditor(MEditor);
   }
 
   void clap_gui_destroy() {
     KODE_CLAPPRINT;
-    delete MEditor;
+    MEditorIsOpen = false;
+    if (MEditor) {
+      MInstance->on_plugin_destroyEditor(MEditor);
+      delete MEditor;
+      MEditor = nullptr;
+    }
   }
 
   void clap_gui_set_scale(double scale) {
     KODE_ClapPrint("%f\n",scale);
+    if (MEditor) {
+      MEditor->setScale(scale);
+    }
   }
 
   bool clap_gui_get_size(uint32_t *width, uint32_t *height) {
@@ -258,11 +310,15 @@ public: // extensions
 
   void clap_gui_round_size(uint32_t *width, uint32_t *height) {
     KODE_CLAPPRINT;
+    //*width  = MDescriptor->editorWidth;
+    //*height = MDescriptor->editorHeight;
   }
 
   bool clap_gui_set_size(uint32_t width, uint32_t height) {
     KODE_ClapPrint("%i,%i\n",width,height);
-    //MEditor->resize(width,height);
+    if (MEditor) {
+      MEditor->resize(width,height);
+    }
     return true;
   }
 
@@ -272,14 +328,21 @@ public: // extensions
 
   void clap_gui_show() {
     KODE_CLAPPRINT;
-    //MEditor->open(MDescriptor->editorWidth,MDescriptor->editorHeight,nullptr);
-    MEditor->show();
+    if (MEditor && !MEditorIsOpen) {
+      //MEditor->open(MDescriptor->editorWidth,MDescriptor->editorHeight,nullptr);
+      MEditorIsOpen = MInstance->on_plugin_openEditor(MEditor);
+      MEditor->show();
+
+    }
   }
 
   void clap_gui_hide() {
     KODE_CLAPPRINT;
-    //MEditor->close();
-    MEditor->hide();
+    if (MEditor && MEditorIsOpen) {
+      //MEditor->close();
+      MEditor->hide();
+      MEditorIsOpen = false;
+    }
   }
 
   //--------------------
@@ -290,7 +353,9 @@ public: // extensions
     KODE_ClapPrint("display:name: %s, window: %i\n",display_name,window);
 //    MParentWindow = window;
 //    MEditor->open(MDescriptor->editorWidth,MDescriptor->editorHeight,(void*)window);
+
     MEditor->attach(display_name,window);
+    MEditorIsOpen = MInstance->on_plugin_openEditor(MEditor);
     return true;
   }
 

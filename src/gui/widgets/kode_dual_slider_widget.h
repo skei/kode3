@@ -127,9 +127,9 @@ private:
       const char* label = "";
       KODE_Parameter* param = getParameter();
       if (param) {
-        label = param->getLabel();
-        param->getDisplayString(value1,MValue1Text);
-        param->getDisplayString(value2,MValue2Text);
+        label = param->label;
+        param->getDisplayText(value1,MValue1Text);
+        param->getDisplayText(value2,MValue2Text);
       }
       else {
         label = MLabel;

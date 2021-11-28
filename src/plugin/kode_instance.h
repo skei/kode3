@@ -67,9 +67,16 @@ public:
   virtual void          on_plugin_midi(uint32_t AOffset, uint8_t AMsg1, uint8_t AMsg2, uint8_t AMsg3) {}
   virtual uint32_t      on_plugin_saveState(void** ABuffer, uint32_t AMode) { *ABuffer = nullptr; return 0; }
   virtual uint32_t      on_plugin_loadState(uint32_t ASize, void* ABuffer, uint32_t AMode) { return 0; }
-  virtual KODE_Editor*  on_plugin_openEditor() { return nullptr; }
-  virtual void          on_plugin_closeEditor() {}
-  virtual uint32_t      on_plugin_updateEditor() { return 0; }
+
+  virtual bool          on_plugin_createEditor(KODE_Editor* AEditor) { return false; }
+  virtual void          on_plugin_destroyEditor(KODE_Editor* AEditor) {}
+  virtual bool          on_plugin_openEditor(KODE_Editor* AEditor) { return false; }
+  virtual void          on_plugin_closeEditor(KODE_Editor* AEditor) {}
+  virtual void          on_plugin_updateEditor(KODE_Editor* AEditor) {}
+
+//  virtual bool          on_plugin_openEditor(KODE_Editor* AEditor) { return false; }
+//  virtual void          on_plugin_closeEditor(KODE_Editor* AEditor) {}
+//  virtual uint32_t      on_plugin_updateEditor(KODE_Editor* AEditor) { return 0; }
 
 };
 

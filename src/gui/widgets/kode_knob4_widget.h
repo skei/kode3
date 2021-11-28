@@ -98,7 +98,7 @@ public:
       if (par) {
         //KODE_String txt = par->getDisplayText(AValue);
         //wdg_value->setText(txt);
-        par->getDisplayString(AValue,value_text);
+        par->getDisplayText(AValue,value_text);
         wdg_value->setText(value_text);
       }
       else {
@@ -116,7 +116,7 @@ public:
   void on_widget_connect(KODE_Parameter* AParameter, uint32_t ASubIndex) override {
       wdg_knob->setParameter(AParameter);
       if (AParameter) {
-        wdg_label->setText( AParameter->getName() );
+        wdg_label->setText( AParameter->name );
         float value = 0.0f;
         //const char* txt = AParameter->getDisplayText(value);
         //KODE_FloatToString(value_text,AValue);
@@ -138,7 +138,7 @@ public:
       //  KODE_Parameter* par = (KODE_Parameter*)MParameter;
       KODE_Parameter* par = (KODE_Parameter*)getParameter();
       if (par) {
-        par->getDisplayString(getValue(),value_text);
+        par->getDisplayText(getValue(),value_text);
         wdg_value->setText(value_text);
       }
       do_widget_redraw(wdg_value,wdg_value->getRect(),0);

@@ -98,8 +98,8 @@ public:
       KODE_Parameter* param = getParameter();
 
       if (param) {
-        label = param->getLabel();
-        param->getDisplayString(value,MValueText);
+        label = param->label;
+        param->getDisplayText(value,MValueText);
       }
       else {
         label = MLabel;

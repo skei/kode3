@@ -10,6 +10,7 @@
 
 #include "kode.h"
 #include "plugin/kode_plugin.h"
+#include "gui/kode_widgets.h"
 
 //----------------------------------------------------------------------
 
@@ -73,24 +74,63 @@ public:
   void on_plugin_deactivate() final {}
   bool on_plugin_startProcessing() final { return false; }
   void on_plugin_stopProcessing() final {}
-  uint32_t on_plugin_process(KODE_ProcessContext* AContext) final { return 0; }
+
+  uint32_t on_plugin_process(KODE_ProcessContext* AContext) final {
+    float* out0 = AContext->outputs[0];
+    float* out1 = AContext->outputs[1];
+    for (uint32_t i=0; i<AContext->numsamples; i++) {
+      *out0++ = KODE_RandomSigned() * 0.5;
+      *out1++ = KODE_RandomSigned() * 0.5;
+    }
+    return 0;
+  }
+
   void on_plugin_parameter(uint32_t AIndex, float AValue) final {}
   void on_plugin_midi(uint32_t AOffset, uint8_t AMsg1, uint8_t AMsg2, uint8_t AMsg3) final {}
   uint32_t on_plugin_saveState(void** ABuffer, uint32_t AMode) final { *ABuffer = nullptr; return 0; }
   uint32_t on_plugin_loadState(uint32_t ASize, void* ABuffer, uint32_t AMode) final { return 0; }
 
-  KODE_Editor* on_plugin_openEditor() final {
-    MEditor = new KODE_Editor(this,MDescriptor);
-    return MEditor;
+  //KODE_Editor* on_plugin_openEditor() final {
+  //  MEditor = new KODE_Editor(this,MDescriptor);
+  //  return MEditor;
+  //}
+
+  //void on_plugin_closeEditor() final {
+  //  delete MEditor;
+  //  MEditor = nullptr;
+  //}
+
+  //uint32_t on_plugin_updateEditor() final {
+  //  return 0;
+  //}
+
+  bool on_plugin_createEditor(KODE_Editor* AEditor) final {
+    KODE_PRINT;
+    return true;
   }
 
-  void on_plugin_closeEditor() final {
-    delete MEditor;
-    MEditor = nullptr;
+  void on_plugin_destroyEditor(KODE_Editor* AEditor) final {
+    KODE_PRINT;
   }
 
-  uint32_t on_plugin_updateEditor() final { return 0; }
+  bool on_plugin_openEditor(KODE_Editor* AEditor) final {
+    KODE_PRINT;
+    KODE_Window* window = AEditor->getWindow();
+    if (window) {
+      window->appendWidget( new KODE_SliderWidget( KODE_FRect(10,10,150,20) ) );
+      window->appendWidget( new KODE_KnobWidget( KODE_FRect(10,40,50,50) ) );
+      return true;
+    }
+    return false;
+  }
 
+  void on_plugin_closeEditor(KODE_Editor* AEditor) final {
+    KODE_PRINT;
+  }
+
+  void on_plugin_updateEditor(KODE_Editor* AEditor) final {
+    KODE_PRINT;
+  }
 
 };
 
