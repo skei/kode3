@@ -48,7 +48,7 @@ public:
 
 class myInstance
 : public KODE_Instance
-, public KODE_EditorListener {
+/*, public KODE_EditorListener*/ {
 
 private:
 
@@ -80,7 +80,7 @@ public:
   uint32_t on_plugin_loadState(uint32_t ASize, void* ABuffer, uint32_t AMode) final { return 0; }
 
   KODE_Editor* on_plugin_openEditor() final {
-    MEditor = new KODE_Editor(this);
+    MEditor = new KODE_Editor(this,MDescriptor);
     return MEditor;
   }
 
@@ -101,8 +101,8 @@ class myEditor
 
 public:
 
-  myEditor(KODE_EditorListener* AListener)
-  : KODE_Editor(AListener) {
+  myEditor(KODE_EditorListener* AListener, KODE_Descriptor* ADescriptor)
+  : KODE_Editor(AListener,ADescriptor) {
     KODE_PRINT;
   }
 

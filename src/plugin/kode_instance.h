@@ -8,7 +8,8 @@
 #include "plugin/kode_process_context.h"
 
 
-class KODE_Instance {
+class KODE_Instance
+: public KODE_EditorListener {
 
 //------------------------------
 private:

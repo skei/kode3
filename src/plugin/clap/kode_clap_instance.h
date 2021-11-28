@@ -15,17 +15,21 @@ class KODE_ClapInstance {
 private:
 //------------------------------
 
+  KODE_Descriptor*      MDescriptor     = nullptr;
   KODE_Instance*        MInstance       = nullptr;
   KODE_ProcessContext   MProcessContext = {};
-
+  KODE_ClapHost*        MHost           = nullptr;
+  KODE_Editor*          MEditor         = nullptr;
 
 //------------------------------
 public:
 //------------------------------
 
-  KODE_ClapInstance(KODE_Instance* AInstance) {
+  KODE_ClapInstance(KODE_Instance* AInstance, KODE_ClapHost* AHost) {
     KODE_CLAPPRINT;
     MInstance = AInstance;
+    MDescriptor = MInstance->getDescriptor();
+    MHost = AHost;
   }
 
   //----------
@@ -33,6 +37,14 @@ public:
   ~KODE_ClapInstance() {
     KODE_CLAPPRINT;
     if (MInstance) delete MInstance;
+  }
+
+//------------------------------
+private:
+//------------------------------
+
+  void init_extensions() {
+    MHost->get_extension(CLAP_EXT_AUDIO_PORTS);
   }
 
 //------------------------------
@@ -65,7 +77,7 @@ public:
     [main-thread]
   */
 
-  bool clap_instance_activate(double sample_rate) {
+  bool clap_instance_activate(double sample_rate, uint32_t minframes, uint32_t maxframes) {
     KODE_CLAPPRINT;
     MInstance->on_plugin_activate();
     return true;
@@ -164,7 +176,7 @@ public: // extensions
   }
 
   //--------------------
-  // clap.audio-ports
+  // clap.audio-ports_kode_create_editor
   //--------------------
 
   uint32_t clap_audio_ports_count(bool is_input) {
@@ -218,25 +230,25 @@ public: // extensions
   //--------------------
 
   bool clap_gui_create() {
-    //KODE_Editor* MEditor = _kode_create_editor(MInstance);
     KODE_CLAPPRINT;
-    return false;
+    MEditor = _kode_create_editor(MInstance,MDescriptor);
+    return true;
   }
 
   void clap_gui_destroy() {
-    //delete MEditor;
     KODE_CLAPPRINT;
+    delete MEditor;
   }
 
   void clap_gui_set_scale(double scale) {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("%f\n",scale);
   }
 
   bool clap_gui_get_size(uint32_t *width, uint32_t *height) {
     KODE_CLAPPRINT;
-    //*width  = MInstance->getDescriptor()->editorWidth;
-    //*height = MInstance->getDescriptor()->editorHeight;
-    return false;
+    *width  = MDescriptor->editorWidth;
+    *height = MDescriptor->editorHeight;
+    return true;
   }
 
   bool clap_gui_can_resize() {
@@ -249,19 +261,25 @@ public: // extensions
   }
 
   bool clap_gui_set_size(uint32_t width, uint32_t height) {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("%i,%i\n",width,height);
     //MEditor->resize(width,height);
-    return false;
+    return true;
   }
+
+  /*
+    is the next two never called by bitwig?
+  */
 
   void clap_gui_show() {
     KODE_CLAPPRINT;
-    //MEditor->open();
+    //MEditor->open(MDescriptor->editorWidth,MDescriptor->editorHeight,nullptr);
+    MEditor->show();
   }
 
   void clap_gui_hide() {
     KODE_CLAPPRINT;
     //MEditor->close();
+    MEditor->hide();
   }
 
   //--------------------
@@ -270,8 +288,10 @@ public: // extensions
 
   bool clap_gui_x11_attach(const char* display_name, unsigned long window) {
     KODE_ClapPrint("display:name: %s, window: %i\n",display_name,window);
-    // create window
-    return false;
+//    MParentWindow = window;
+//    MEditor->open(MDescriptor->editorWidth,MDescriptor->editorHeight,(void*)window);
+    MEditor->attach(display_name,window);
+    return true;
   }
 
   //--------------------
@@ -303,33 +323,36 @@ public: // extensions
 
   uint32_t clap_params_count() {
     KODE_CLAPPRINT;
-    return 0;
+    return MDescriptor->parameters.size();
   }
 
   bool clap_params_get_info(int32_t param_index, clap_param_info *param_info) {
     KODE_CLAPPRINT;
-    //param_info->id = 0;
-    //param_info->flags
-    //param_info->cookie
-    //param_info->name
-    //param_info->module
-    //param_info->min_value
-    //param_info->max_value
-    //param_info->default_value
-    return false;
+    KODE_Parameter* param     = MDescriptor->parameters[param_index];
+    param_info->id            = param_index;
+    param_info->flags         = 0;
+    param_info->cookie        = nullptr;
+    strcpy(param_info->name,param->name); // todo: strncpy
+    strcpy(param_info->module,""); // todo: strncpy
+    param_info->min_value     = 0.0;
+    param_info->max_value     = 1.0;
+    param_info->default_value = 0.5;
+    return true;
   }
 
   bool clap_params_get_value(clap_id param_id, double *value) {
     KODE_CLAPPRINT;
-    //MInstance->getParameterValue(index);
-    return false;
+    MInstance->getParameterValue(param_id); // !!!
+    return true;
   }
 
   bool clap_params_value_to_text(clap_id param_id, double value, char *display, uint32_t size) {
+    char buffer[256];
     KODE_CLAPPRINT;
-    //KODE_Parameter* param;
-    //param->getDisplayText(value,buffer);)
-    return false;
+    KODE_Parameter* param = MDescriptor->parameters[param_id];
+    param->getDisplayText(value,buffer);
+    strcpy(display,buffer);
+    return true;
   }
 
   bool clap_params_text_to_value(clap_id param_id, const char* display, double* value) {

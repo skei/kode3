@@ -101,13 +101,19 @@ public:
   const clap_plugin* clap_entry_create_plugin(const clap_host* host, const char* plugin_id) {
     KODE_ClapPrint("%s\n",plugin_id);
 
+    KODE_ClapHost* my_host = new KODE_ClapHost(host);
+
+    //if (!my_host) {
+    //  printf("error creatinge KODE_ClapHost\n");
+    //}
+
     //if (host) {
     //  host->get_extension(host,"hello? are you there?");
     //}
 
     clap_plugin*        plugin        = (clap_plugin*)malloc(sizeof(clap_plugin));
     KODE_Instance*      instance      = _kode_create_instance(MDescriptor);  // deleted by KODE_ClapInstance destructor
-    KODE_ClapInstance*  clap_instance = new KODE_ClapInstance(instance);
+    KODE_ClapInstance*  clap_instance = new KODE_ClapInstance(instance,my_host);
 
     plugin->desc              = MClapDescriptor;
     plugin->plugin_data       = clap_instance;
@@ -182,10 +188,10 @@ public:
   }
 
   static
-  bool clap_instance_activate_callback(const struct clap_plugin *plugin, double sample_rate) {
+  bool clap_instance_activate_callback(const struct clap_plugin *plugin, double sample_rate, uint32_t minframes, uint32_t maxframes) {
     //KODE_CLAPPRINT;
     KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
-    return instance->clap_instance_activate(sample_rate);
+    return instance->clap_instance_activate(sample_rate,minframes,maxframes);
   }
 
   static

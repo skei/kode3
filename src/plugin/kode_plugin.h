@@ -9,7 +9,7 @@
 
 KODE_Descriptor*  _kode_create_descriptor();
 KODE_Instance*    _kode_create_instance(KODE_Descriptor* ADescriptor);
-KODE_Editor*      _kode_create_editor(KODE_Instance* AInstance);
+KODE_Editor*      _kode_create_editor(KODE_EditorListener* AListener,KODE_Descriptor* ADescriptor);
 
 //----------------------------------------------------------------------
 //
@@ -98,19 +98,27 @@ KODE_Editor*      _kode_create_editor(KODE_Instance* AInstance);
 //
 //----------------------------------------------------------------------
 
-#define KODE_MAIN(D,I,E)                                                                      \
-                                                                                              \
-  KODE_Descriptor*  _kode_create_descriptor()                     { return new D();      }    \
-  KODE_Instance*    _kode_create_instance(KODE_Descriptor* ADesc) { return new I(ADesc); }    \
-/*KODE_Editor*      _kode_create_editor(KODE_Instance* AInst)     { return new E(AInst); }*/  \
-                                                                                              \
-  KODE_CLAP_MAIN(D,I,E);                                                                      \
-  KODE_DSSI_MAIN(D,I,E);                                                                      \
-  KODE_EXE_MAIN(D,I,E);                                                                       \
-  KODE_LADSPA_MAIN(D,I,E);                                                                    \
-  KODE_LV2_MAIN(D,I,E);                                                                       \
-  KODE_VST2_MAIN(D,I,E);                                                                      \
-  KODE_VST3_MAIN(D,I,E);                                                                      \
+#define KODE_MAIN(D,I,E)                                                                              \
+                                                                                                      \
+  KODE_Descriptor* _kode_create_descriptor() { \
+    return new D();                         \
+  }      \
+  \
+  KODE_Instance* _kode_create_instance(KODE_Descriptor* ADesc) { \
+    return new I(ADesc); \
+  }      \
+  \
+  KODE_Editor* _kode_create_editor(KODE_EditorListener* AListener, KODE_Descriptor* ADescriptor) {    \
+    return new E(AListener,ADescriptor);                                              \
+  }                                                                                                   \
+                                                                                                      \
+  KODE_CLAP_MAIN(D,I,E);                                                                              \
+  KODE_DSSI_MAIN(D,I,E);                                                                              \
+  KODE_EXE_MAIN(D,I,E);                                                                               \
+  KODE_LADSPA_MAIN(D,I,E);                                                                            \
+  KODE_LV2_MAIN(D,I,E);                                                                               \
+  KODE_VST2_MAIN(D,I,E);                                                                              \
+  KODE_VST3_MAIN(D,I,E);                                                                              \
 
 
 //----------------------------------------------------------------------

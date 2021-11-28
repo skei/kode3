@@ -13,27 +13,25 @@ class KODE_ClapHost {
 private:
 //------------------------------
 
-  clap_host* MClapHost = nullptr;
+  const clap_host*  MClapHost     = nullptr;
 
-  void*       MHostData     = nullptr;
-  const char* MHostName     = "";
-  const char* MHostVendor   = "";
-  const char* MHostUrl      = "";
-  const char* MHostVersion  = "";
+  void*             MHostData     = nullptr;
+  const char*       MHostName     = "";
+  const char*       MHostVendor   = "";
+  const char*       MHostUrl      = "";
+  const char*       MHostVersion  = "";
 
 //------------------------------
 public:
 //------------------------------
 
-  KODE_ClapHost(clap_host* AHost) {
+  KODE_ClapHost(const clap_host* AHost) {
     MClapHost     = AHost;
     MHostData     = AHost->host_data;
     MHostName     = AHost->name;
     MHostVendor   = AHost->vendor;
     MHostUrl      = AHost->url;
     MHostVersion  = AHost->version;
-
-
   }
 
 //------------------------------
