@@ -26,18 +26,18 @@ private:
   uint32_t                      MMinFrames            = 0;
   uint32_t                      MMaxFrames            = INT_MAX;
   // extensions
-  clap_host_audio_ports_config* MHostAudioPortsConfig = nullptr;
-  clap_host_audio_ports*        MHostAudioPorts       = nullptr;
-  clap_host_event_filter*       MHostEventFilter      = nullptr;
-  clap_host_fd_support*         MHostFdSupport        = nullptr;
-  clap_host_gui*                MHostGui              = nullptr;
-  clap_host_latency*            MHostLatency          = nullptr;
-  clap_host_log*                MHostLog              = nullptr;
-  clap_host_note_name*          MHostNoteName         = nullptr;
-  clap_host_params*             MHostParams           = nullptr;
-  clap_host_state*              MHostState            = nullptr;
-  clap_host_thread_check*       MHostThreadCheck      = nullptr;
-  clap_host_timer_support*      MHostTimerSupport     = nullptr;
+//  clap_host_audio_ports_config* MHostAudioPortsConfig = nullptr;
+//  clap_host_audio_ports*        MHostAudioPorts       = nullptr;
+//  clap_host_event_filter*       MHostEventFilter      = nullptr;
+//  clap_host_fd_support*         MHostFdSupport        = nullptr;
+//  clap_host_gui*                MHostGui              = nullptr;
+//  clap_host_latency*            MHostLatency          = nullptr;
+//  clap_host_log*                MHostLog              = nullptr;
+//  clap_host_note_name*          MHostNoteName         = nullptr;
+//  clap_host_params*             MHostParams           = nullptr;
+//  clap_host_state*              MHostState            = nullptr;
+//  clap_host_thread_check*       MHostThreadCheck      = nullptr;
+//  clap_host_timer_support*      MHostTimerSupport     = nullptr;
 
 //------------------------------
 public:
@@ -62,20 +62,20 @@ public:
 private:
 //------------------------------
 
-  void init_extensions() {
-    MHostAudioPortsConfig = (clap_host_audio_ports_config*)MHost->get_extension(CLAP_EXT_AUDIO_PORTS_CONFIG);
-    MHostAudioPorts       = (clap_host_audio_ports*)MHost->get_extension(CLAP_EXT_AUDIO_PORTS);
-    MHostEventFilter      = (clap_host_event_filter*)MHost->get_extension(CLAP_EXT_EVENT_FILTER);
-    MHostFdSupport        = (clap_host_fd_support*)MHost->get_extension(CLAP_EXT_FD_SUPPORT);
-    MHostGui              = (clap_host_gui*)MHost->get_extension(CLAP_EXT_GUI);
-    MHostLatency          = (clap_host_latency*)MHost->get_extension(CLAP_EXT_LATENCY);
-    MHostLog              = (clap_host_log*)MHost->get_extension(CLAP_EXT_LOG);
-    MHostNoteName         = (clap_host_note_name*)MHost->get_extension(CLAP_EXT_NOTE_NAME);
-    MHostParams           = (clap_host_params*)MHost->get_extension(CLAP_EXT_PARAMS);
-    MHostState            = (clap_host_state*)MHost->get_extension(CLAP_EXT_STATE);
-    MHostThreadCheck      = (clap_host_thread_check*)MHost->get_extension(CLAP_EXT_THREAD_CHECK);
-    MHostTimerSupport     = (clap_host_timer_support*)MHost->get_extension(CLAP_EXT_TIMER_SUPPORT);
-  }
+//  void init_extensions() {
+//    MHostAudioPortsConfig = (clap_host_audio_ports_config*)MHost->get_extension(CLAP_EXT_AUDIO_PORTS_CONFIG);
+//    MHostAudioPorts       = (clap_host_audio_ports*)MHost->get_extension(CLAP_EXT_AUDIO_PORTS);
+//    MHostEventFilter      = (clap_host_event_filter*)MHost->get_extension(CLAP_EXT_EVENT_FILTER);
+//    MHostFdSupport        = (clap_host_fd_support*)MHost->get_extension(CLAP_EXT_FD_SUPPORT);
+//    MHostGui              = (clap_host_gui*)MHost->get_extension(CLAP_EXT_GUI);
+//    MHostLatency          = (clap_host_latency*)MHost->get_extension(CLAP_EXT_LATENCY);
+//    MHostLog              = (clap_host_log*)MHost->get_extension(CLAP_EXT_LOG);
+//    MHostNoteName         = (clap_host_note_name*)MHost->get_extension(CLAP_EXT_NOTE_NAME);
+//    MHostParams           = (clap_host_params*)MHost->get_extension(CLAP_EXT_PARAMS);
+//    MHostState            = (clap_host_state*)MHost->get_extension(CLAP_EXT_STATE);
+//    MHostThreadCheck      = (clap_host_thread_check*)MHost->get_extension(CLAP_EXT_THREAD_CHECK);
+//    MHostTimerSupport     = (clap_host_timer_support*)MHost->get_extension(CLAP_EXT_TIMER_SUPPORT);
+//  }
 
 //------------------------------
 public:
@@ -89,7 +89,7 @@ public:
   bool clap_instance_init() {
     KODE_CLAPPRINT;
     MInstance->on_plugin_init();
-    init_extensions();
+//    init_extensions();
     return true;
   }
 

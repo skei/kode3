@@ -14,12 +14,25 @@ private:
 //------------------------------
 
   const clap_host*  MClapHost     = nullptr;
-
   void*             MHostData     = nullptr;
   const char*       MHostName     = "";
   const char*       MHostVendor   = "";
   const char*       MHostUrl      = "";
   const char*       MHostVersion  = "";
+
+  // extensions
+  clap_host_audio_ports_config* MHostAudioPortsConfig = nullptr;
+  clap_host_audio_ports*        MHostAudioPorts       = nullptr;
+  clap_host_event_filter*       MHostEventFilter      = nullptr;
+  clap_host_fd_support*         MHostFdSupport        = nullptr;
+  clap_host_gui*                MHostGui              = nullptr;
+  clap_host_latency*            MHostLatency          = nullptr;
+  clap_host_log*                MHostLog              = nullptr;
+  clap_host_note_name*          MHostNoteName         = nullptr;
+  clap_host_params*             MHostParams           = nullptr;
+  clap_host_state*              MHostState            = nullptr;
+  clap_host_thread_check*       MHostThreadCheck      = nullptr;
+  clap_host_timer_support*      MHostTimerSupport     = nullptr;
 
 //------------------------------
 public:
@@ -32,6 +45,26 @@ public:
     MHostVendor   = AHost->vendor;
     MHostUrl      = AHost->url;
     MHostVersion  = AHost->version;
+    init_extensions();
+  }
+
+//------------------------------
+public:
+//------------------------------
+
+  void init_extensions() {
+    MHostAudioPortsConfig = (clap_host_audio_ports_config*)get_extension(CLAP_EXT_AUDIO_PORTS_CONFIG);
+    MHostAudioPorts       = (clap_host_audio_ports*)get_extension(CLAP_EXT_AUDIO_PORTS);
+    MHostEventFilter      = (clap_host_event_filter*)get_extension(CLAP_EXT_EVENT_FILTER);
+    MHostFdSupport        = (clap_host_fd_support*)get_extension(CLAP_EXT_FD_SUPPORT);
+    MHostGui              = (clap_host_gui*)get_extension(CLAP_EXT_GUI);
+    MHostLatency          = (clap_host_latency*)get_extension(CLAP_EXT_LATENCY);
+    MHostLog              = (clap_host_log*)get_extension(CLAP_EXT_LOG);
+    MHostNoteName         = (clap_host_note_name*)get_extension(CLAP_EXT_NOTE_NAME);
+    MHostParams           = (clap_host_params*)get_extension(CLAP_EXT_PARAMS);
+    MHostState            = (clap_host_state*)get_extension(CLAP_EXT_STATE);
+    MHostThreadCheck      = (clap_host_thread_check*)get_extension(CLAP_EXT_THREAD_CHECK);
+    MHostTimerSupport     = (clap_host_timer_support*)get_extension(CLAP_EXT_TIMER_SUPPORT);
   }
 
 //------------------------------
