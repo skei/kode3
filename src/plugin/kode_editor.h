@@ -94,7 +94,7 @@ public: // "widget listener"
 //------------------------------
 
   void do_widget_update(KODE_Widget* AWidget) override {
-    KODE_Print("\n");
+    //KODE_Print("\n");
     KODE_Window::do_widget_update(AWidget);
     KODE_Parameter* parameter = AWidget->getParameter();
     if (parameter) {
@@ -106,52 +106,52 @@ public: // "widget listener"
   }
 
   void do_widget_redraw(KODE_Widget* AWidget, KODE_FRect ARect, uint32_t AMode=0) override {
-    KODE_Print("\n");
+    //KODE_Print("\n");
     KODE_Window::do_widget_redraw(AWidget,ARect,AMode);
   }
 
   void do_widget_realign(KODE_Widget* ASender, bool ARecursive=true) override {
-    KODE_Print("\n");
+    //KODE_Print("\n");
     KODE_Window::do_widget_realign(ASender,ARecursive);
   }
 
   void do_widget_resized(KODE_Widget* ASender, float ADeltaX=0.0f, float ADeltaY=0.0f) override {
-    KODE_Print("\n");
+    //KODE_Print("\n");
     KODE_Window::do_widget_resized(ASender,ADeltaX,ADeltaY);
   }
 
   void do_widget_grabMouseCursor(KODE_Widget* ASender) override {
-    KODE_Print("\n");
+    //KODE_Print("\n");
     KODE_Window::do_widget_grabMouseCursor(ASender);
   }
 
   void do_widget_grabKeyboard(KODE_Widget* AWidget) override {
-    KODE_Print("\n");
+    //KODE_Print("\n");
     KODE_Window::do_widget_grabKeyboard(AWidget);
   }
 
   void do_widget_grabModal(KODE_Widget* AWidget) override {
-    KODE_Print("\n");
+    //KODE_Print("\n");
     KODE_Window::do_widget_grabModal(AWidget);
   }
 
   void do_widget_setMouseCursor(KODE_Widget* AWidget, int32_t ACursor) override {
-    KODE_Print("\n");
+    //KODE_Print("\n");
     KODE_Window::do_widget_setMouseCursor(AWidget,ACursor);
   }
 
   void do_widget_setMouseCursorPos(KODE_Widget* ASender, float AXpos, float AYpos) override {
-    KODE_Print("\n");
+    //KODE_Print("\n");
     KODE_Window::do_widget_setMouseCursorPos(ASender,AXpos,AYpos);
   }
 
   void do_widget_setHint(KODE_Widget* AWidget, const char* AHint) override {
-    KODE_Print("\n");
+    //KODE_Print("\n");
     KODE_Window::do_widget_setHint(AWidget,AHint);
   }
 
   void do_widget_notify(KODE_Widget* AWidget, uint32_t AValue=0) override {
-    KODE_Print("\n");
+    //KODE_Print("\n");
     KODE_Window::do_widget_notify(AWidget,AValue);
   }
 
@@ -176,14 +176,18 @@ private:
   //KODE_ControlArray MControls   = {};
   float                 MScale      = 1.0;
 
+  KODE_Widget**         MParameterToWidget = nullptr;
+
 //------------------------------
 public:
 //------------------------------
 
   KODE_Editor(KODE_EditorListener* AListener, KODE_Descriptor* ADescriptor) {
-    KODE_PRINT;
+    //KODE_PRINT;
     MListener = AListener;
     MDescriptor = ADescriptor;
+    uint32_t num = ADescriptor->parameters.size();
+    MParameterToWidget = (KODE_Widget**)malloc( num * sizeof(KODE_Widget*) );
   }
 
   //----------
@@ -193,7 +197,8 @@ public:
       MWindow->close();
       delete MWindow;
     }
-    KODE_PRINT;
+    if (MParameterToWidget) free(MParameterToWidget);
+    //KODE_PRINT;
   }
 
 //------------------------------
@@ -216,7 +221,7 @@ public:
 //------------------------------
 
   void attach(const char* display_name, unsigned long window) {
-    KODE_PRINT;
+    //KODE_PRINT;
     //MWindow = new KODE_Window(MDescriptor->editorWidth,MDescriptor->editorHeight,"test",(void*)window);
     MWindow = new KODE_EditorWindow(MListener,MDescriptor,MDescriptor->editorWidth,MDescriptor->editorHeight,"test",(void*)window);
     MWindow->setFillBackground(true);
@@ -227,7 +232,7 @@ public:
   //----------
 
   void show() {
-    KODE_PRINT;
+    //KODE_PRINT;
     if (MIsOpen) return;
   }
 
@@ -239,7 +244,7 @@ public:
       MWindow = nullptr;
       MIsOpen = false;
     }
-    KODE_PRINT;
+    //KODE_PRINT;
   }
 
   //----------
@@ -281,10 +286,10 @@ public:
   //----------
 
   void connect(KODE_Widget* AWidget, uint32_t AParameterIndex) {
-    KODE_PRINT;
+    //KODE_PRINT;
     KODE_Parameter* parameter = MDescriptor->parameters[AParameterIndex];
     AWidget->setParameter(parameter);
-    //MParameterToWidget[parameter->index);
+    MParameterToWidget[AParameterIndex] = AWidget;;
     AWidget->on_widget_connect(parameter);
   }
 
@@ -326,10 +331,13 @@ public:
 //  }
 //
 //  //----------
-//
-//  void updateParameter(uint32_t AIndex, float AValue) {
-//    //KODE_Print("%i = %.3f\n",AIndex,AValue);
-//  }
+
+  void updateParameter(uint32_t AIndex, float AValue) {
+    //KODE_Print("%i = %.3f\n",AIndex,AValue);
+    KODE_Widget* widget = MParameterToWidget[AIndex];
+    widget->setValue(AValue);
+    widget->redraw();
+  }
 
 };
 

@@ -39,18 +39,18 @@ public:
 //------------------------------
 
   KODE_ClapHost(const clap_host* AHost) {
-    KODE_ClapPrint("AHost %p\n",AHost);
+    //KODE_ClapPrint("AHost %p\n",AHost);
     MClapHost     = AHost;
     MHostData     = AHost->host_data;
     MHostName     = AHost->name;
     MHostVendor   = AHost->vendor;
     MHostUrl      = AHost->url;
     MHostVersion  = AHost->version;
-    KODE_ClapPrint("- name: %s\n",MHostName);
-    KODE_ClapPrint("- vendor: %s\n",MHostVendor);
-    KODE_ClapPrint("- url: %s\n",MHostUrl);
-    KODE_ClapPrint("- version: %s\n",MHostVersion);
-    KODE_ClapPrint("- host_data: %p\n",MHostData);
+    //KODE_ClapPrint("- name: %s\n",MHostName);
+    //KODE_ClapPrint("- vendor: %s\n",MHostVendor);
+    //KODE_ClapPrint("- url: %s\n",MHostUrl);
+    //KODE_ClapPrint("- version: %s\n",MHostVersion);
+    //KODE_ClapPrint("- host_data: %p\n",MHostData);
     init_extensions();
   }
 
@@ -98,7 +98,7 @@ public:
     const void* ptr = nullptr;
     if (MClapHost) {
       ptr = MClapHost->get_extension(MClapHost,extension_id);
-      KODE_ClapPrint("extension_id %s -> %p\n",extension_id, ptr);
+      //KODE_ClapPrint("extension_id %s -> %p\n",extension_id, ptr);
     }
     return ptr;
   }
@@ -111,7 +111,7 @@ public:
 
   void request_restart() {
     if (MClapHost) {
-      KODE_ClapPrint("\n");
+      //KODE_ClapPrint("\n");
       MClapHost->request_restart(MClapHost);
     }
   }
@@ -127,7 +127,7 @@ public:
 
   void request_process() {
     if (MClapHost) {
-      KODE_ClapPrint("\n");
+      //KODE_ClapPrint("\n");
       MClapHost->request_process(MClapHost);
     }
   }
@@ -142,7 +142,7 @@ public:
 
   void request_callback() {
     if (MClapHost) {
-      KODE_ClapPrint("\n");
+      //KODE_ClapPrint("\n");
       MClapHost->request_callback(MClapHost);
     }
   }
@@ -174,7 +174,7 @@ public: // extensions
 
   void audio_ports_config_rescan() {
     if (MHostAudioPortsConfig) {
-      KODE_ClapPrint("\n");
+      //KODE_ClapPrint("\n");
       MHostAudioPortsConfig->rescan(MClapHost);
     }
   }
@@ -199,7 +199,7 @@ public: // extensions
   uint32_t audio_ports_get_preferred_sample_size() {
     if (MHostAudioPorts) {
       uint32_t i = MHostAudioPorts->get_preferred_sample_size(MClapHost);
-      KODE_ClapPrint("-> %i\n",i);
+      //KODE_ClapPrint("-> %i\n",i);
       return i;
     }
     return 0;
@@ -220,7 +220,7 @@ public: // extensions
 
   void audio_ports_rescan(uint32_t flags) {
     if (MHostAudioPorts) {
-      KODE_ClapPrint("flags %i\n",flags);
+      //KODE_ClapPrint("flags %i\n",flags);
       MHostAudioPorts->rescan(MClapHost,flags);
     }
   }
@@ -242,7 +242,7 @@ public: // extensions
 
   void event_filter_changed() {
     if (MHostEventFilter) {
-      KODE_ClapPrint("\n");
+      //KODE_ClapPrint("\n");
       MHostEventFilter->changed(MClapHost);
     }
   }
@@ -257,7 +257,7 @@ public: // extensions
     bool result = false;
     if (MHostFdSupport) {
       result = MHostFdSupport->register_fd(MClapHost,fd,flags);
-      KODE_ClapPrint("fd %i flags %i -> %s\n",fd,flags, result ? "true" : "false" );
+      //KODE_ClapPrint("fd %i flags %i -> %s\n",fd,flags, result ? "true" : "false" );
     }
     return result;
   }
@@ -267,8 +267,8 @@ public: // extensions
   bool fd_support_modify_fd(clap_fd fd, clap_fd_flags flags) {
     bool result = false;
     if (MHostFdSupport) {
-      bool result = MHostFdSupport->modify_fd(MClapHost,fd,flags);
-      KODE_ClapPrint("fd %i flags %i -> %s\n",fd,flags, result ? "true" : "false" );
+      result = MHostFdSupport->modify_fd(MClapHost,fd,flags);
+      //KODE_ClapPrint("fd %i flags %i -> %s\n",fd,flags, result ? "true" : "false" );
     }
     return result;
   }
@@ -279,7 +279,7 @@ public: // extensions
     bool result = false;
     if (MHostFdSupport) {
       result = MHostFdSupport->unregister_fd(MClapHost,fd);
-      KODE_ClapPrint("fd %i -> %s\n",fd, result ? "true" : "false" );
+      //KODE_ClapPrint("fd %i -> %s\n",fd, result ? "true" : "false" );
     }
     return result;
   }
@@ -298,7 +298,7 @@ public: // extensions
     bool result = false;
     if (MHostGui) {
       result = MHostGui->resize(MClapHost,width,height);
-      KODE_ClapPrint("width %i height %i -> %s\n",width,height, result ? "true" : "false" );
+      //KODE_ClapPrint("width %i height %i -> %s\n",width,height, result ? "true" : "false" );
     }
     return result;
   }
@@ -314,7 +314,7 @@ public: // extensions
 
   void latency_changed() {
     if (MHostLatency) {
-      KODE_ClapPrint("\n");
+      //KODE_ClapPrint("\n");
       MHostLatency->changed(MClapHost);
     }
   }
@@ -328,7 +328,7 @@ public: // extensions
 
   void log(clap_log_severity severity, const char *msg) {
     if (MHostLog) {
-      KODE_ClapPrint("severity %i msg %s\n",severity,msg);
+      //KODE_ClapPrint("severity %i msg %s\n",severity,msg);
       MHostLog->log(MClapHost,severity,msg);
     }
   }
@@ -342,7 +342,7 @@ public: // extensions
 
   void note_name_changed() {
     if (MHostNoteName) {
-      KODE_ClapPrint("\n");
+      //KODE_ClapPrint("\n");
       MHostNoteName->changed(MClapHost);
     }
   }
@@ -363,7 +363,7 @@ public: // extensions
 
   void params_rescan(clap_param_rescan_flags flags) {
     if (MHostParams) {
-      KODE_ClapPrint("flags %i\n",flags);
+      //KODE_ClapPrint("flags %i\n",flags);
       MHostParams->rescan(MClapHost,flags);
     }
   }
@@ -379,7 +379,7 @@ public: // extensions
 
   void params_clear(clap_id param_id, clap_param_clear_flags flags) {
     if (MHostParams) {
-      KODE_ClapPrint("param_id %i flags %i\n",param_id,flags);
+      //KODE_ClapPrint("param_id %i flags %i\n",param_id,flags);
       MHostParams->clear(MClapHost,param_id,flags);
     }
   }
@@ -396,7 +396,7 @@ public: // extensions
 
   void params_request_flush() {
     if (MHostParams) {
-      KODE_ClapPrint("\n");
+      //KODE_ClapPrint("\n");
       MHostParams->request_flush(MClapHost);
     }
   }
@@ -413,7 +413,7 @@ public: // extensions
 
   void state_mark_dirty() {
     if (MHostState) {
-      KODE_ClapPrint("\n");
+      //KODE_ClapPrint("\n");
       MHostState->mark_dirty(MClapHost);
     }
   }
@@ -439,7 +439,7 @@ public: // extensions
     bool result = false;
     if (MHostThreadCheck) {
       result = MHostThreadCheck->is_main_thread(MClapHost);
-      KODE_ClapPrint("-> %s\n", result ? "true" : "false" );
+      //KODE_ClapPrint("-> %s\n", result ? "true" : "false" );
     }
     return result;
   }
@@ -453,7 +453,7 @@ public: // extensions
     bool result = false;
     if (MHostThreadCheck) {
       result = MHostThreadCheck->is_audio_thread(MClapHost);
-      KODE_ClapPrint("-> %s\n", result ? "true" : "false" );
+      //KODE_ClapPrint("-> %s\n", result ? "true" : "false" );
     }
     return result;
   }
@@ -474,7 +474,7 @@ public: // extensions
     if (MHostTimerSupport) {
       result = MHostTimerSupport->register_timer(MClapHost,period_ms,timer_id);
       *timer_id = 0;
-      KODE_ClapPrint("period_ms %i -> %s (*timer_id %i\n",period_ms, result ? "true" : "false", *timer_id );
+      //KODE_ClapPrint("period_ms %i -> %s (*timer_id %i\n",period_ms, result ? "true" : "false", *timer_id );
     }
     return result;
   }
@@ -487,7 +487,7 @@ public: // extensions
     bool result = false;
     if (MHostTimerSupport) {
       result = MHostTimerSupport->unregister_timer(MClapHost,timer_id);
-      KODE_ClapPrint("timer_id %i -> %s \n",timer_id, result ? "true" : "false" );
+      //KODE_ClapPrint("timer_id %i -> %s \n",timer_id, result ? "true" : "false" );
     }
     return result;
   }

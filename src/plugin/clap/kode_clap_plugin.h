@@ -43,7 +43,7 @@ public:
   //----------
 
   bool clap_entry_init(const char *plugin_path) {
-    KODE_ClapPrint("-> true\n");
+    //KODE_ClapPrint("-> true\n");
     MDescriptor     = _kode_create_descriptor();
     MClapDescriptor = (clap_plugin_descriptor*)malloc(sizeof(clap_plugin_descriptor));
     MClapDescriptor->clap_version = CLAP_VERSION;
@@ -70,7 +70,7 @@ public:
   */
 
   void clap_entry_deinit(void) {
-    KODE_ClapPrint("\n");
+    //KODE_ClapPrint("\n");
     if (MClapDescriptor) free(MClapDescriptor);
     MClapDescriptor = nullptr;
     // crash..
@@ -86,7 +86,7 @@ public:
   */
 
   uint32_t clap_entry_get_plugin_count() {
-    KODE_ClapPrint("-> 1\n");
+    //KODE_ClapPrint("-> 1\n");
     return 1;
   }
 
@@ -100,7 +100,7 @@ public:
   */
 
   const clap_plugin_descriptor* clap_entry_get_plugin_descriptor(uint32_t index) {
-    KODE_ClapPrint("index %i -> 0x%p\n",index,MClapDescriptor);
+    //KODE_ClapPrint("index %i -> 0x%p\n",index,MClapDescriptor);
     return MClapDescriptor;
   }
 
@@ -132,7 +132,7 @@ public:
     plugin->get_extension     = clap_instance_get_extension_callback;
     plugin->on_main_thread    = clap_instance_on_main_thread_callback;
 
-    KODE_ClapPrint("plugin_id %s -> %p\n",plugin_id,plugin);
+    //KODE_ClapPrint("plugin_id %s -> %p\n",plugin_id,plugin);
 
     return plugin;
   }
@@ -144,7 +144,7 @@ public:
   */
 
   uint32_t clap_entry_get_invalidation_sources_count(void) {
-    KODE_ClapPrint("-> 0\n");
+    //KODE_ClapPrint("-> 0\n");
     return 0;
   }
 
@@ -156,7 +156,7 @@ public:
   */
 
   const clap_plugin_invalidation_source* clap_entry_get_invalidation_sources(uint32_t index) {
-    KODE_ClapPrint("index %i -> NULL\n",index);
+    //KODE_ClapPrint("index %i -> NULL\n",index);
     return nullptr;
   }
 
@@ -168,7 +168,7 @@ public:
   */
 
   void clap_entry_refresh(void) {
-    KODE_ClapPrint("\n");
+    //KODE_ClapPrint("\n");
   }
 
 //------------------------------

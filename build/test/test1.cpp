@@ -1,6 +1,6 @@
 
 #define KODE_PLUGIN_CLAP
-#define KODE_DEBUG_CLAP
+//#define KODE_DEBUG_CLAP
 
 #define KODE_GUI_XCB
 #define KODE_DEBUG_PRINT_SOCKET
@@ -159,7 +159,7 @@ private:
 public:
 
   myDescriptor() {
-    KODE_PRINT;
+    //KODE_PRINT;
     #ifdef KODE_DEBUG
       name  = "kode_debug";
     #else
@@ -178,7 +178,7 @@ public:
   }
 
   virtual ~myDescriptor() {
-    KODE_PRINT;
+    //KODE_PRINT;
   }
 
 };
@@ -199,12 +199,12 @@ public:
 
   myInstance(KODE_Descriptor* ADescriptor)
   : KODE_Instance(ADescriptor) {
-    KODE_PRINT;
+    //KODE_PRINT;
     MDescriptor = ADescriptor;
   }
 
   virtual ~myInstance() {
-    KODE_PRINT;
+    //KODE_PRINT;
   }
 
 public:
@@ -271,16 +271,16 @@ public:
   //}
 
   bool on_plugin_createEditor(KODE_Editor* AEditor) final {
-    KODE_PRINT;
+    //KODE_PRINT;
     return true;
   }
 
   void on_plugin_destroyEditor(KODE_Editor* AEditor) final {
-    KODE_PRINT;
+    //KODE_PRINT;
   }
 
   bool on_plugin_openEditor(KODE_Editor* AEditor) final {
-    KODE_PRINT;
+    //KODE_PRINT;
     KODE_Window* window = AEditor->getWindow();
     if (window) {
       KODE_SliderWidget* slider = new KODE_SliderWidget( KODE_FRect(10,10,150,20) );
@@ -294,11 +294,11 @@ public:
   }
 
   void on_plugin_closeEditor(KODE_Editor* AEditor) final {
-    KODE_PRINT;
+    //KODE_PRINT;
   }
 
   void on_plugin_updateEditor(KODE_Editor* AEditor) final {
-    KODE_PRINT;
+    //KODE_PRINT;
   }
 
 };
@@ -312,11 +312,11 @@ public:
 
   myEditor(KODE_EditorListener* AListener, KODE_Descriptor* ADescriptor)
   : KODE_Editor(AListener,ADescriptor) {
-    KODE_PRINT;
+    //KODE_PRINT;
   }
 
   virtual ~myEditor() {
-    KODE_PRINT;
+    //KODE_PRINT;
   }
 
 };
