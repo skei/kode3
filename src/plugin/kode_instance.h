@@ -74,7 +74,7 @@ public:
 
   virtual bool          on_plugin_init() { return false; }
   virtual void          on_plugin_destroy() {}
-  virtual bool          on_plugin_activate() { return false; }
+  virtual bool          on_plugin_activate(float ASampleRate, uint32_t AMinFrames, uint32_t AMaxFrames) { return false; }
   virtual void          on_plugin_deactivate() {}
   virtual bool          on_plugin_startProcessing() { return false; }
   virtual void          on_plugin_stopProcessing() {}

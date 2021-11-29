@@ -139,6 +139,10 @@ private:
               KODE_ClapPrint("- key %i\n",event->note.key);
               KODE_ClapPrint("- channel %i\n",event->note.channel);
               KODE_ClapPrint("- velocity %.3f\n",event->note.velocity);
+              uint8_t msg1 = KODE_MIDI_NOTE_ON + event->note.channel;
+              uint8_t msg2 = event->note.key;
+              uint8_t msg3 = event->note.velocity * 127.0f;
+              MInstance->on_plugin_midi(event->time,msg1,msg2,msg3);
               break;
             }
             case CLAP_EVENT_NOTE_OFF: {
@@ -148,6 +152,10 @@ private:
               KODE_ClapPrint("- key %i\n",event->note.key);
               KODE_ClapPrint("- channel %i\n",event->note.channel);
               KODE_ClapPrint("- velocity %.3f\n",event->note.velocity);
+              uint8_t msg1 = KODE_MIDI_NOTE_OFF + event->note.channel;
+              uint8_t msg2 = event->note.key;
+              uint8_t msg3 = event->note.velocity * 127.0f;
+              MInstance->on_plugin_midi(event->time,msg1,msg2,msg3);
               break;
             }
             case CLAP_EVENT_NOTE_END: {
@@ -176,6 +184,35 @@ private:
               KODE_ClapPrint("- key %i\n",event->note_expression.key);
               KODE_ClapPrint("- channel %i\n",event->note_expression.channel);
               KODE_ClapPrint("- value %.3f\n",event->note_expression.value);
+              uint32_t  time = event->time;
+              uint8_t   msg1 = 0;
+              uint8_t   msg2 = 0;
+              uint8_t   msg3 = 0;
+              uint32_t  bend = 0;
+              switch (event->note_expression.expression_id) {
+                case CLAP_NOTE_EXPRESSION_VOLUME:      // x >= 0, use 20 * log(4 * x)
+                  break;
+                case CLAP_NOTE_EXPRESSION_PAN:         // pan, 0 left, 0.5 center, 1 right
+                  break;
+                case CLAP_NOTE_EXPRESSION_TUNING:      // relative tuning in semitone, from -120 to +120
+                  bend = 8192 + (event->note_expression.value * 8192 * 12 / 60);
+                  msg1 = KODE_MIDI_PITCHBEND + event->note_expression.channel;
+                  msg2 = bend & 0x7f;
+                  msg3 = (bend >> 7) & 0x7f;
+                  MInstance->on_plugin_midi(time,msg1,msg2,msg3);
+                  break;
+                case CLAP_NOTE_EXPRESSION_VIBRATO:     // 0..1
+                  break;
+                case CLAP_NOTE_EXPRESSION_BRIGHTNESS:  // 0..1
+                  break;
+                case CLAP_NOTE_EXPRESSION_BREATH:      // 0..1
+                  break;
+                case CLAP_NOTE_EXPRESSION_PRESSURE:    // 0..1
+                  break;
+                case CLAP_NOTE_EXPRESSION_TIMBRE:      // 0..1
+                  break;
+              }
+              MInstance->on_plugin_midi(time,msg1,msg2,msg3);
               break;
             }
             case CLAP_EVENT_NOTE_MASK: {
@@ -258,32 +295,16 @@ private:
   */
 
   /*
-    //bool wasAdjusting = _isAdjusting;
-    //if (!wasAdjusting)
-    //   setIsAdjusting(true);
-    //setValueFromUI(_defaultValue);
-    //if (!wasAdjusting)
-    //   setIsAdjusting(false);
-
-    void ParameterProxy::setIsAdjusting(bool isAdjusting) {
-      if (isAdjusting == _isAdjusting) return;
-      _isAdjusting = isAdjusting;
-      clap_event_param_flags flags = CLAP_EVENT_PARAM_SHOULD_RECORD;
-      flags |= isAdjusting ? CLAP_EVENT_PARAM_BEGIN_ADJUST : CLAP_EVENT_PARAM_END_ADJUST;
-      clap::messages::AdjustRequest rq{_id, _value, flags};
-      Application::instance().remoteChannel().sendRequestAsync(rq);
-      emit isAdjustingChanged();
-    }
-
-    void ParameterProxy::setValueFromUI(double value) {
-      value = clip(value);
-      if (value == _value) return;
-      _value = value;
-      clap::messages::AdjustRequest rq{_id, _value, CLAP_EVENT_PARAM_SHOULD_RECORD};
-      Application::instance().remoteChannel().sendRequestAsync(rq);
-      emit valueChanged();
-      emit finalValueChanged();
-    }
+    clap_event ev;
+    ev.time = 0;
+    ev.type = CLAP_EVENT_PARAM_VALUE;
+    ev.param_value.param_id = value.paramId;
+    ev.param_value.value = value.value;
+    ev.param_value.channel = -1;
+    ev.param_value.key = -1;
+    ev.param_value.flags = value.flags;
+    ev.param_value.cookie = p;
+    process->out_events->push_back(process->out_events, &ev);
   */
 
   void handleOutputEvents(const clap_event_list* out_events) {
@@ -357,7 +378,7 @@ public:
     MSampleRate = sample_rate;
     MMinFrames  = minframes;
     MMaxFrames  = maxframes;
-    MInstance->on_plugin_activate();
+    MInstance->on_plugin_activate(MSampleRate,MMinFrames,MMaxFrames);
     return true;
   }
 
@@ -418,7 +439,9 @@ public:
     if (process->transport->flags & CLAP_TRANSPORT_IS_PLAYING)      MProcessContext.playstate |= KODE_PLUGIN_PLAYSTATE_PLAYING;
     if (process->transport->flags & CLAP_TRANSPORT_IS_RECORDING)    MProcessContext.playstate |= KODE_PLUGIN_PLAYSTATE_RECORDING;
     if (process->transport->flags & CLAP_TRANSPORT_IS_LOOP_ACTIVE)  MProcessContext.playstate |= KODE_PLUGIN_PLAYSTATE_LOOPING;
+
     MInstance->on_plugin_process(&MProcessContext);
+
     handleOutputEvents(process->out_events);
     return CLAP_PROCESS_CONTINUE;
   }
