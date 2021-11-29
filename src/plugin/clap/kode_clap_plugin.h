@@ -43,7 +43,7 @@ public:
   //----------
 
   bool clap_entry_init(const char *plugin_path) {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("-> true\n");
     MDescriptor     = _kode_create_descriptor();
     MClapDescriptor = (clap_plugin_descriptor*)malloc(sizeof(clap_plugin_descriptor));
     MClapDescriptor->clap_version = CLAP_VERSION;
@@ -67,6 +67,7 @@ public:
   */
 
   void clap_entry_deinit(void) {
+    KODE_ClapPrint("\n");
     if (MClapDescriptor) free(MClapDescriptor);
     MClapDescriptor = nullptr;
     // crash..
@@ -82,7 +83,7 @@ public:
   */
 
   uint32_t clap_entry_get_plugin_count() {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("-> 1\n");
     return 1;
   }
 
@@ -96,7 +97,7 @@ public:
   */
 
   const clap_plugin_descriptor* clap_entry_get_plugin_descriptor(uint32_t index) {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("index %i -> 0x%p\n",index,MClapDescriptor);
     return MClapDescriptor;
   }
 
@@ -111,7 +112,6 @@ public:
   */
 
   const clap_plugin* clap_entry_create_plugin(const clap_host* host, const char* plugin_id) {
-    KODE_ClapPrint("%s\n",plugin_id);
     KODE_ClapHost* my_host = new KODE_ClapHost(host);
     //if (!my_host) {
     //  printf("error creatinge KODE_ClapHost\n");
@@ -133,6 +133,9 @@ public:
     plugin->process           = clap_instance_process_callback;
     plugin->get_extension     = clap_instance_get_extension_callback;
     plugin->on_main_thread    = clap_instance_on_main_thread_callback;
+
+    KODE_ClapPrint("plugin_id %s -> %p\n",plugin_id,plugin);
+
     return plugin;
   }
 
@@ -143,7 +146,7 @@ public:
   */
 
   uint32_t clap_entry_get_invalidation_sources_count(void) {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("-> 0\n");
     return 0;
   }
 
@@ -155,7 +158,7 @@ public:
   */
 
   const clap_plugin_invalidation_source* clap_entry_get_invalidation_sources(uint32_t index) {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("index %i -> NULL\n",index);
     return nullptr;
   }
 
@@ -167,7 +170,7 @@ public:
   */
 
   void clap_entry_refresh(void) {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("\n");
   }
 
 //------------------------------
@@ -180,14 +183,12 @@ public:
 
   static
   bool clap_instance_init_callback(const struct clap_plugin *plugin) {
-    //KODE_CLAPPRINT;
     KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
     return instance->clap_instance_init();
   }
 
   static
   void clap_instance_destroy_callback(const struct clap_plugin *plugin) {
-    //KODE_CLAPPRINT;
     KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
     instance->clap_instance_destroy();
     delete instance;
@@ -196,55 +197,46 @@ public:
 
   static
   bool clap_instance_activate_callback(const struct clap_plugin *plugin, double sample_rate, uint32_t minframes, uint32_t maxframes) {
-    //KODE_CLAPPRINT;
     KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
     return instance->clap_instance_activate(sample_rate,minframes,maxframes);
   }
 
   static
   void clap_instance_deactivate_callback(const struct clap_plugin *plugin) {
-    //KODE_CLAPPRINT;
     KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
     instance->clap_instance_deactivate();
   }
 
   static
   bool clap_instance_start_processing_callback(const struct clap_plugin *plugin) {
-    //KODE_CLAPPRINT;
     KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
     return instance->clap_instance_start_processing();
   }
 
   static
   void clap_instance_stop_processing_callback(const struct clap_plugin *plugin) {
-    //KODE_CLAPPRINT;
     KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
     instance->clap_instance_stop_processing();
   }
 
   static
   clap_process_status clap_instance_process_callback(const struct clap_plugin *plugin, const clap_process *process) {
-    //KODE_CLAPPRINT;
     KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
     return instance->clap_instance_process(process);
   }
 
   static
   const void *clap_instance_get_extension_callback(const struct clap_plugin *plugin, const char *id) {
-    //KODE_CLAPPRINT;
     KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
     return instance->clap_instance_get_extension(id);
   }
 
   static
   void clap_instance_on_main_thread_callback(const struct clap_plugin *plugin) {
-    //KODE_CLAPPRINT;
     KODE_ClapInstance* instance = (KODE_ClapInstance*)plugin->plugin_data;
     instance->clap_instance_on_main_thread();
   }
 
-//------------------------------
-public:
 //------------------------------
 
 };
@@ -345,9 +337,14 @@ struct clap_plugin_entry CLAP_ENTRY_STRUCT asm("clap_plugin_entry") = {
 //
 //----------------------------------------------------------------------
 
-// nothing to do here..
-
-#define KODE_CLAP_MAIN(D,I,E)
+#define KODE_CLAP_MAIN(D,I,E)             \
+                                          \
+  /*bool print_CLAP() {              */   \
+  /*  KODE_ClapPrint("CLAP\n");      */   \
+  /*  return true;                   */   \
+  /*}                                */   \
+  /*                                 */   \
+  /*bool printed_CLAP = print_CLAP();*/   \
 
 
 //----------------------------------------------------------------------

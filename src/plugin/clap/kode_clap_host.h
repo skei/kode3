@@ -39,12 +39,18 @@ public:
 //------------------------------
 
   KODE_ClapHost(const clap_host* AHost) {
+    KODE_ClapPrint("AHost %p\n",AHost);
     MClapHost     = AHost;
     MHostData     = AHost->host_data;
     MHostName     = AHost->name;
     MHostVendor   = AHost->vendor;
     MHostUrl      = AHost->url;
     MHostVersion  = AHost->version;
+    KODE_ClapPrint("- name: %s\n",MHostName);
+    KODE_ClapPrint("- vendor: %s\n",MHostVendor);
+    KODE_ClapPrint("- url: %s\n",MHostUrl);
+    KODE_ClapPrint("- version: %s\n",MHostVersion);
+    KODE_ClapPrint("- host_data: %p\n",MHostData);
     init_extensions();
   }
 
@@ -65,6 +71,18 @@ public:
     MHostState            = (clap_host_state*)get_extension(CLAP_EXT_STATE);
     MHostThreadCheck      = (clap_host_thread_check*)get_extension(CLAP_EXT_THREAD_CHECK);
     MHostTimerSupport     = (clap_host_timer_support*)get_extension(CLAP_EXT_TIMER_SUPPORT);
+//    KODE_ClapPrint("CLAP_EXT_AUDIO_PORTS_CONFIG: %p\n",MHostAudioPortsConfig);
+//    KODE_ClapPrint("CLAP_EXT_AUDIO_PORTS: %p\n",MHostAudioPorts);
+//    KODE_ClapPrint("CLAP_EXT_EVENT_FILTER: %p\n",MHostEventFilter);
+//    KODE_ClapPrint("CLAP_EXT_FD_SUPPORT: %p\n",MHostFdSupport);
+//    KODE_ClapPrint("CLAP_EXT_GUI: %p\n",MHostGui);
+//    KODE_ClapPrint("CLAP_EXT_LATENCY: %p\n",MHostLatency);
+//    KODE_ClapPrint("CLAP_EXT_LOG: %p\n",MHostLog);
+//    KODE_ClapPrint("CLAP_EXT_NOTE_NAME: %p\n",MHostNoteName);
+//    KODE_ClapPrint("CLAP_EXT_PARAMS: %p\n",MHostParams);
+//    KODE_ClapPrint("CLAP_EXT_STATE: %p\n",MHostState);
+//    KODE_ClapPrint("CLAP_EXT_THREAD_CHECK: %p\n",MHostThreadCheck);
+//    KODE_ClapPrint("CLAP_EXT_TIMER_SUPPORT: %p\n",MHostTimerSupport);
   }
 
 //------------------------------
@@ -77,8 +95,12 @@ public:
   */
 
   const void* get_extension(const char *extension_id) {
-    KODE_ClapPrint("%s\n",extension_id);
-    return MClapHost->get_extension(MClapHost,extension_id);
+    const void* ptr = nullptr;
+    if (MClapHost) {
+      ptr = MClapHost->get_extension(MClapHost,extension_id);
+      KODE_ClapPrint("extension_id %s -> %p\n",extension_id, ptr);
+    }
+    return ptr;
   }
 
   /*
@@ -88,8 +110,10 @@ public:
   */
 
   void request_restart() {
-    KODE_CLAPPRINT;
-    MClapHost->request_restart(MClapHost);
+    if (MClapHost) {
+      KODE_ClapPrint("\n");
+      MClapHost->request_restart(MClapHost);
+    }
   }
 
   //----------
@@ -102,8 +126,10 @@ public:
   */
 
   void request_process() {
-    KODE_CLAPPRINT;
-    MClapHost->request_process(MClapHost);
+    if (MClapHost) {
+      KODE_ClapPrint("\n");
+      MClapHost->request_process(MClapHost);
+    }
   }
 
   //----------
@@ -115,8 +141,10 @@ public:
   */
 
   void request_callback() {
-    KODE_CLAPPRINT;
-    MClapHost->request_callback(MClapHost);
+    if (MClapHost) {
+      KODE_ClapPrint("\n");
+      MClapHost->request_callback(MClapHost);
+    }
   }
 
 //------------------------------
@@ -145,7 +173,10 @@ public: // extensions
   */
 
   void audio_ports_config_rescan() {
-    MHostAudioPortsConfig->rescan(MClapHost);
+    if (MHostAudioPortsConfig) {
+      KODE_ClapPrint("\n");
+      MHostAudioPortsConfig->rescan(MClapHost);
+    }
   }
 
   //--------------------
@@ -166,7 +197,12 @@ public: // extensions
   */
 
   uint32_t audio_ports_get_preferred_sample_size() {
-    return MHostAudioPorts->get_preferred_sample_size(MClapHost);
+    if (MHostAudioPorts) {
+      uint32_t i = MHostAudioPorts->get_preferred_sample_size(MClapHost);
+      KODE_ClapPrint("-> %i\n",i);
+      return i;
+    }
+    return 0;
   }
 
   /*
@@ -183,7 +219,10 @@ public: // extensions
   */
 
   void audio_ports_rescan(uint32_t flags) {
-    MHostAudioPorts->rescan(MClapHost,flags);
+    if (MHostAudioPorts) {
+      KODE_ClapPrint("flags %i\n",flags);
+      MHostAudioPorts->rescan(MClapHost,flags);
+    }
   }
 
   //--------------------
@@ -202,7 +241,10 @@ public: // extensions
   */
 
   void event_filter_changed() {
-    MHostEventFilter->changed(MClapHost);
+    if (MHostEventFilter) {
+      KODE_ClapPrint("\n");
+      MHostEventFilter->changed(MClapHost);
+    }
   }
 
   //--------------------
@@ -212,19 +254,34 @@ public: // extensions
   // [main-thread]
 
   bool fd_support_register_fd(clap_fd fd, clap_fd_flags flags) {
-    return MHostFdSupport->register_fd(MClapHost,fd,flags);
+    bool result = false;
+    if (MHostFdSupport) {
+      result = MHostFdSupport->register_fd(MClapHost,fd,flags);
+      KODE_ClapPrint("fd %i flags %i -> %s\n",fd,flags, result ? "true" : "false" );
+    }
+    return result;
   }
 
   // [main-thread]
 
   bool fd_support_modify_fd(clap_fd fd, clap_fd_flags flags) {
-    return MHostFdSupport->modify_fd(MClapHost,fd,flags);
+    bool result = false;
+    if (MHostFdSupport) {
+      bool result = MHostFdSupport->modify_fd(MClapHost,fd,flags);
+      KODE_ClapPrint("fd %i flags %i -> %s\n",fd,flags, result ? "true" : "false" );
+    }
+    return result;
   }
 
   // [main-thread]
 
   bool fd_support_unregister_fd(clap_fd fd) {
-    return MHostFdSupport->unregister_fd(MClapHost,fd);
+    bool result = false;
+    if (MHostFdSupport) {
+      result = MHostFdSupport->unregister_fd(MClapHost,fd);
+      KODE_ClapPrint("fd %i -> %s\n",fd, result ? "true" : "false" );
+    }
+    return result;
   }
 
   //--------------------
@@ -238,7 +295,12 @@ public: // extensions
   */
 
   bool gui_resize(uint32_t width, uint32_t height) {
-    return MHostGui->resize(MClapHost,width,height);
+    bool result = false;
+    if (MHostGui) {
+      result = MHostGui->resize(MClapHost,width,height);
+      KODE_ClapPrint("width %i height %i -> %s\n",width,height, result ? "true" : "false" );
+    }
+    return result;
   }
 
   //--------------------
@@ -251,7 +313,10 @@ public: // extensions
   // [main-thread]
 
   void latency_changed() {
-    MHostLatency->changed(MClapHost);
+    if (MHostLatency) {
+      KODE_ClapPrint("\n");
+      MHostLatency->changed(MClapHost);
+    }
   }
 
   //--------------------
@@ -262,7 +327,10 @@ public: // extensions
   // [thread-safe]
 
   void log(clap_log_severity severity, const char *msg) {
-    MHostLog->log(MClapHost,severity,msg);
+    if (MHostLog) {
+      KODE_ClapPrint("severity %i msg %s\n",severity,msg);
+      MHostLog->log(MClapHost,severity,msg);
+    }
   }
 
   //--------------------
@@ -273,7 +341,10 @@ public: // extensions
   // [main-thread]
 
   void note_name_changed() {
-    MHostNoteName->changed(MClapHost);
+    if (MHostNoteName) {
+      KODE_ClapPrint("\n");
+      MHostNoteName->changed(MClapHost);
+    }
   }
 
   //--------------------
@@ -291,7 +362,10 @@ public: // extensions
   */
 
   void params_rescan(clap_param_rescan_flags flags) {
-    MHostParams->rescan(MClapHost,flags);
+    if (MHostParams) {
+      KODE_ClapPrint("flags %i\n",flags);
+      MHostParams->rescan(MClapHost,flags);
+    }
   }
 
   /*
@@ -304,7 +378,10 @@ public: // extensions
   */
 
   void params_clear(clap_id param_id, clap_param_clear_flags flags) {
-    MHostParams->clear(MClapHost,param_id,flags);
+    if (MHostParams) {
+      KODE_ClapPrint("param_id %i flags %i\n",param_id,flags);
+      MHostParams->clear(MClapHost,param_id,flags);
+    }
   }
 
   /*
@@ -318,7 +395,10 @@ public: // extensions
   */
 
   void params_request_flush() {
-    MHostParams->request_flush(MClapHost);
+    if (MHostParams) {
+      KODE_ClapPrint("\n");
+      MHostParams->request_flush(MClapHost);
+    }
   }
 
   //--------------------
@@ -332,7 +412,10 @@ public: // extensions
   */
 
   void state_mark_dirty() {
-    MHostState->mark_dirty(MClapHost);
+    if (MHostState) {
+      KODE_ClapPrint("\n");
+      MHostState->mark_dirty(MClapHost);
+    }
   }
 
   //--------------------
@@ -353,7 +436,12 @@ public: // extensions
   */
 
   bool thread_check_is_main_thread() {
-    return MHostThreadCheck->is_main_thread(MClapHost);
+    bool result = false;
+    if (MHostThreadCheck) {
+      result = MHostThreadCheck->is_main_thread(MClapHost);
+      KODE_ClapPrint("-> %s\n", result ? "true" : "false" );
+    }
+    return result;
   }
 
   /*
@@ -362,7 +450,12 @@ public: // extensions
   */
 
   bool thread_check_is_audio_thread() {
-    return MHostThreadCheck->is_audio_thread(MClapHost);
+    bool result = false;
+    if (MHostThreadCheck) {
+      result = MHostThreadCheck->is_audio_thread(MClapHost);
+      KODE_ClapPrint("-> %s\n", result ? "true" : "false" );
+    }
+    return result;
   }
 
   //--------------------
@@ -377,7 +470,13 @@ public: // extensions
   */
 
   bool timer_support_register_timer(uint32_t period_ms, clap_id *timer_id) {
-    return MHostTimerSupport->register_timer(MClapHost,period_ms,timer_id);
+    bool result = false;
+    if (MHostTimerSupport) {
+      result = MHostTimerSupport->register_timer(MClapHost,period_ms,timer_id);
+      *timer_id = 0;
+      KODE_ClapPrint("period_ms %i -> %s (*timer_id %i\n",period_ms, result ? "true" : "false", *timer_id );
+    }
+    return result;
   }
 
   /*
@@ -385,7 +484,12 @@ public: // extensions
   */
 
   bool timer_support_unregister_timer(clap_id timer_id) {
-    return MHostTimerSupport->unregister_timer(MClapHost,timer_id);
+    bool result = false;
+    if (MHostTimerSupport) {
+      result = MHostTimerSupport->unregister_timer(MClapHost,timer_id);
+      KODE_ClapPrint("timer_id %i -> %s \n",timer_id, result ? "true" : "false" );
+    }
+    return result;
   }
 
 };

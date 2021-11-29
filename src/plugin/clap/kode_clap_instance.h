@@ -44,7 +44,7 @@ public:
 //------------------------------
 
   KODE_ClapInstance(KODE_Instance* AInstance, KODE_ClapHost* AHost) {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("\n");
     MInstance = AInstance;
     MDescriptor = MInstance->getDescriptor();
     MHost = AHost;
@@ -54,7 +54,7 @@ public:
   //----------
 
   ~KODE_ClapInstance() {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("\n");
     if (MInstance) delete MInstance;
   }
 
@@ -77,6 +77,135 @@ private:
 //    MHostTimerSupport     = (clap_host_timer_support*)MHost->get_extension(CLAP_EXT_TIMER_SUPPORT);
 //  }
 
+  //----------
+
+  void handleInputEvents(const clap_event_list* in_events) {
+    if (in_events) {
+      uint32_t num = in_events->size(in_events);
+      for (uint32_t i=0; i<num; i++) {
+        const clap_event* event = in_events->get(in_events,i);
+        if (event) {
+          switch (event->type) {
+            case CLAP_EVENT_NOTE_ON: {
+              KODE_ClapPrint("CLAP_EVENT_NOTE_ON\n");
+              KODE_ClapPrint("- time %i\n",event->time);
+              KODE_ClapPrint("- port_index %i\n",event->note.port_index);
+              KODE_ClapPrint("- key %i\n",event->note.key);
+              KODE_ClapPrint("- channel %i\n",event->note.channel);
+              KODE_ClapPrint("- velocity %.3f\n",event->note.velocity);
+              break;
+            }
+            case CLAP_EVENT_NOTE_OFF: {
+              KODE_ClapPrint("CLAP_EVENT_NOTE_OFF\n");
+              KODE_ClapPrint("- time %i\n",event->time);
+              KODE_ClapPrint("- port_index %i\n",event->note.port_index);
+              KODE_ClapPrint("- key %i\n",event->note.key);
+              KODE_ClapPrint("- channel %i\n",event->note.channel);
+              KODE_ClapPrint("- velocity %.3f\n",event->note.velocity);
+              break;
+            }
+            case CLAP_EVENT_NOTE_END: {
+              KODE_ClapPrint("CLAP_EVENT_NOTE_END\n");
+              KODE_ClapPrint("- time %i\n",event->time);
+              KODE_ClapPrint("- port_index %i\n",event->note.port_index);
+              KODE_ClapPrint("- key %i\n",event->note.key);
+              KODE_ClapPrint("- channel %i\n",event->note.channel);
+              KODE_ClapPrint("- velocity %.3f\n",event->note.velocity);
+              break;
+            }
+            case CLAP_EVENT_NOTE_CHOKE: {
+              KODE_ClapPrint("CLAP_EVENT_NOTE_CHOKE\n");
+              KODE_ClapPrint("- time %i\n",event->time);
+              KODE_ClapPrint("- port_index %i\n",event->note.port_index);
+              KODE_ClapPrint("- key %i\n",event->note.key);
+              KODE_ClapPrint("- channel %i\n",event->note.channel);
+              KODE_ClapPrint("- velocity %.3f\n",event->note.velocity);
+              break;
+            }
+            case CLAP_EVENT_NOTE_EXPRESSION: {
+              KODE_ClapPrint("CLAP_EVENT_NOTE_EXPRESSION\n");
+              KODE_ClapPrint("- time %i\n",event->time);
+              KODE_ClapPrint("- expression_id %i\n",event->note_expression.expression_id);
+              KODE_ClapPrint("- port_index %i\n",event->note_expression.port_index);
+              KODE_ClapPrint("- key %i\n",event->note_expression.key);
+              KODE_ClapPrint("- channel %i\n",event->note_expression.channel);
+              KODE_ClapPrint("- value %.3f\n",event->note_expression.value);
+              break;
+            }
+            case CLAP_EVENT_NOTE_MASK: {
+              KODE_ClapPrint("CLAP_EVENT_NOTE_MASK\n");
+              KODE_ClapPrint("- time %i\n",event->time);
+              KODE_ClapPrint("- port_index %i\n",event->note_mask.port_index);
+              KODE_ClapPrint("- note_mask %i\n",event->note_mask.note_mask);
+              KODE_ClapPrint("- root_note %i\n",event->note_mask.root_note);
+              break;
+            }
+            case CLAP_EVENT_PARAM_VALUE: {
+              KODE_ClapPrint("CLAP_EVENT_PARAM_VALUE\n");
+              KODE_ClapPrint("- time %i\n",event->time);
+              KODE_ClapPrint("- cookie %p\n",event->param_value.cookie);
+              KODE_ClapPrint("- param_id %i\n",event->param_value.param_id);
+              KODE_ClapPrint("- port_index %i\n",event->param_value.port_index);
+              KODE_ClapPrint("- key %i\n",event->param_value.key);
+              KODE_ClapPrint("- channel %i\n",event->param_value.channel);
+              KODE_ClapPrint("- flags %i\n",event->param_value.flags);
+              KODE_ClapPrint("- value %.3f\n",event->param_value.value);
+              break;
+            }
+            case CLAP_EVENT_PARAM_MOD: {
+              KODE_ClapPrint("CLAP_EVENT_PARAM_MOD\n");
+              KODE_ClapPrint("- time %i\n",event->time);
+              KODE_ClapPrint("- cookie %p\n",event->param_mod.cookie);
+              KODE_ClapPrint("- param_id %i\n",event->param_mod.param_id);
+              KODE_ClapPrint("- port_index %i\n",event->param_mod.port_index);
+              KODE_ClapPrint("- key %i\n",event->param_mod.key);
+              KODE_ClapPrint("- channel %i\n",event->param_mod.channel);
+              KODE_ClapPrint("- amount %.3f\n",event->param_mod.amount);
+            }
+            case CLAP_EVENT_TRANSPORT: {
+              KODE_ClapPrint("CLAP_EVENT_TRANSPORT\n");
+              KODE_ClapPrint("- time %i\n",event->time);
+              KODE_ClapPrint("- song_pos_beats %i\n",event->time_info.song_pos_beats);
+              KODE_ClapPrint("- song_pos_seconds %f\n",event->time_info.song_pos_seconds);
+              KODE_ClapPrint("- tempo %.2f\n",event->time_info.tempo);
+              KODE_ClapPrint("- tempo_inc %.2f\n",event->time_info.tempo_inc);
+              KODE_ClapPrint("- bar_start %i\n",event->time_info.bar_start);
+              KODE_ClapPrint("- bar_number %i\n",event->time_info.bar_number);
+              KODE_ClapPrint("- loop_start_beats %i\n",event->time_info.loop_start_beats);
+              KODE_ClapPrint("- loop_end_beats %i\n",event->time_info.loop_end_beats);
+              KODE_ClapPrint("- loop_start_seconds %f\n",event->time_info.loop_start_seconds);
+              KODE_ClapPrint("- loop_end_seconds %f\n",event->time_info.loop_end_seconds);
+              KODE_ClapPrint("- tsig_num %i\n",event->time_info.tsig_num);
+              KODE_ClapPrint("- tsig_denom %i\n",event->time_info.tsig_denom);
+            }
+            case CLAP_EVENT_MIDI: {
+              KODE_ClapPrint("CLAP_EVENT_MIDI\n");
+              KODE_ClapPrint("- time %i\n",event->time);
+              KODE_ClapPrint("- port_index %i\n",event->midi.port_index);
+              KODE_ClapPrint("- port_index %i\n",event->midi.port_index);
+              KODE_ClapPrint("- data %02x 02x 02x\n",event->midi.data[0],event->midi.data[1],event->midi.data[2]);
+            }
+            case CLAP_EVENT_MIDI_SYSEX: {
+              KODE_ClapPrint("CLAP_EVENT_MIDI_SYSEX\n");
+              KODE_ClapPrint("- time %i\n",event->time);
+              KODE_ClapPrint("- port_index %i\n",event->midi_sysex.port_index);
+              KODE_ClapPrint("- size %i\n",event->midi_sysex.size);
+              KODE_ClapPrint("- buffer %p\n",event->midi_sysex.buffer);
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  //----------
+
+  void handleOutputEvents(const clap_event_list* out_events) {
+    if (out_events) {
+    }
+  }
+
 //------------------------------
 public:
 //------------------------------
@@ -87,7 +216,7 @@ public:
   */
 
   bool clap_instance_init() {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("-> true\n");
     MInstance->on_plugin_init();
 //    init_extensions();
     return true;
@@ -99,7 +228,7 @@ public:
   */
 
   void clap_instance_destroy() {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("\n");
     MInstance->on_plugin_destroy();
   }
 
@@ -114,7 +243,7 @@ public:
   */
 
   bool clap_instance_activate(double sample_rate, uint32_t minframes, uint32_t maxframes) {
-    KODE_ClapPrint("sample_rate %.2f minframes %i maxframes %i\n",sample_rate,minframes,maxframes);
+    KODE_ClapPrint("sample_rate %.2f minframes %i maxframes %i -> true\n",sample_rate,minframes,maxframes);
     MSampleRate = sample_rate;
     MMinFrames  = minframes;
     MMaxFrames  = maxframes;
@@ -125,7 +254,7 @@ public:
   /* */
 
   void clap_instance_deactivate() {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("\n");
     MInstance->on_plugin_deactivate();
   }
 
@@ -136,7 +265,7 @@ public:
   */
 
   bool clap_instance_start_processing() {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("-> true\n");
     MInstance->on_plugin_startProcessing();
     return true;
   }
@@ -144,22 +273,36 @@ public:
   /* */
 
   void clap_instance_stop_processing() {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("\n");
     MInstance->on_plugin_stopProcessing();
   }
 
   /*
     process audio, events, ...
     [audio-thread]
+
+    typedef struct clap_process {
+      uint64_t                    steady_time;  // a steady sample time counter, requiered
+      uint32_t                    frames_count; // number of frame to process
+      const clap_event_transport* transport;
+      const clap_audio_buffer*    audio_inputs;
+      const clap_audio_buffer*    audio_outputs;
+      uint32_t                    audio_inputs_count;
+      uint32_t                    audio_outputs_count;
+      const clap_event_list*      in_events;
+      const clap_event_list*      out_events;
+    } clap_process;
   */
 
-  //TODO
-
   clap_process_status clap_instance_process(const clap_process *process) {
+    //KODE_ClapPrint("\n");
     //KODE_Assert(process);
     //KODE_Assert(process->audio_inputs);
     //KODE_Assert(process->audio_outputs);
     //KODE_Assert(process->transport);
+
+    handleInputEvents(process->in_events);
+
     MProcessContext.mode          = 0;
     MProcessContext.offset        = 0;
     MProcessContext.numsamples    = process->frames_count;
@@ -169,7 +312,7 @@ public:
     MProcessContext.inputs[1]     = process->audio_inputs[0].data32[1];
     MProcessContext.outputs[0]    = process->audio_outputs[0].data32[0];
     MProcessContext.outputs[1]    = process->audio_outputs[0].data32[1];
-    MProcessContext.samplerate    = MSampleRate;//48000;
+    MProcessContext.samplerate    = MSampleRate;
     MProcessContext.tempo         = process->transport->tempo;
     MProcessContext.timesignum    = process->transport->tsig_num;
     MProcessContext.timesigdenom  = process->transport->tsig_denom;
@@ -180,6 +323,10 @@ public:
     if (process->transport->flags & CLAP_TRANSPORT_IS_RECORDING) MProcessContext.playstate |= KODE_PLUGIN_PLAYSTATE_RECORDING;
     if (process->transport->flags & CLAP_TRANSPORT_IS_LOOP_ACTIVE) MProcessContext.playstate |= KODE_PLUGIN_PLAYSTATE_LOOPING;
     MInstance->on_plugin_process(&MProcessContext);
+
+    handleOutputEvents(process->out_events);
+
+
     return CLAP_PROCESS_CONTINUE;
   }
 
@@ -190,20 +337,34 @@ public:
   */
 
   const void *clap_instance_get_extension(const char *id) {
-    KODE_ClapPrint("%s\n",id);
-    if (strcmp(id,CLAP_EXT_AUDIO_PORTS_CONFIG) == 0)  { return &MClapAudioPortsConfig; }
-    if (strcmp(id,CLAP_EXT_AUDIO_PORTS) == 0)         { return &MClapAudioPorts; }
-    if (strcmp(id,CLAP_EXT_EVENT_FILTER) == 0)        { return &MClapEventFilter; }
-    if (strcmp(id,CLAP_EXT_FD_SUPPORT) == 0)          { return &MClapFdSupport; }
-    if (strcmp(id,CLAP_EXT_GUI) == 0)                 { return &MClapGui; }
-    if (strcmp(id,CLAP_EXT_GUI_X11) == 0)             { return &MClapGuiX11; }
-    if (strcmp(id,CLAP_EXT_LATENCY) == 0)             { return &MClapLatency; }
-    if (strcmp(id,CLAP_EXT_NOTE_NAME) == 0)           { return &MClapNoteName; }
-    if (strcmp(id,CLAP_EXT_PARAMS) == 0)              { return &MClapParams; }
-    if (strcmp(id,CLAP_EXT_RENDER) == 0)              { return &MClapRender; }
-    if (strcmp(id,CLAP_EXT_STATE) == 0)               { return &MClapState; }
-    if (strcmp(id,CLAP_EXT_TIMER_SUPPORT) == 0)       { return &MClapTimerSupport; }
-    return nullptr;
+    const void* ptr = nullptr;
+//    if (strcmp(id,CLAP_EXT_AUDIO_PORTS_CONFIG) == 0)  { return &MClapAudioPortsConfig; }
+//    if (strcmp(id,CLAP_EXT_AUDIO_PORTS) == 0)         { return &MClapAudioPorts; }
+//    if (strcmp(id,CLAP_EXT_EVENT_FILTER) == 0)        { return &MClapEventFilter; }
+//    if (strcmp(id,CLAP_EXT_FD_SUPPORT) == 0)          { return &MClapFdSupport; }
+//    if (strcmp(id,CLAP_EXT_GUI) == 0)                 { return &MClapGui; }
+//    if (strcmp(id,CLAP_EXT_GUI_X11) == 0)             { return &MClapGuiX11; }
+//    if (strcmp(id,CLAP_EXT_LATENCY) == 0)             { return &MClapLatency; }
+//    if (strcmp(id,CLAP_EXT_NOTE_NAME) == 0)           { return &MClapNoteName; }
+//    if (strcmp(id,CLAP_EXT_PARAMS) == 0)              { return &MClapParams; }
+//    if (strcmp(id,CLAP_EXT_RENDER) == 0)              { return &MClapRender; }
+//    if (strcmp(id,CLAP_EXT_STATE) == 0)               { return &MClapState; }
+//    if (strcmp(id,CLAP_EXT_TIMER_SUPPORT) == 0)       { return &MClapTimerSupport; }
+    if (strcmp(id,CLAP_EXT_AUDIO_PORTS_CONFIG) == 0)  { ptr = &MClapAudioPortsConfig; }
+    if (strcmp(id,CLAP_EXT_AUDIO_PORTS) == 0)         { ptr = &MClapAudioPorts; }
+    if (strcmp(id,CLAP_EXT_EVENT_FILTER) == 0)        { ptr = &MClapEventFilter; }
+    if (strcmp(id,CLAP_EXT_FD_SUPPORT) == 0)          { ptr = &MClapFdSupport; }
+    if (strcmp(id,CLAP_EXT_GUI) == 0)                 { ptr = &MClapGui; }
+    if (strcmp(id,CLAP_EXT_GUI_X11) == 0)             { ptr = &MClapGuiX11; }
+    if (strcmp(id,CLAP_EXT_LATENCY) == 0)             { ptr = &MClapLatency; }
+    if (strcmp(id,CLAP_EXT_NOTE_NAME) == 0)           { ptr = &MClapNoteName; }
+    if (strcmp(id,CLAP_EXT_PARAMS) == 0)              { ptr = &MClapParams; }
+    if (strcmp(id,CLAP_EXT_RENDER) == 0)              { ptr = &MClapRender; }
+    if (strcmp(id,CLAP_EXT_STATE) == 0)               { ptr = &MClapState; }
+    if (strcmp(id,CLAP_EXT_TIMER_SUPPORT) == 0)       { ptr = &MClapTimerSupport; }
+    //return nullptr;
+    KODE_ClapPrint("id %s -> %p\n",id,ptr);
+    return ptr;
   }
 
   /*
@@ -213,7 +374,7 @@ public:
   */
 
   void clap_instance_on_main_thread() {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("\n");
   }
 
 //------------------------------
@@ -253,7 +414,7 @@ public: // extensions
   */
 
   uint32_t clap_audio_ports_config_count() {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("-> 1\n");
     return 1;
   }
 
@@ -268,7 +429,7 @@ public: // extensions
   */
 
   bool clap_audio_ports_config_get(uint32_t index, clap_audio_ports_config *config) {
-    KODE_ClapPrint("%i\n",index);
+    KODE_ClapPrint("index %i",index);
     switch(index) {
       case 0:
         config->id                    = 0;
@@ -277,8 +438,10 @@ public: // extensions
         config->input_channel_map     = CLAP_CHMAP_STEREO;
         config->output_channel_count  = 2;
         config->output_channel_map    = CLAP_CHMAP_STEREO;
+        KODE_ClapDPrint(" -> true\n");
         return true;
     }
+    KODE_ClapDPrint(" -> false\n");
     return false;
   }
 
@@ -289,7 +452,7 @@ public: // extensions
   */
 
   bool clap_audio_ports_config_select(clap_id config_id) {
-    KODE_ClapPrint("%i\n",config_id);
+    KODE_ClapPrint("config_id %i -> true\n",config_id);
     return true;
   }
 
@@ -314,9 +477,15 @@ public: // extensions
   */
 
   uint32_t clap_audio_ports_count(bool is_input) {
-    KODE_CLAPPRINT;
-    if (is_input) return 1;
-    else return 1;
+    KODE_ClapPrint("is_input %s", is_input ? "true" : "false" );
+    if (is_input) {
+      KODE_ClapDPrint(" -> 1\n");
+      return 1;
+    }
+    else {
+      KODE_ClapDPrint(" -> 1\n");
+      return 1;
+    }
   }
 
   /*
@@ -327,7 +496,7 @@ public: // extensions
   */
 
   bool clap_audio_ports_get(uint32_t index, bool is_input, clap_audio_port_info *info) {
-    KODE_ClapPrint("%i\n",index);
+    KODE_ClapPrint("index %i is_input %s",index, is_input ? "true" : "false" );
     switch(index) {
       case 0:
         info->id = 0;
@@ -338,8 +507,10 @@ public: // extensions
         info->is_main       = true;   // there can only be 1 main input and output
         info->is_cv         = false;  // control voltage
         info->in_place      = true;   // if true the daw can use the same buffer for input and output, only for main input to main output
+        KODE_ClapDPrint(" -> true\n");
         return true;
     };
+    KODE_ClapDPrint(" -> false\n");
     return false;
   }
 
@@ -360,20 +531,20 @@ public: // extensions
   */
 
   bool clap_event_filter_accepts(clap_event_type event_type) {
-    KODE_CLAPPRINT;
-    //switch (event_type) {
-    //  case CLAP_EVENT_NOTE_ON:          return true; break;
-    //  case CLAP_EVENT_NOTE_OFF:         return true; break;
-    //  case CLAP_EVENT_NOTE_END:         return true; break;
-    //  case CLAP_EVENT_NOTE_CHOKE:       return true; break;
-    //  case CLAP_EVENT_NOTE_EXPRESSION:  return true; break;
-    //  case CLAP_EVENT_NOTE_MASK:        return true; break;
-    //  case CLAP_EVENT_PARAM_VALUE:      return true; break;
-    //  case CLAP_EVENT_PARAM_MOD:        return true; break;
-    //  case CLAP_EVENT_TRANSPORT:        return true; break;
-    //  case CLAP_EVENT_MIDI:             return true; break;
-    //  case CLAP_EVENT_MIDI_SYSEX:       return true; break;
-    //}
+    switch (event_type) {
+      case CLAP_EVENT_NOTE_ON:          KODE_ClapPrint("event_type CLAP_EVENT_NOTE_ON -> true\n");          return true; break;
+      case CLAP_EVENT_NOTE_OFF:         KODE_ClapPrint("event_type CLAP_EVENT_NOTE_OFF -> true\n");         return true; break;
+      case CLAP_EVENT_NOTE_END:         KODE_ClapPrint("event_type CLAP_EVENT_NOTE_END -> true\n");         return true; break;
+      case CLAP_EVENT_NOTE_CHOKE:       KODE_ClapPrint("event_type CLAP_EVENT_NOTE_CHOKE -> true\n");       return true; break;
+      case CLAP_EVENT_NOTE_EXPRESSION:  KODE_ClapPrint("event_type CLAP_EVENT_NOTE_EXPRESSION -> true\n");  return true; break;
+      case CLAP_EVENT_NOTE_MASK:        KODE_ClapPrint("event_type CLAP_EVENT_NOTE_MASK -> true\n");        return true; break;
+      case CLAP_EVENT_PARAM_VALUE:      KODE_ClapPrint("event_type CLAP_EVENT_PARAM_VALUE -> true\n");      return true; break;
+      case CLAP_EVENT_PARAM_MOD:        KODE_ClapPrint("event_type CLAP_EVENT_PARAM_MOD -> true\n");        return true; break;
+      case CLAP_EVENT_TRANSPORT:        KODE_ClapPrint("event_type CLAP_EVENT_TRANSPORT -> true\n");        return true; break;
+      case CLAP_EVENT_MIDI:             KODE_ClapPrint("event_type CLAP_EVENT_MIDI -> true\n");             return true; break;
+      case CLAP_EVENT_MIDI_SYSEX:       KODE_ClapPrint("event_type CLAP_EVENT_MIDI_SYSEX -> true\n");       return true; break;
+    }
+    KODE_ClapPrint("event_type %i <unknown> -> false\n",event_type);
     return false;
   }
 
@@ -399,7 +570,7 @@ public: // extensions
   */
 
   void clap_fd_support_on_fd(clap_fd fd, clap_fd_flags flags) {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("fd %i flags %i\n",fd,flags);
   }
 
   //--------------------
@@ -438,10 +609,11 @@ public: // extensions
   // note: the editor doesn't have a window yet!
 
   bool clap_gui_create() {
-    KODE_CLAPPRINT;
     MEditorIsOpen = false;
     MEditor = _kode_create_editor(MInstance,MDescriptor);
-    return MInstance->on_plugin_createEditor(MEditor);
+    bool result = MInstance->on_plugin_createEditor(MEditor);
+    KODE_ClapPrint("-> %s\n", result ? "true" : "false" );
+    return result;
   }
 
   /*
@@ -450,7 +622,7 @@ public: // extensions
   */
 
   void clap_gui_destroy() {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("\n");
     MEditorIsOpen = false;
     if (MEditor) {
       MInstance->on_plugin_destroyEditor(MEditor);
@@ -465,7 +637,7 @@ public: // extensions
   */
 
   void clap_gui_set_scale(double scale) {
-    KODE_ClapPrint("%f\n",scale);
+    KODE_ClapPrint("scale %.3f\n",scale);
     if (MEditor) {
       MEditor->setScale(scale);
     }
@@ -478,7 +650,7 @@ public: // extensions
   */
 
   bool clap_gui_get_size(uint32_t *width, uint32_t *height) {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("-> true (*width %i *height %i)\n",MDescriptor->editorWidth,MDescriptor->editorHeight);
     *width  = MDescriptor->editorWidth;
     *height = MDescriptor->editorHeight;
     return true;
@@ -489,7 +661,7 @@ public: // extensions
   */
 
   bool clap_gui_can_resize() {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("-> false\n");
     return false;
   }
 
@@ -502,9 +674,9 @@ public: // extensions
   */
 
   void clap_gui_round_size(uint32_t *width, uint32_t *height) {
-    KODE_CLAPPRINT;
-    //*width  = MDescriptor->editorWidth;
-    //*height = MDescriptor->editorHeight;
+    KODE_ClapPrint("-> (*width %i *height %i)\n",MDescriptor->editorWidth,MDescriptor->editorHeight);
+    *width  = MDescriptor->editorWidth;
+    *height = MDescriptor->editorHeight;
   }
 
   /*
@@ -514,7 +686,7 @@ public: // extensions
   */
 
   bool clap_gui_set_size(uint32_t width, uint32_t height) {
-    KODE_ClapPrint("%i,%i\n",width,height);
+    KODE_ClapPrint("width %i height %i\n",width,height);
     if (MEditor) {
       MEditor->resize(width,height);
     }
@@ -527,7 +699,7 @@ public: // extensions
   */
 
   void clap_gui_show() {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("\n");
     if (MEditor && !MEditorIsOpen) {
       //MEditor->open(MDescriptor->editorWidth,MDescriptor->editorHeight,nullptr);
       MEditorIsOpen = MInstance->on_plugin_openEditor(MEditor);
@@ -543,7 +715,7 @@ public: // extensions
   */
 
   void clap_gui_hide() {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("\n");
     if (MEditor && MEditorIsOpen) {
       //MEditor->close();
       MEditor->hide();
@@ -566,7 +738,7 @@ public: // extensions
   */
 
   bool clap_gui_x11_attach(const char* display_name, unsigned long window) {
-    KODE_ClapPrint("display:name: %s, window: %i\n",display_name,window);
+    KODE_ClapPrint("display_name: %s, window: %i -> true\n",display_name,window);
     MEditor->attach(display_name,window);
     MEditorIsOpen = MInstance->on_plugin_openEditor(MEditor);
     return true;
@@ -582,7 +754,7 @@ public: // extensions
   */
 
   uint32_t clap_latency_get() {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("-> 0\n");
     return 0;
   }
 
@@ -601,7 +773,7 @@ public: // extensions
   */
 
   uint32_t clap_note_name_count() {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("-> 0\n");
     return 0;
   }
 
@@ -611,7 +783,7 @@ public: // extensions
   */
 
   bool clap_note_name_get(uint32_t index, clap_note_name *note_name) {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("index %i -> false\n",index);
     return false;
   }
 
@@ -700,7 +872,7 @@ public: // extensions
   */
 
   uint32_t clap_params_count() {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("-> %i\n",MDescriptor->parameters.size());
     return MDescriptor->parameters.size();
   }
 
@@ -710,7 +882,7 @@ public: // extensions
   */
 
   bool clap_params_get_info(int32_t param_index, clap_param_info *param_info) {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("param_index %i -> true\n",param_index);
     KODE_Parameter* param     = MDescriptor->parameters[param_index];
     param_info->id            = param_index;
     param_info->flags         = 0;
@@ -729,8 +901,9 @@ public: // extensions
   */
 
   bool clap_params_get_value(clap_id param_id, double *value) {
-    KODE_CLAPPRINT;
-    MInstance->getParameterValue(param_id); // !!!
+    float v = MInstance->getParameterValue(param_id); // !!!
+    KODE_ClapPrint("param_id %i -> *value %.3f, true\n",param_id,v);
+    *value = v;
     return true;
   }
 
@@ -741,10 +914,11 @@ public: // extensions
 
   bool clap_params_value_to_text(clap_id param_id, double value, char *display, uint32_t size) {
     char buffer[256];
-    KODE_CLAPPRINT;
     KODE_Parameter* param = MDescriptor->parameters[param_id];
     param->getDisplayText(value,buffer);
-    strcpy(display,buffer); // strncpy?
+    strncpy(display,buffer,size);
+    display[size-1] = 0;
+    KODE_ClapPrint("param_id %i value %.3f -> true (*display '%s'\n",param_id,value,display);
     return true;
   }
 
@@ -754,7 +928,8 @@ public: // extensions
   */
 
   bool clap_params_text_to_value(clap_id param_id, const char* display, double* value) {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("param_id %i display %s -> false (*value 0) -> false\n",param_id,display);
+    *value = 0.0;
     return false;
   }
 
@@ -767,7 +942,7 @@ public: // extensions
   */
 
   void clap_params_flush(const clap_event_list *input_parameter_changes, const clap_event_list *output_parameter_changes) {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("\n");
   }
 
   //--------------------
@@ -788,7 +963,7 @@ public: // extensions
   */
 
   void clap_render_set(clap_plugin_render_mode mode) {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("mode %i\n",mode);
   }
 
   //--------------------
@@ -811,8 +986,8 @@ public: // extensions
   */
 
   bool clap_state_save(clap_ostream *stream) {
-    KODE_CLAPPRINT;
-    return false;
+    KODE_ClapPrint("stream %p -> true\n",stream);
+    return true;
   }
 
   /*
@@ -826,8 +1001,8 @@ public: // extensions
   */
 
   bool clap_state_load(clap_istream *stream) {
-    KODE_CLAPPRINT;
-    return false;
+    KODE_ClapPrint("stream %p -> true \n",stream);
+    return true;
   }
 
   //--------------------
@@ -844,7 +1019,7 @@ public: // extensions
   */
 
   void clap_timer_support_on_timer(clap_id timer_id) {
-    KODE_CLAPPRINT;
+    KODE_ClapPrint("timer_id \n");
   }
 //------------------------------
 public: // extension callbacks
