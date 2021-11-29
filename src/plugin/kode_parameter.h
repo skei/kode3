@@ -35,7 +35,7 @@ public:
 
   float                 def_value   = 0.0;
   float                 min_value   = 0.0;
-  float                 max_value   = 0.0;
+  float                 max_value   = 1.0;
 
   uint32_t              num_steps   = 0;
 
@@ -45,7 +45,11 @@ public:
 public:
 //------------------------------
 
-  KODE_Parameter() {
+  KODE_Parameter(const char* AName, float ADefValue=0.0f, float AMinValue=0.0f, float AMaxValue=1.0f ) {
+    name = AName;
+    def_value = ADefValue;
+    min_value = AMinValue;
+    max_value = AMaxValue;
   }
 
   virtual ~KODE_Parameter() {
@@ -56,13 +60,15 @@ public:
 //------------------------------
 
   virtual float from01(float value) {
-    return value;
+    float range = max_value - min_value;
+    return min_value + (value * range);
   }
 
   //----------
 
   virtual float to01(float value) {
-    return value;
+    float range = max_value - min_value;
+    return ((value - min_value) / range);
   }
 
   //----------

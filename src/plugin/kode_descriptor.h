@@ -38,10 +38,11 @@ typedef KODE_Array<KODE_PluginPort*>  KODE_PluginPortArray;
 //----------
 
 struct KODE_PluginOptions {
-  bool has_editor       = false;
-  bool can_send_midi    = false;
-  bool can_receive_midi = false;
-  bool is_synth         = false;
+  bool has_editor         = false;
+  bool can_resize_editor  = false;
+  bool is_synth           = false;
+  bool can_send_midi      = false;
+  bool can_receive_midi   = false;
 };
 
 //----------------------------------------------------------------------

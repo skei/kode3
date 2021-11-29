@@ -99,6 +99,7 @@ public:
 
       if (param) {
         label = param->label;
+        value = param->from01(value);
         param->getDisplayText(value,MValueText);
       }
       else {

@@ -170,7 +170,8 @@ public:
     appendInput("input 2");
     appendOutput("output 1");
     appendOutput("output 2");
-    appendParameter( new KODE_Parameter() );
+    appendParameter(new KODE_Parameter( "slider", 1, -2, 2 ));
+    appendParameter(new KODE_Parameter( "knob",   0,  0, 1 ));
     options.is_synth = true;
     options.has_editor = true;
     editorWidth = 400;
@@ -288,6 +289,7 @@ public:
       window->appendWidget(slider);
       window->appendWidget(knob);
       AEditor->connect(slider,0);
+      AEditor->connect(knob,1);
       return true;
     }
     return false;

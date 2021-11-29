@@ -264,7 +264,7 @@
 	"plugin/vst2/kode_vst2_plugin.h"
 	"plugin/vst3/kode_vst3_plugin.h"
 
-1638170870 /DISKS/sda2/code/git/kode3/src/plugin/kode_descriptor.h
+1638226319 /DISKS/sda2/code/git/kode3/src/plugin/kode_descriptor.h
 	"kode.h"
 	"base/types/kode_array.h"
 	"base/utils/kode_utils.h"
@@ -277,7 +277,7 @@
 	"plugin/kode_editor.h"
 	"plugin/kode_process_context.h"
 
-1638218848 /DISKS/sda2/code/git/kode3/src/plugin/kode_editor.h
+1638226743 /DISKS/sda2/code/git/kode3/src/plugin/kode_editor.h
 	"kode.h"
 	"plugin/kode_parameter.h"
 	"gui/kode_widget.h"
@@ -294,7 +294,7 @@
 	"kode.h"
 	"extern/clap/all.h"
 
-1638218620 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_instance.h
+1638226396 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_instance.h
 	"kode_clap.h"
 	"plugin/kode_descriptor.h"
 	"plugin/kode_instance.h"
@@ -640,7 +640,7 @@
 1636129665 /DISKS/sda2/code/git/kode3/src/base/kode_array.h
 	<stdlib.h>
 
-1638170817 /DISKS/sda2/code/git/kode3/src/plugin/kode_parameter.h
+1638225592 /DISKS/sda2/code/git/kode3/src/plugin/kode_parameter.h
 	<stdio.h>
 	"base/types/kode_array.h"
 
@@ -760,7 +760,7 @@
 	"kode.h"
 	"plugin/vst2/kode_vst2.h"
 
-1638217891 /DISKS/sda2/code/git/kode3/build/test/test1.cpp
+1638225774 /DISKS/sda2/code/git/kode3/build/test/test1.cpp
 	"kode.h"
 	"plugin/kode_plugin.h"
 	"plugin/kode_voice_manager.h"
@@ -1287,7 +1287,7 @@
 1638126677 /DISKS/sda2/code/git/kode3/src/gui/widgets/kode_drag_value_widget.h
 	"gui/widgets/kode_value_widget.h"
 
-1638126665 /DISKS/sda2/code/git/kode3/src/gui/widgets/kode_value_widget.h
+1638225712 /DISKS/sda2/code/git/kode3/src/gui/widgets/kode_value_widget.h
 	"gui/widgets/kode_text_widget.h"
 
 1633116458 /DISKS/sda2/code/git/kode3/src/gui/widgets/kode_drag_value2_widget.h
