@@ -111,8 +111,8 @@ public: // editor listener
     MInstance->setParameterValue(AIndex,AValue);
     // notify host
     MHostParameterQueue.write(AIndex);
-    if (MIsProcessing) MHost->request_process();
-    else MHost->params_request_flush();
+    //if (MIsProcessing) MHost->request_process();
+    //else MHost->params_request_flush();
   }
 
   //----------
@@ -328,7 +328,7 @@ private:
           event.param_value.port_index  = -1;
           event.param_value.key         = -1;
           event.param_value.channel     = -1;
-          event.param_value.flags       = CLAP_EVENT_PARAM_BEGIN_ADJUST;// | CLAP_EVENT_PARAM_END_ADJUST;// | CLAP_EVENT_PARAM_SHOULD_RECORD;
+          event.param_value.flags       = CLAP_EVENT_PARAM_BEGIN_ADJUST | CLAP_EVENT_PARAM_END_ADJUST | CLAP_EVENT_PARAM_SHOULD_RECORD;
           event.param_value.value       = value;
 
           out_events->push_back(out_events,&event);
