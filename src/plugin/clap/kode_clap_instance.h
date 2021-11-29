@@ -188,14 +188,19 @@ private:
               uint8_t   msg1 = 0;
               uint8_t   msg2 = 0;
               uint8_t   msg3 = 0;
-              uint32_t  bend = 0;
+              int32_t   bend = 0;
+              float f;
               switch (event->note_expression.expression_id) {
                 case CLAP_NOTE_EXPRESSION_VOLUME:      // x >= 0, use 20 * log(4 * x)
                   break;
                 case CLAP_NOTE_EXPRESSION_PAN:         // pan, 0 left, 0.5 center, 1 right
                   break;
                 case CLAP_NOTE_EXPRESSION_TUNING:      // relative tuning in semitone, from -120 to +120
-                  bend = 8192 + (event->note_expression.value * 8192 * 12 / 60);
+                  f = (event->note_expression.value / 48.0);
+
+                  //* 15 / 12
+                  bend = 8192 + (8192.0 * f);
+                  //bend = 8192 + (event->note_expression.value * 8192 / 120);
                   msg1 = KODE_MIDI_PITCHBEND + event->note_expression.channel;
                   msg2 = bend & 0x7f;
                   msg3 = (bend >> 7) & 0x7f;
