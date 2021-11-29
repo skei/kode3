@@ -260,6 +260,11 @@ public: // extensions
   /*
     gets information about a configuration
     [main-thread]
+
+    CLAP_CHMAP_UNSPECIFIED
+    CLAP_CHMAP_MONO
+    CLAP_CHMAP_STEREO
+    CLAP_CHMAP_SURROUND
   */
 
   bool clap_audio_ports_config_get(uint32_t index, clap_audio_ports_config *config) {
@@ -267,7 +272,7 @@ public: // extensions
     switch(index) {
       case 0:
         config->id                    = 0;
-        strcpy(config->name,"ports");
+        strcpy(config->name,"ports"); // strncpy?
         config->input_channel_count   = 2;
         config->input_channel_map     = CLAP_CHMAP_STEREO;
         config->output_channel_count  = 2;
@@ -310,12 +315,15 @@ public: // extensions
 
   uint32_t clap_audio_ports_count(bool is_input) {
     KODE_CLAPPRINT;
-    return 1;
+    if (is_input) return 1;
+    else return 1;
   }
 
   /*
     get info about about an audio port.
     [main-thread]
+
+    see clap_audio_ports_config_get (above) for CLAP_CHMAP_* flags
   */
 
   bool clap_audio_ports_get(uint32_t index, bool is_input, clap_audio_port_info *info) {
@@ -323,13 +331,13 @@ public: // extensions
     switch(index) {
       case 0:
         info->id = 0;
-        strcpy(info->name,"ports");
+        strcpy(info->name,"ports"); // strncpy?
         info->channel_count = 2;
-        info->channel_map = CLAP_CHMAP_STEREO;
-        info->sample_size = 32;
-        info->is_main = true;
-        info->is_cv = false;
-        info->in_place = true;
+        info->channel_map   = CLAP_CHMAP_STEREO;
+        info->sample_size   = 32;     // 32 for float and 64 for double
+        info->is_main       = true;   // there can only be 1 main input and output
+        info->is_cv         = false;  // control voltage
+        info->in_place      = true;   // if true the daw can use the same buffer for input and output, only for main input to main output
         return true;
     };
     return false;
@@ -384,6 +392,10 @@ public: // extensions
     don't forget using modify_fd() to remove the write notification once you're
     done writting.
     [main-thread]
+
+    CLAP_FD_READ
+    CLAP_FD_WRITE
+    CLAP_FD_ERROR
   */
 
   void clap_fd_support_on_fd(clap_fd fd, clap_fd_flags flags) {
@@ -565,12 +577,6 @@ public: // extensions
   //--------------------
 
   /*
-    The audio ports scan has to be done while the plugin is deactivated.
-  */
-
-  //----------
-
-  /*
     Returns the plugin latency.
     [main-thread]
   */
@@ -614,34 +620,37 @@ public: // extensions
   //--------------------
 
   /*
-    Main idea:
-
-    The host sees the plugin as an atomic entity; and acts as a controler on top of its parameters.
-    The plugin is responsible to keep in sync its audio processor and its GUI.
-
+    The host sees the plugin as an atomic entity; and acts as a controler on
+    top of its parameters. The plugin is responsible to keep in sync its audio
+    processor and its GUI.
     The host can read at any time parameters value on the [main-thread] using
     @ref clap_plugin_params.value().
-
-    There is two options to communicate parameter value change, and they are not concurrent.
+    There is two options to communicate parameter value change, and they are
+    not concurrent.
     - send automation points during clap_plugin.process()
-    - send automation points during clap_plugin_params.flush(), this one is used when the plugin is
-      not processing
+    - send automation points during clap_plugin_params.flush(),
+      this one is used when the plugin is not processing
 
     When the plugin changes a parameter value, it must inform the host.
     It will send @ref CLAP_EVENT_PARAM_VALUE event during process() or flush().
-    - set the flag CLAP_EVENT_PARAM_BEGIN_ADJUST to mark the begining of automation recording
-    - set the flag CLAP_EVENT_PARAM_END_ADJUST to mark the end of automation recording
-    - set the flag CLAP_EVENT_PARAM_SHOULD_RECORD if the event should be recorded
+    - set the flag CLAP_EVENT_PARAM_BEGIN_ADJUST to mark the begining of
+      automation recording
+    - set the flag CLAP_EVENT_PARAM_END_ADJUST to mark the end of automation
+      recording
+    - set the flag CLAP_EVENT_PARAM_SHOULD_RECORD if the event should be
+      recorded
 
-    @note MIDI CCs are a tricky because you may not know when the parameter adjustment ends.
-    Also if the hosts records incoming MIDI CC and parameter change automation at the same time,
-    there will be a conflict at playback: MIDI CC vs Automation.
-    The parameter automation will always target the same parameter because the param_id is stable.
-    The MIDI CC may have a different mapping in the future and may result in a different playback.
+    MIDI CCs are a tricky because you may not know when the parameter
+    adjustment ends. Also if the hosts records incoming MIDI CC and parameter
+    change automation at the same time, there will be a conflict at playback:
+    MIDI CC vs Automation. The parameter automation will always target the same
+    parameter because the param_id is stable. The MIDI CC may have a different
+    mapping in the future and may result in a different playback.
 
-    When a MIDI CC changes a parameter's value, set @ref clap_event_param.should_record to false.
-    That way the host may record the MIDI CC automation, but not the parameter change and there
-    won't be conflict at playback.
+    When a MIDI CC changes a parameter's value, set
+    clap_event_param.should_record to false.
+    That way the host may record the MIDI CC automation, but not the parameter
+    change and there won't be conflict at playback.
 
     Scenarios:
 
@@ -706,8 +715,8 @@ public: // extensions
     param_info->id            = param_index;
     param_info->flags         = 0;
     param_info->cookie        = nullptr;
-    strcpy(param_info->name,param->name); // todo: strncpy
-    strcpy(param_info->module,""); // todo: strncpy
+    strcpy(param_info->name,param->name);   // todo: strncpy
+    strcpy(param_info->module,"");          // todo: strncpy
     param_info->min_value     = 0.0;
     param_info->max_value     = 1.0;
     param_info->default_value = 0.5;
@@ -735,7 +744,7 @@ public: // extensions
     KODE_CLAPPRINT;
     KODE_Parameter* param = MDescriptor->parameters[param_id];
     param->getDisplayText(value,buffer);
-    strcpy(display,buffer);
+    strcpy(display,buffer); // strncpy?
     return true;
   }
 
@@ -795,6 +804,10 @@ public: // extensions
     Saves the plugin state into stream.
     Returns true if the state was correctly saved.
     [main-thread]
+
+    clap_ostream:
+      void     *ctx;                                                                      // reserved pointer for the stream
+      int64_t (*write)(struct clap_ostream *stream, const void *buffer, uint64_t size);   // returns the number of bytes written. -1 on error.
   */
 
   bool clap_state_save(clap_ostream *stream) {
@@ -806,6 +819,10 @@ public: // extensions
     Tell the host that the plugin state has changed and should be saved again.
     If a parameter value changes, then it is implicit that the state is dirty.
     [main-thread]
+
+    clap_istream:
+      void    *ctx;                                                             // reserved pointer for the stream
+      nt64_t (*read)(struct clap_istream *stream, void *buffer, uint64_t size); // returns the number of bytes read. 0 for end of file. -1 on error.
   */
 
   bool clap_state_load(clap_istream *stream) {
