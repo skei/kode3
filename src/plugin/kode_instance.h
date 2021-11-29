@@ -9,13 +9,14 @@
 
 
 class KODE_Instance
-: public KODE_EditorListener {
+/*: public KODE_EditorListener*/ {
 
 //------------------------------
 private:
 //------------------------------
 
-  KODE_Descriptor* MDescriptor = nullptr;
+  KODE_Descriptor*  MDescriptor       = nullptr;
+  float*            MParameterValues  = nullptr;
 
 //------------------------------
 public:
@@ -24,12 +25,14 @@ public:
   KODE_Instance(KODE_Descriptor* ADescriptor) {
     //KODE_PRINT;
     MDescriptor = ADescriptor;
+    MParameterValues = (float*)malloc(MDescriptor->parameters.size() * sizeof(float));
   }
 
   //----------
 
   virtual ~KODE_Instance() {
     //KODE_PRINT;
+    if (MParameterValues) free(MParameterValues);
     if (MDescriptor) delete MDescriptor;
   }
 
@@ -42,15 +45,28 @@ public:
   }
 
   float* getParameterValueBuffer() {
-    return nullptr;
+    return MParameterValues;
   }
 
   void setParameterValue(uint32_t AIndex, float AValue) {
+    MParameterValues[AIndex] = AValue;
   }
 
   float getParameterValue(uint32_t AIndex) {
-    return 0.0;
+    return MParameterValues[AIndex];
   }
+
+////------------------------------
+//public: // editor listener
+////------------------------------
+//
+//  void on_editor_updateParameter(uint32_t AIndex, float AValue) override {
+//    KODE_Print("index %i value %.3f\n",AIndex,AValue);
+//  }
+//
+//  void on_editor_resize(uint32_t AWidth, uint32_t AHeight) override {
+//    KODE_Print("width %i height %i\n",AWidth,AHeight);
+//  }
 
 //------------------------------
 public:

@@ -841,7 +841,7 @@ public:
     if (flags.autoHint) do_widget_setHint(this,"");
   }
 
-  virtual void on_widget_connect(KODE_Parameter* AParameter, uint32_t ASubIndex) {
+  virtual void on_widget_connect(KODE_Parameter* AParameter, uint32_t ASubIndex=0) {
     //setParameter(AParameter);
   }
 

@@ -34,6 +34,7 @@ public:
     appendOutput("output 1");
     appendOutput("output 2");
     appendParameter( new KODE_Parameter() );
+    options.is_synth = true;
     options.has_editor = true;
     editorWidth = 400;
     editorHeight = 300;
@@ -117,8 +118,11 @@ public:
     KODE_PRINT;
     KODE_Window* window = AEditor->getWindow();
     if (window) {
-      window->appendWidget( new KODE_SliderWidget( KODE_FRect(10,10,150,20) ) );
-      window->appendWidget( new KODE_KnobWidget( KODE_FRect(10,40,50,50) ) );
+      KODE_SliderWidget* slider = new KODE_SliderWidget( KODE_FRect(10,10,150,20) );
+      KODE_KnobWidget*    knob  = new KODE_KnobWidget( KODE_FRect(10,40,50,50) );
+      window->appendWidget(slider);
+      window->appendWidget(knob);
+      AEditor->connect(slider,0);
       return true;
     }
     return false;

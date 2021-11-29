@@ -56,7 +56,10 @@ public:
     MClapDescriptor->version      = MDescriptor->getVersionString();
     MClapDescriptor->description  = "";
     MClapDescriptor->keywords     = ""; // Arbitrary list of keywords, separated by `;'
-    MClapDescriptor->plugin_type  = CLAP_PLUGIN_AUDIO_EFFECT;
+
+    if (MDescriptor->options.is_synth) MClapDescriptor->plugin_type  = CLAP_PLUGIN_INSTRUMENT;
+    else MClapDescriptor->plugin_type  = CLAP_PLUGIN_AUDIO_EFFECT; //CLAP_PLUGIN_EVENT_EFFECT, CLAP_PLUGIN_ANALYZER
+
     return true;
   }
 
@@ -112,18 +115,13 @@ public:
   */
 
   const clap_plugin* clap_entry_create_plugin(const clap_host* host, const char* plugin_id) {
-    KODE_ClapHost* my_host = new KODE_ClapHost(host);
-    //if (!my_host) {
-    //  printf("error creatinge KODE_ClapHost\n");
-    //}
-    //if (host) {
-    //  host->get_extension(host,"hello? are you there?");
-    //}
+    KODE_ClapHost*      claphost      = new KODE_ClapHost(host);
     clap_plugin*        plugin        = (clap_plugin*)malloc(sizeof(clap_plugin));
     KODE_Instance*      instance      = _kode_create_instance(MDescriptor);  // deleted by KODE_ClapInstance destructor
-    KODE_ClapInstance*  clap_instance = new KODE_ClapInstance(instance,my_host);
+    KODE_ClapInstance*  clapinstance = new KODE_ClapInstance(instance,claphost);
+
     plugin->desc              = MClapDescriptor;
-    plugin->plugin_data       = clap_instance;
+    plugin->plugin_data       = clapinstance;
     plugin->init              = clap_instance_init_callback;
     plugin->destroy           = clap_instance_destroy_callback;
     plugin->activate          = clap_instance_activate_callback;

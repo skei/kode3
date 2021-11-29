@@ -229,6 +229,8 @@ public:
   }
 
   void appendParameter(KODE_Parameter* AParameter) {
+    int32_t index = parameters.size();
+    AParameter->index = index;
     parameters.append(AParameter);
   }
 
