@@ -467,7 +467,9 @@ public:
 
   clap_process_status clap_instance_process(const clap_process *process) {
     //KODE_ClapPrint("\n");
+
     handleInputEvents(process->in_events);
+
     MProcessContext.mode          = 0;
     MProcessContext.offset        = 0;
     MProcessContext.numsamples    = process->frames_count;
@@ -488,7 +490,9 @@ public:
     if (process->transport->flags & CLAP_TRANSPORT_IS_RECORDING)    MProcessContext.playstate |= KODE_PLUGIN_PLAYSTATE_RECORDING;
     if (process->transport->flags & CLAP_TRANSPORT_IS_LOOP_ACTIVE)  MProcessContext.playstate |= KODE_PLUGIN_PLAYSTATE_LOOPING;
     MInstance->on_plugin_process(&MProcessContext);
+
     handleOutputEvents(process->out_events);
+
     return CLAP_PROCESS_CONTINUE;
   }
 
@@ -923,8 +927,11 @@ public: // extensions
 
   bool clap_gui_x11_attach(const char* display_name, unsigned long window) {
     //KODE_ClapPrint("display_name: %s, window: %i -> true\n",display_name,window);
-    MEditor->attach(display_name,window);
-    MEditorIsOpen = MInstance->on_plugin_openEditor(MEditor);
+
+    MEditor->attach(display_name,(void*)window);
+
+//    MEditorIsOpen = MInstance->on_plugin_openEditor(MEditor);     // see show?
+
     return true;
   }
 
@@ -1081,7 +1088,7 @@ public: // extensions
     //KODE_ClapPrint("param_index %i -> true\n",param_index);
     KODE_Parameter* parameter = MDescriptor->parameters[param_index];
     param_info->id            = param_index;
-    param_info->flags         = 0;
+    param_info->flags         = 0;//CLAP_PARAM_IS_MODULATABLE;
     param_info->cookie        = nullptr; // KODE_Parameter* ?
     strncpy(param_info->name,parameter->name,CLAP_NAME_SIZE);
     strncpy(param_info->module,"",CLAP_MODULE_SIZE);
@@ -1190,15 +1197,20 @@ public: // extensions
   */
 
   bool clap_state_save(clap_ostream *stream) {
+    KODE_Assert(stream);
     //KODE_ClapPrint("stream %p -> true\n",stream);
-    //uint32_t version = MDescriptor->version;
-    //stream->write(stream,&version,sizeof(uint32_t));
-    //uint32_t num_params = MDescriptor->parameters.size();
-    //stream->write(stream,&num_params,sizeof(uint32_t));
-    //for (uint32_t i=0; i<num_params; i++) {
-    //  float value = MInstance->getParameterValue(i);
-    //  stream->write(stream,&value,sizeof(float));
-    //}
+
+#ifndef SKIP_STATE_SAVE
+    uint32_t version = MDescriptor->version;
+    stream->write(stream,&version,sizeof(uint32_t));
+    uint32_t num_params = MDescriptor->parameters.size();
+    stream->write(stream,&num_params,sizeof(uint32_t));
+    for (uint32_t i=0; i<num_params; i++) {
+      float value = MInstance->getParameterValue(i);
+      stream->write(stream,&value,sizeof(float));
+    }
+#endif // SKIP_STATE_SAVE
+
     return true;
   }
 
@@ -1213,16 +1225,25 @@ public: // extensions
   */
 
   bool clap_state_load(clap_istream *stream) {
+
+    KODE_Assert(stream);
     //KODE_ClapPrint("stream %p -> true \n",stream);
-    //uint32_t version = 0;
-    //stream->read(stream,&version,sizeof(uint32_t));
-    //uint32_t num_params = 0;
-    //stream->read(stream,&num_params,sizeof(uint32_t));
-    //for (uint32_t i=0; i<num_params; i++) {
-    //  float value = 0.0;
-    //  stream->read(stream,&value,sizeof(float));
-    //  MInstance->setParameterValue(i,value);
-    //}
+
+#ifndef SKIP_STATE_SAVE
+
+    uint32_t version = 0;
+    stream->read(stream,&version,sizeof(uint32_t));
+    uint32_t num_params = 0;
+    stream->read(stream,&num_params,sizeof(uint32_t));
+    for (uint32_t i=0; i<num_params; i++) {
+      float value = 0.0;
+      stream->read(stream,&value,sizeof(float));
+      MInstance->setParameterValue(i,value);
+    }
+
+    #endif // SKIP_STATE_SAVE
+
+
     return true;
   }
 

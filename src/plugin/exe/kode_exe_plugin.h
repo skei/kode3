@@ -14,7 +14,8 @@
 //----------------------------------------------------------------------
 
 //template <class DESCRIPTOR, class INSTANCE, class EDITOR>
-class KODE_ExePlugin {
+class KODE_ExePlugin
+: public KODE_EditorListener {
 
 //------------------------------
 private:
@@ -24,24 +25,76 @@ private:
 public:
 //------------------------------
 
+  /*
+    descriptor = _kode_create_descriptor
+    instance   = _kode_create_instance
+    editor     = _kode_create_editor
+
+    instance->on_plugin_createEditor        // on_plugin_initEditor
+    editor->attach
+    editor->show
+    instance->on_plugin_openEditor          // on_plugin_showEditor
+    instance->on_plugin_updateEditor
+    editor->getWindow->eventLoop
+    instance->on_plugin_closeEditor         // on_plugin_hideEditor
+    editor->hide
+    editor->detach
+    instance->on_plugin_destroyEditor       (( op_plugion_exitEditor
+    delete editor
+
+    delete instance
+    //delete descriptor
+  */
+
   int main(int argc, char** argv) {
+
+    // descriptor
+
     KODE_Descriptor* descriptor = _kode_create_descriptor(); // new DESCRIPTOR();
     if (descriptor) {
+
+      // instance
+
       KODE_Instance* instance = _kode_create_instance(descriptor); // new INSTANCE(descriptor);
       if (instance) {
+
+        // editor
+
         if (descriptor->options.has_editor) {
-          KODE_Editor* editor = instance->on_plugin_openEditor(/*nullptr*/);
+          KODE_Editor* editor = _kode_create_editor(this,descriptor);
           if (editor) {
-            editor->open(640,480,nullptr);
-            editor->eventLoop();
-            editor->close();
-            instance->on_plugin_closeEditor();
+            KODE_Print("editor %p\n",editor);
+            if (instance->on_plugin_createEditor(editor)) {
+              editor->attach("",nullptr);
+              editor->show();
+              if (instance->on_plugin_openEditor(editor)) {
+                instance->on_plugin_updateEditor(editor);
+                KODE_Window* window = editor->getWindow();
+                if (window) {
+                  window->eventLoop();
+                }
+                instance->on_plugin_closeEditor(editor);
+              }
+              editor->hide();
+              editor->detach();
+              instance->on_plugin_destroyEditor(editor);
+            }
+            delete editor;
           }
         }
+
+        // editor
+
         delete instance;
       }
+
+      // instance
+
       //delete descriptor; // deleted by KODE_Instance
     }
+
+    // descriptor
+
     return 0;
   }
 

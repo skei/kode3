@@ -196,11 +196,24 @@ public:
 public:
 //------------------------------
 
-  void attach(const char* display_name, unsigned long window) {
+  //void attach(const char* display_name="", unsigned long window=0) {
+  void attach(const char* display_name="", void* window=nullptr) {
+    //TODO: save arguments, use in open();
     MWindow = new KODE_EditorWindow(MListener,MDescriptor,MDescriptor->editorWidth,MDescriptor->editorHeight,"test",(void*)window);
     MWindow->setFillBackground(true);
-    MWindow->open();
-    MIsOpen = true;
+    //MWindow->open();
+    //MIsOpen = true;
+  }
+
+  //----------
+
+  void detach() {
+    if (MWindow) {
+      delete MWindow;
+      MWindow = nullptr;
+      //MIsOpen = false;
+    }
+
   }
 
   //----------
@@ -226,17 +239,24 @@ public:
   //----------
 
   void show() {
-    if (MIsOpen) return;
+    //if (MIsOpen) return;
+    if (MWindow) MWindow->open();
+    MIsOpen = true;
   }
 
   //----------
 
   void hide() {
-    if (MIsOpen && MWindow) {
-      delete MWindow;
-      MWindow = nullptr;
-      MIsOpen = false;
-    }
+    if (MWindow) MWindow->close();
+    MIsOpen = false;
+
+//    detach(); // nope!
+
+    //if (MIsOpen && MWindow) {
+    //  delete MWindow;
+    //  MWindow = nullptr;
+    //  MIsOpen = false;
+    //}
   }
 
   //----------

@@ -1,9 +1,12 @@
 
+#define KODE_PLUGIN_EXE
 #define KODE_PLUGIN_CLAP
 //#define KODE_DEBUG_CLAP
 
+//#define SKIP_STATE_SAVE
+
 #define KODE_GUI_XCB
-#define KODE_DEBUG_PRINT_SOCKET
+//#define KODE_DEBUG_PRINT_SOCKET
 // nc -U -l -k /tmp/kode.socket
 
 //----------
@@ -271,6 +274,7 @@ public:
   //  return 0;
   //}
 
+  // we don't have a window yet
   bool on_plugin_createEditor(KODE_Editor* AEditor) final {
     //KODE_PRINT;
     return true;
