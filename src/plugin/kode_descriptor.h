@@ -57,10 +57,10 @@ class KODE_Descriptor {
 private:
 //------------------------------
 
-  uint8_t   MLongId[16] = {0};
-  uint8_t   MLongEditorId[16] = {0};
-  char      MVersionString[32] = {0};
-  char      MIdString[256] = {0};
+  uint8_t   MLongId[16]         = {0};
+  uint8_t   MLongEditorId[16]   = {0};
+  char      MVersionString[32]  = {0};
+  char      MIdString[256]      = {0};
 
 
 //------------------------------
@@ -170,22 +170,37 @@ public:
   //----------
 
     // 0x03030001 -> "3.3.1"
+    // buffer = 32 bytes, maxlen = 31
 
   //char* getVersionString(char* buffer) {
   char* getVersionString() {
     char* buffer = MVersionString;
-    sprintf(buffer,"%i.%i.%i",((version & 0xff000000) >> 24),((version & 0x00ff0000) >> 16),(version & 0x0000ffff));
+    snprintf(buffer,31,"%i.%i.%i",((version & 0xff000000) >> 24),((version & 0x00ff0000) >> 16),(version & 0x0000ffff));
     return buffer;
   }
 
   //----------
 
+  /*
+
+  warning: ‘char* __builtin___strcat_chk(char*, const char*, long unsigned int)’
+
+  accessing 33 or more bytes at offsets 72 and 40 may overlap 1 byte at offset 72
+  [-Wrestrict]|
+
+
+
+
+
+  */
+
   //char* getIdString(char* buffer) {
   char* getIdString() {
     char* buffer = MIdString;
-    char * ver = getVersionString();
-    buffer[0] = 0;
-    strcat(buffer,name);
+    char* ver = getVersionString();
+    //if ((strlen(name) + strlen(author) + strlen(ver) + 3) >= 255) {
+    //}
+    strcpy(buffer,name);
     strcat(buffer,"/");
     strcat(buffer,author);
     strcat(buffer,"/");

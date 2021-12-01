@@ -105,9 +105,14 @@ public: // editor listener
     - the plugin is responsible to send the parameter value to its audio processor
   */
 
+  // AValue is 0..1 (widget value)
+  // todo: convert via parameter if necessary..
+
   void on_editor_updateParameter(uint32_t AIndex, float AValue) override {
     //KODE_ClapPrint("index %i value %.3f\n",AIndex,AValue);
-    MInstance->setParameterValue(AIndex,AValue);
+    KODE_Parameter* parameter = MDescriptor->parameters[AIndex];
+    float value = parameter->from01(AValue);
+    MInstance->setParameterValue(AIndex,value/*AValue*/);
     MHostParameterQueue.write(AIndex);
 
     //if (MIsProcessing) MHost->request_process();
@@ -187,11 +192,11 @@ private:
     //KODE_ClapPrint("- key %i\n",event->note_expression.key);
     //KODE_ClapPrint("- channel %i\n",event->note_expression.channel);
     //KODE_ClapPrint("- value %.3f\n",event->note_expression.value);
-    uint8_t   msg1;
-    uint8_t   msg2;
-    uint8_t   msg3;
-    int32_t   bend;
-    float     f;
+    uint8_t   msg1 = 0;
+    uint8_t   msg2 = 0;
+    uint8_t   msg3 = 0;
+    int32_t   bend = 0;
+    float     f = 0.0;
     uint32_t  time = event->time;
     switch (event->note_expression.expression_id) {
       case CLAP_NOTE_EXPRESSION_VOLUME:      // x >= 0, use 20 * log(4 * x)
@@ -586,7 +591,7 @@ public: // extensions
     switch(index) {
       case 0:
         config->id                    = 0;
-        strncpy(config->name,"port config 1",CLAP_NAME_SIZE);
+        KODE_Strlcpy(config->name,"port config 1",CLAP_NAME_SIZE);
         config->input_channel_count   = 2;
         config->input_channel_map     = CLAP_CHMAP_STEREO;
         config->output_channel_count  = 2;
@@ -673,7 +678,7 @@ public: // extensions
       switch(index) {
         case 0:
           info->id = 0;
-          strncpy(info->name,"ports",CLAP_NAME_SIZE);
+          KODE_Strlcpy(info->name,"ports",CLAP_NAME_SIZE);
           info->channel_count = MDescriptor->inputs.size();
           info->channel_map   = CLAP_CHMAP_STEREO;
           info->sample_size   = 32;     // 32 for float and 64 for double
@@ -688,7 +693,7 @@ public: // extensions
       switch(index) {
         case 0:
           info->id = 0;
-          strncpy(info->name,"ports",CLAP_NAME_SIZE);
+          KODE_Strlcpy(info->name,"ports",CLAP_NAME_SIZE);
           info->channel_count = MDescriptor->outputs.size();;
           info->channel_map   = CLAP_CHMAP_STEREO;
           info->sample_size   = 32;     // 32 for float and 64 for double
@@ -1090,8 +1095,8 @@ public: // extensions
     param_info->id            = param_index;
     param_info->flags         = 0;//CLAP_PARAM_IS_MODULATABLE;
     param_info->cookie        = nullptr; // KODE_Parameter* ?
-    strncpy(param_info->name,parameter->name,CLAP_NAME_SIZE);
-    strncpy(param_info->module,"",CLAP_MODULE_SIZE);
+    KODE_Strlcpy(param_info->name,parameter->name,CLAP_NAME_SIZE);
+    KODE_Strlcpy(param_info->module,"",CLAP_MODULE_SIZE);
     param_info->min_value     = parameter->min_value;//0.0;
     param_info->max_value     = parameter->max_value;//1.0;
     param_info->default_value = parameter->def_value;//0.5;
@@ -1119,8 +1124,8 @@ public: // extensions
     char buffer[256];
     KODE_Parameter* param = MDescriptor->parameters[param_id];
     param->getDisplayText(value,buffer);
-    strncpy(display,buffer,size);
-    display[size-1] = 0;
+    KODE_Strlcpy(display,buffer,size);
+    //display[size-1] = 0;
     //KODE_ClapPrint("param_id %i value %.3f -> true (*display '%s'\n",param_id,value,display);
     return true;
   }
@@ -1197,20 +1202,17 @@ public: // extensions
   */
 
   bool clap_state_save(clap_ostream *stream) {
+    KODE_Print("Saving state..\n");
     KODE_Assert(stream);
-    //KODE_ClapPrint("stream %p -> true\n",stream);
-
-#ifndef SKIP_STATE_SAVE
-    uint32_t version = MDescriptor->version;
-    stream->write(stream,&version,sizeof(uint32_t));
-    uint32_t num_params = MDescriptor->parameters.size();
-    stream->write(stream,&num_params,sizeof(uint32_t));
-    for (uint32_t i=0; i<num_params; i++) {
-      float value = MInstance->getParameterValue(i);
-      stream->write(stream,&value,sizeof(float));
-    }
-#endif // SKIP_STATE_SAVE
-
+      uint32_t version = MDescriptor->version;
+      stream->write(stream,&version,sizeof(uint32_t));
+      uint32_t num_params = MDescriptor->parameters.size();
+      stream->write(stream,&num_params,sizeof(uint32_t));
+      for (uint32_t i=0; i<num_params; i++) {
+        float value = MInstance->getParameterValue(i);
+        stream->write(stream,&value,sizeof(float));
+      }
+    KODE_Print("Saving state.. OK\n");
     return true;
   }
 
@@ -1225,12 +1227,8 @@ public: // extensions
   */
 
   bool clap_state_load(clap_istream *stream) {
-
+    KODE_Print("Loading state..\n");
     KODE_Assert(stream);
-    //KODE_ClapPrint("stream %p -> true \n",stream);
-
-#ifndef SKIP_STATE_SAVE
-
     uint32_t version = 0;
     stream->read(stream,&version,sizeof(uint32_t));
     uint32_t num_params = 0;
@@ -1240,10 +1238,7 @@ public: // extensions
       stream->read(stream,&value,sizeof(float));
       MInstance->setParameterValue(i,value);
     }
-
-    #endif // SKIP_STATE_SAVE
-
-
+    KODE_Print("Saving state.. OK\n");
     return true;
   }
 

@@ -66,7 +66,7 @@ public: // FUnknown
 
   int32_t VST3_API queryInterface(const VST3_Id _iid, void** obj) final {
     KODE_Vst3Print("iid: ");
-    VST3_PrintIID(_iid);
+    //VST3_PrintIID(_iid);
     if (VST3_iidEqual(VST3_IPluginFactory2_iid,_iid)) {
       *obj = (VST3_IPluginFactory2*)this;
       KODE_Vst3DPrint(" (IPluginFactory2) -> Ok\n");
@@ -138,7 +138,7 @@ public:
   int32_t VST3_API createInstance(const char* cid, const char* _iid, void** obj) final {
     KODE_Vst3Print("cid: ");
     //KODE_Vst3DPrint(cid);
-    VST3_PrintIID(cid);
+    //VST3_PrintIID(cid);
     if (VST3_iidEqual(MDescriptor->getLongId(),cid)) {
       KODE_Vst3DPrint(" (%s) -> Ok\n",MDescriptor->name);
 

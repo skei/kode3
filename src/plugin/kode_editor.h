@@ -87,7 +87,11 @@ public: // widget
     if (parameter) {
       int32_t index = parameter->index;
       float   value = AWidget->getValue();
-      value = parameter->from01(value);
+
+// convert to/from 01 in do_editor_updateparameter instead..
+// KODE_Vst3Instance, KODE_ClapInstance, ..
+//      value = parameter->from01(value);
+
       //KODE_Print("%i = %.3f\n",index,value);
       MListener->on_editor_updateParameter(index,value);
     }
@@ -297,7 +301,7 @@ public:
 
   //----------
 
-  void updateParameter(uint32_t AIndex, float AValue) {
+  void updateParameter(uint32_t AIndex, float AValue/*, bool ARedraw*/) {
     KODE_Parameter* parameter = MDescriptor->parameters[AIndex];
     KODE_Widget*    widget    = MParameterToWidget[AIndex];
     if (widget) {

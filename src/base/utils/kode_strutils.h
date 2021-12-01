@@ -300,6 +300,20 @@ bool KODE_SearchWildcards(char* buffer, const char* wildcards) {
 
 //----------
 
+// strlcpy/cat
+
+void KODE_Strlcpy(char* dst, const char* src, uint32_t length) {
+  if (strlen(src) >= length) {
+    strncpy(dst,src,length-1);
+    dst[length-1] = 0;
+  }
+  else {
+    strcpy(dst,src);
+  }
+}
+
+//----------
+
 // file.txt -> file
 // problem if there is a dot in the path
 // todo: find last dot..

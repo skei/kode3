@@ -1,12 +1,14 @@
 
-#define KODE_PLUGIN_EXE
+//#define KODE_PLUGIN_EXE
+#define KODE_PLUGIN_VST3
 #define KODE_PLUGIN_CLAP
+
 //#define KODE_DEBUG_CLAP
 
 //#define SKIP_STATE_SAVE
 
 #define KODE_GUI_XCB
-//#define KODE_DEBUG_PRINT_SOCKET
+#define KODE_DEBUG_PRINT_SOCKET
 // nc -U -l -k /tmp/kode.socket
 
 //----------

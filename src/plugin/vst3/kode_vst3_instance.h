@@ -37,8 +37,8 @@ typedef KODE_Queue<uint32_t,KODE_VST3_QUEUE_SIZE> VST3_UpdateQueue;
 //----------------------------------------------------------------------
 
 class KODE_Vst3Instance
-
-: public VST3_IComponent
+: public KODE_EditorListener
+, public VST3_IComponent
 , public VST3_IAudioProcessor
 , public VST3_IUnitInfo
 , public VST3_IConnectionPoint
@@ -88,7 +88,7 @@ public:
 //------------------------------
 
   KODE_Vst3Instance(KODE_Instance* AInstance) {
-    KODE_PRINT;
+    //KODE_PRINT;
     MRefCount = 1;
     MInstance = AInstance;
     MDescriptor = AInstance->getDescriptor();
@@ -99,7 +99,7 @@ public:
   //----------
 
   virtual ~KODE_Vst3Instance() {
-    KODE_PRINT;
+    //KODE_PRINT;
     deleteParameterInfo();
     destroyParameterBuffers();
   }
@@ -112,6 +112,43 @@ public:
   pid_t             getHostPid()    { return MHostPid; }
   pid_t             getHostTid()    { return MHostTid; }
   const char*       getHostName()   { return MHostName; }
+
+//------------------------------
+public: // KODE_EditorListener
+//------------------------------
+
+  #ifndef KODE_NO_GUI
+
+  /*
+    we run our gui in its own thread, but need to communicate with the
+    host on its gui thread.. so, when we tweak a parameter, we queue the
+    parameter (index), and send all updated ones to the host during onTimer
+    (see bottom)
+    the host should communicate the parameter change (audio thread) during
+    next process()
+  */
+
+  // AValue is 0..1 (widget-value)
+  // TODO: convert via parameter if necessary..
+
+  void on_editor_updateParameter(uint32_t AIndex, float AValue) override {
+    //KODE_Vst3Print("index: %i value: %.3f\n",AIndex,AValue);
+    //MEditorParameterValues[AIndex] = AValue;
+
+    KODE_Parameter* parameter = MDescriptor->parameters[AIndex];
+    float value = parameter->from01(AValue);
+    //float value = AValue;
+
+    MParameterValues[AIndex] = value;//AValue;
+    queueParameterToHost(AIndex,value/*AValue*/);
+  }
+
+  //----------
+
+  void on_editor_resize(uint32_t AWidth, uint32_t AHeight) override {
+  }
+
+  #endif
 
 //------------------------------
 public:
@@ -149,8 +186,8 @@ public:
     uint32_t num = MDescriptor->parameters.size();
     for (uint32_t i=0; i<num; i++) {
 
-//      float value = MInstance->getParameterValue(i);
-//      AEditor->updateParameterFromHost(i,value,ARedraw);
+      float value = MInstance->getParameterValue(i);
+      AEditor->updateParameter(i,value/*,ARedraw*/);
 
     }
   }
@@ -167,14 +204,14 @@ public:
     next process()
   */
 
-  #ifndef KODE_NO_GUI
-  void updateParameterFromEditor(uint32_t AIndex, float AValue) {
-    //KODE_Vst3Print("index: %i value: %.3f\n",AIndex,AValue);
-    //MEditorParameterValues[AIndex] = AValue;
-    MParameterValues[AIndex] = AValue;
-    queueParameterToHost(AIndex,AValue);
-  }
-  #endif
+//  #ifndef KODE_NO_GUI
+//  void updateParameterFromEditor(uint32_t AIndex, float AValue) {
+//    //KODE_Vst3Print("index: %i value: %.3f\n",AIndex,AValue);
+//    //MEditorParameterValues[AIndex] = AValue;
+//    MParameterValues[AIndex] = AValue;
+//    queueParameterToHost(AIndex,AValue);
+//  }
+//  #endif
 
 //------------------------------
 private:
@@ -690,11 +727,11 @@ public: // IComponent
 
   int32_t VST3_API getControllerClassId(VST3_Id classId) final {
     //KODE_Vst3Print("classId: ");
-    VST3_PrintIID(classId);
+    //VST3_PrintIID(classId);
     if (MDescriptor->options.has_editor) {
       memcpy(classId,MDescriptor->getLongEditorId(),16);
       //KODE_Vst3Print("-> ");
-      VST3_PrintIID(classId);
+      //VST3_PrintIID(classId);
       //KODE_Vst3Print(" -> Ok\n");
       return vst3_ResultOk;
     }
@@ -897,7 +934,7 @@ public: // IComponent
 
   int32_t VST3_API setActive(uint8_t state) final {
 
-    if (state) MInstance->on_plugin_activate();
+    if (state) MInstance->on_plugin_activate(MSampleRate,0,MBlockSize);
     else MInstance->on_plugin_deactivate();
 
     //KODE_Vst3Print("state: %i -> Ok\n",state);
@@ -1904,7 +1941,7 @@ public: // IEditController
     MParameterValues[id] = value;
     #ifndef KODE_NO_GUI
     if (MEditor) {
-//      MEditor->updateParameterFromHost(id,value);
+      MEditor->updateParameter(id,value);
     }
     #endif
     return vst3_ResultOk;
@@ -2019,11 +2056,17 @@ public: // IPlugView
           MPlugFrame->resizeView(this,&r);
         }
 
+/*
         MEditor = MInstance->on_plugin_openEditor(); // (parent);
-
 //        updateAllEditorParameters(MEditor,false);
-
         MEditor->open(w,h,parent);
+*/
+
+        MEditor = _kode_create_editor(this,MDescriptor);
+        MInstance->on_plugin_createEditor(MEditor);
+        MEditor->attach("",parent);
+        MEditor->show();
+        MInstance->on_plugin_openEditor(MEditor);
 
         //if (MRunLoop)
         MRunLoop->registerTimer(this,KODE_VST3_TIMER_MS);
@@ -2050,8 +2093,16 @@ public: // IPlugView
       //if (MRunLoop)
       MRunLoop->unregisterTimer(this);
 
+/*
       MEditor->close();
       MInstance->on_plugin_closeEditor();
+*/
+
+      MInstance->on_plugin_closeEditor(MEditor);
+      MEditor->hide();
+      MEditor->detach();
+      MInstance->on_plugin_destroyEditor(MEditor);
+      delete MEditor;
 
       MEditor = nullptr;
       //KODE_Vst3Print(" -> Ok\n");
@@ -2197,7 +2248,7 @@ public: // ITimerHandler
     #ifndef KODE_NO_GUI
       if (MEditor) {
 
-        MInstance->on_plugin_updateEditor();
+        MInstance->on_plugin_updateEditor(MEditor);
 
       }
       flushParametersToHost();

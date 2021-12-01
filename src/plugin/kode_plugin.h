@@ -100,16 +100,16 @@ KODE_Editor*      _kode_create_editor(KODE_EditorListener* AListener,KODE_Descri
 
 #define KODE_MAIN(D,I,E)                                                                              \
                                                                                                       \
-  KODE_Descriptor* _kode_create_descriptor() { \
-    return new D();                         \
-  }      \
-  \
-  KODE_Instance* _kode_create_instance(KODE_Descriptor* ADesc) { \
-    return new I(ADesc); \
-  }      \
-  \
+  KODE_Descriptor* _kode_create_descriptor() {                                                        \
+    return new D();                                                                                   \
+  }                                                                                                   \
+                                                                                                      \
+  KODE_Instance* _kode_create_instance(KODE_Descriptor* ADesc) {                                      \
+    return new I(ADesc);                                                                              \
+  }                                                                                                   \
+                                                                                                      \
   KODE_Editor* _kode_create_editor(KODE_EditorListener* AListener, KODE_Descriptor* ADescriptor) {    \
-    return new E(AListener,ADescriptor);                                              \
+    return new E(AListener,ADescriptor);                                                              \
   }                                                                                                   \
                                                                                                       \
   KODE_CLAP_MAIN(D,I,E);                                                                              \
