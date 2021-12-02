@@ -169,42 +169,44 @@ public:
 
   //----------
 
-    // 0x03030001 -> "3.3.1"
-    // buffer = 32 bytes, maxlen = 31
+  // 0x03030001 -> "3.3.1"
+  // buffer = 32 bytes, maxlen = 31
+  // '255.255.65535' + 0 = 14 chars..
 
   //char* getVersionString(char* buffer) {
   char* getVersionString() {
     char* buffer = MVersionString;
-    snprintf(buffer,31,"%i.%i.%i",((version & 0xff000000) >> 24),((version & 0x00ff0000) >> 16),(version & 0x0000ffff));
+    snprintf( buffer,
+              31, // safety...
+              "%i.%i.%i",
+              ((version & 0xff000000) >> 24),
+              ((version & 0x00ff0000) >> 16),
+               (version & 0x0000ffff)
+    );
     return buffer;
   }
 
   //----------
 
   /*
-
-  warning: ‘char* __builtin___strcat_chk(char*, const char*, long unsigned int)’
-
-  accessing 33 or more bytes at offsets 72 and 40 may overlap 1 byte at offset 72
-  [-Wrestrict]|
-
-
-
-
-
+    warning: ‘char* __builtin___strcat_chk(char*, const char*, long unsigned int)’
+    accessing 33 or more bytes at offsets 72 and 40 may overlap 1 byte at offset 72
+    [-Wrestrict]|
   */
 
   //char* getIdString(char* buffer) {
   char* getIdString() {
     char* buffer = MIdString;
-    char* ver = getVersionString();
-    //if ((strlen(name) + strlen(author) + strlen(ver) + 3) >= 255) {
-    //}
-    strcpy(buffer,name);
-    strcat(buffer,"/");
-    strcat(buffer,author);
-    strcat(buffer,"/");
-    strcat(buffer,ver);
+    char* ver    = getVersionString();
+    //strcpy(buffer,name);
+    //strcat(buffer,"/");
+    //strcat(buffer,author);
+    //strcat(buffer,"/");
+    //strcat(buffer,ver);
+    snprintf( buffer,
+              255, // safety...
+              "%s/%s/%s",name,author,ver
+    );
     return buffer;
   }
 
