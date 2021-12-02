@@ -199,10 +199,13 @@ private:
     float     f = 0.0;
     uint32_t  time = event->time;
     switch (event->note_expression.expression_id) {
+
       case CLAP_NOTE_EXPRESSION_VOLUME:      // x >= 0, use 20 * log(4 * x)
         break;
+
       case CLAP_NOTE_EXPRESSION_PAN:         // pan, 0 left, 0.5 center, 1 right
         break;
+
       case CLAP_NOTE_EXPRESSION_TUNING:      // relative tuning in semitone, from -120 to +120
         f = (event->note_expression.value / 48.0);
         bend = 8192 + (8192.0 * f);
@@ -211,20 +214,30 @@ private:
         msg3 = (bend >> 7) & 0x7f;
         MInstance->on_plugin_midi(time,msg1,msg2,msg3);
         break;
+
       case CLAP_NOTE_EXPRESSION_VIBRATO:     // 0..1
         break;
+
       case CLAP_NOTE_EXPRESSION_BRIGHTNESS:  // 0..1
         msg1 = KODE_MIDI_CONTROL_CHANGE + event->note_expression.channel;
         msg2 = 74;
         msg3 = event->note_expression.value * 127;
         MInstance->on_plugin_midi(time,msg1,msg2,msg3);
         break;
+
       case CLAP_NOTE_EXPRESSION_BREATH:      // 0..1
         break;
+
       case CLAP_NOTE_EXPRESSION_PRESSURE:    // 0..1
         break;
+
       case CLAP_NOTE_EXPRESSION_TIMBRE:      // 0..1
         break;
+
+      default:
+        // unknown expression
+        break;
+
     } // switch
     MInstance->on_plugin_midi(time,msg1,msg2,msg3);
   }

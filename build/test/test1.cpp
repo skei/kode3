@@ -1,7 +1,14 @@
 
 //#define KODE_PLUGIN_EXE
-#define KODE_PLUGIN_VST3
-#define KODE_PLUGIN_CLAP
+//#define KODE_PLUGIN_LADSPA
+//#define KODE_PLUGIN_DSSI
+//#define KODE_PLUGIN_LV2
+//#define KODE_PLUGIN_VST2
+//#define KODE_PLUGIN_VST3
+//#define KODE_PLUGIN_CLAP
+
+#define KODE_PLUGIN_ALL
+
 
 //#define KODE_DEBUG_CLAP
 
