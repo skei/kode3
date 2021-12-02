@@ -6,6 +6,7 @@
 #include "plugin/kode_descriptor.h"
 #include "plugin/kode_instance.h"
 #include "plugin/kode_editor.h"
+#include "plugin/clap/kode_clap_utils.h"
 
 typedef KODE_Queue<uint32_t,1024> KODE_HostParameterQueue;
 
@@ -18,33 +19,6 @@ class KODE_ClapInstance
 private:
 //------------------------------
 
-  const char* note_expression_names[8] = {
-    "CLAP_NOTE_EXPRESSION_VOLUME",      // x >= 0, use 20 * log(4 * x)
-    "CLAP_NOTE_EXPRESSION_PAN",         // pan, 0 left, 0.5 center, 1 right
-    "CLAP_NOTE_EXPRESSION_TUNING",      // relative tuning in semitone, from -120 to +120
-    "CLAP_NOTE_EXPRESSION_VIBRATO",     // 0..1
-    "CLAP_NOTE_EXPRESSION_BRIGHTNESS",  // 0..1
-    "CLAP_NOTE_EXPRESSION_BREATH",      // 0..1
-    "CLAP_NOTE_EXPRESSION_PRESSURE",    // 0..1
-    "CLAP_NOTE_EXPRESSION_TIMBRE"       // 0..1
-  };
-
-  //const char* param_value_flag_names[3] = {
-  //  "CLAP_EVENT_PARAM_BEGIN_ADJUST",    // live user adjustment begun
-  //  "CLAP_EVENT_PARAM_END_ADJUST",      // live user adjustment ended
-  //  "CLAP_EVENT_PARAM_SHOULD_RECORD"    // should record this parameter change and create an automation point?
-  //};
-
-  //const char* transport_event_flag_names[8] = {
-  //  "CLAP_TRANSPORT_HAS_TEMPO",
-  //  "CLAP_TRANSPORT_HAS_BEATS_TIMELINE",
-  //  "CLAP_TRANSPORT_HAS_SECONDS_TIMELINE",
-  //  "CLAP_TRANSPORT_HAS_TIME_SIGNATURE",
-  //  "CLAP_TRANSPORT_IS_PLAYING",
-  //  "CLAP_TRANSPORT_IS_RECORDING",
-  //  "CLAP_TRANSPORT_IS_LOOP_ACTIVE",
-  //  "CLAP_TRANSPORT_IS_WITHIN_PRE_ROLL",
-  //};
 
 //------------------------------
 private:
@@ -73,7 +47,7 @@ public:
 //------------------------------
 
   KODE_ClapInstance(KODE_Instance* AInstance, KODE_ClapHost* AHost) {
-    //KODE_ClapPrint("\n");
+    //KODE_Print("\n");
     MInstance = AInstance;
     MDescriptor = MInstance->getDescriptor();
     MHost = AHost;
@@ -82,7 +56,7 @@ public:
   //----------
 
   virtual ~KODE_ClapInstance() {
-    //KODE_ClapPrint("\n");
+    //KODE_Print("\n");
     if (MInstance) delete MInstance;
   }
 
@@ -105,19 +79,14 @@ public: // editor listener
     - the plugin is responsible to send the parameter value to its audio processor
   */
 
-  // AValue is 0..1 (widget value)
-  // todo: convert via parameter if necessary..
-
   void on_editor_updateParameter(uint32_t AIndex, float AValue) override {
-    //KODE_ClapPrint("index %i value %.3f\n",AIndex,AValue);
+    //KODE_Print("index %i value %.3f\n",AIndex,AValue);
     KODE_Parameter* parameter = MDescriptor->parameters[AIndex];
     float value = parameter->from01(AValue);
-    MInstance->setParameterValue(AIndex,value/*AValue*/);
+    MInstance->setParameterValue(AIndex,value);
     MHostParameterQueue.write(AIndex);
-
     //if (MIsProcessing) MHost->request_process();
     //else MHost->params_request_flush();
-
     //if (!MIsProcessing) MHost->params_request_flush();
 
   }
@@ -125,21 +94,15 @@ public: // editor listener
   //----------
 
   void on_editor_resize(uint32_t AWidth, uint32_t AHeight) override {
-    //KODE_ClapPrint("width %i height %i\n",AWidth,AHeight);
+    //KODE_Print("width %i height %i\n",AWidth,AHeight);
   }
+
 
 //------------------------------
 private:
 //------------------------------
 
   void handleNoteOn(const clap_event* event) {
-    KODE_Print("CLAP_EVENT_NOTE_ON\n");
-    //KODE_ClapPrint("CLAP_EVENT_NOTE_ON\n");
-    //KODE_ClapPrint("- time %i\n",event->time);
-    //KODE_ClapPrint("- port_index %i\n",event->note.port_index);
-    //KODE_ClapPrint("- key %i\n",event->note.key);
-    //KODE_ClapPrint("- channel %i\n",event->note.channel);
-    //KODE_ClapPrint("- velocity %.3f\n",event->note.velocity);
     uint8_t msg1 = KODE_MIDI_NOTE_ON + event->note.channel;
     uint8_t msg2 = event->note.key;
     uint8_t msg3 = event->note.velocity * 127.0f;
@@ -149,13 +112,6 @@ private:
   //----------
 
   void handleNoteOff(const clap_event* event) {
-    KODE_Print("CLAP_EVENT_NOTE_OFF\n");
-    //KODE_ClapPrint("CLAP_EVENT_NOTE_OFF\n");
-    //KODE_ClapPrint("- time %i\n",event->time);
-    //KODE_ClapPrint("- port_index %i\n",event->note.port_index);
-    //KODE_ClapPrint("- key %i\n",event->note.key);
-    //KODE_ClapPrint("- channel %i\n",event->note.channel);
-    //KODE_ClapPrint("- velocity %.3f\n",event->note.velocity);
     uint8_t msg1 = KODE_MIDI_NOTE_OFF + event->note.channel;
     uint8_t msg2 = event->note.key;
     uint8_t msg3 = event->note.velocity * 127.0f;
@@ -165,37 +121,16 @@ private:
   //----------
 
   void handleNoteEnd(const clap_event* event) {
-    KODE_Print("CLAP_EVENT_NOTE_END\n");
-    //KODE_ClapPrint("CLAP_EVENT_NOTE_END\n");
-    //KODE_ClapPrint("- time %i\n",event->time);
-    //KODE_ClapPrint("- port_index %i\n",event->note.port_index);
-    //KODE_ClapPrint("- key %i\n",event->note.key);
-    //KODE_ClapPrint("- channel %i\n",event->note.channel);
-    //KODE_ClapPrint("- velocity %.3f\n",event->note.velocity);
   }
 
   //----------
 
   void handleNoteChoke(const clap_event* event) {
-    KODE_Print("CLAP_EVENT_NOTE_CHOKE\n");
-    //KODE_ClapPrint("CLAP_EVENT_NOTE_CHOKE\n");
-    //KODE_ClapPrint("- time %i\n",event->time);
-    //KODE_ClapPrint("- port_index %i\n",event->note.port_index);
-    //KODE_ClapPrint("- key %i\n",event->note.key);
-    //KODE_ClapPrint("- channel %i\n",event->note.channel);
-    //KODE_ClapPrint("- velocity %.3f\n",event->note.velocity);
   }
 
   //----------
 
   void handleNoteExpression(const clap_event* event) {
-    //KODE_ClapPrint("CLAP_EVENT_NOTE_EXPRESSION\n");
-    //KODE_ClapPrint("- time %i\n",event->time);
-    //KODE_ClapPrint("- expression_id %i (%s)\n",event->note_expression.expression_id,note_expression_names[event->note_expression.expression_id]);
-    //KODE_ClapPrint("- port_index %i\n",event->note_expression.port_index);
-    //KODE_ClapPrint("- key %i\n",event->note_expression.key);
-    //KODE_ClapPrint("- channel %i\n",event->note_expression.channel);
-    //KODE_ClapPrint("- value %.3f\n",event->note_expression.value);
     uint8_t   msg1 = 0;
     uint8_t   msg2 = 0;
     uint8_t   msg3 = 0;
@@ -204,16 +139,14 @@ private:
     uint32_t  time = event->time;
     switch (event->note_expression.expression_id) {
 
-      case CLAP_NOTE_EXPRESSION_VOLUME:      // x >= 0, use 20 * log(4 * x)
-        KODE_Print("CLAP_NOTE_EXPRESSION_VOLUME\n");
+      case CLAP_NOTE_EXPRESSION_VOLUME:
+        // x >= 0, use 20 * log(4 * x)
         break;
-
-      case CLAP_NOTE_EXPRESSION_PAN:         // pan, 0 left, 0.5 center, 1 right
-        KODE_Print("CLAP_NOTE_EXPRESSION_PAN\n");
+      case CLAP_NOTE_EXPRESSION_PAN:
+        // pan, 0 left, 0.5 center, 1 right
         break;
-
-      case CLAP_NOTE_EXPRESSION_TUNING:      // relative tuning in semitone, from -120 to +120
-        KODE_Print("CLAP_NOTE_EXPRESSION_TUNING\n");
+      case CLAP_NOTE_EXPRESSION_TUNING:
+        // relative tuning in semitone, from -120 to +120
         f = (event->note_expression.value / 48.0);
         bend = 8192 + (8192.0 * f);
         msg1 = KODE_MIDI_PITCHBEND + event->note_expression.channel;
@@ -221,72 +154,49 @@ private:
         msg3 = (bend >> 7) & 0x7f;
         MInstance->on_plugin_midi(time,msg1,msg2,msg3);
         break;
-
-      case CLAP_NOTE_EXPRESSION_VIBRATO:     // 0..1
-        KODE_Print("CLAP_NOTE_EXPRESSION_VIBRATO\n");
+      case CLAP_NOTE_EXPRESSION_VIBRATO:
+        // 0..1
         break;
-
-      case CLAP_NOTE_EXPRESSION_BRIGHTNESS:  // 0..1
-        KODE_Print("CLAP_NOTE_EXPRESSION_BRIGHTNESS\n");
+      case CLAP_NOTE_EXPRESSION_BRIGHTNESS:
+        // 0..1
         msg1 = KODE_MIDI_CONTROL_CHANGE + event->note_expression.channel;
         msg2 = 74;
         msg3 = event->note_expression.value * 127;
         MInstance->on_plugin_midi(time,msg1,msg2,msg3);
         break;
-
-      case CLAP_NOTE_EXPRESSION_BREATH:      // 0..1
-        KODE_Print("CLAP_NOTE_EXPRESSION_BREATH\n");
+      case CLAP_NOTE_EXPRESSION_BREATH:
+        // 0..1
         break;
-
-      case CLAP_NOTE_EXPRESSION_PRESSURE:    // 0..1
-        KODE_Print("CLAP_NOTE_EXPRESSION_PRESSURE\n");
+      case CLAP_NOTE_EXPRESSION_PRESSURE:
+        // 0..1
         break;
-
-      case CLAP_NOTE_EXPRESSION_TIMBRE:      // 0..1
-        KODE_Print("CLAP_NOTE_EXPRESSION_TIMBRE\n");
+      case CLAP_NOTE_EXPRESSION_TIMBRE:
+        // 0..1
         break;
-
       default:
-        KODE_Print("unknown CLAP_EVENT_NOTE_EXPRESSION\n");
-        // unknown expression
         break;
 
-    } // switch
+    } // switch, note expression id
+
     MInstance->on_plugin_midi(time,msg1,msg2,msg3);
   }
 
   //----------
 
   void handleNoteMask(const clap_event* event) {
-    KODE_Print("CLAP_EVENT_NOTE_MASK\n");
-    //KODE_ClapPrint("CLAP_EVENT_NOTE_MASK\n");
-    //KODE_ClapPrint("- time %i\n",event->time);
-    //KODE_ClapPrint("- port_index %i\n",event->note_mask.port_index);
-    //KODE_ClapPrint("- note_mask %i (%11b)\n",event->note_mask.note_mask,event->note_mask.note_mask);
-    //KODE_ClapPrint("- root_note %i\n",event->note_mask.root_note);
   }
 
   //----------
 
   void handleParamValue(const clap_event* event) {
-    KODE_Print("CLAP_EVENT_PARAM_VALUE\n");
-    //KODE_Print("CLAP_EVENT_PARAM_VALUE %i %.3f\n",event->param_value.param_id,event->param_value.value);
-    //KODE_ClapPrint("CLAP_EVENT_PARAM_VALUE\n");
-    //KODE_ClapPrint("- time %i\n",event->time);
-    //KODE_ClapPrint("- cookie %p\n",event->param_value.cookie);
-    //KODE_ClapPrint("- param_id %i\n",event->param_value.param_id);
-    //KODE_ClapPrint("- port_index %i\n",event->param_value.port_index);
-    //KODE_ClapPrint("- key %i\n",event->param_value.key);
-    //KODE_ClapPrint("- channel %i\n",event->param_value.channel);
-    //KODE_ClapPrint("- flags %i (%08b)\n",event->param_value.flags,event->param_value.flags);
-    //KODE_ClapPrint("- value %.3f\n",event->param_value.value);
-
-    uint32_t index = event->param_value.param_id;
-    float    value = event->param_value.value;
+    uint32_t  index   = event->param_value.param_id;
+    float     value   = event->param_value.value;
+    //float v = MDescriptor->parameters[index]->from01(value);
+    MInstance->setParameterValue(index,value);
     MInstance->on_plugin_parameter(index,value);
-
     if (MEditor && MEditorIsOpen) {
-      //TODO (or is it done already=) queue, and do all in refresh (timer?)
+      value = MDescriptor->parameters[index]->to01(value);
+      //TODO queue, and do all in refresh/timer ((or is it done already?)
       MEditor->updateParameter(index,value);
     }
   }
@@ -294,58 +204,21 @@ private:
   //----------
 
   void handleParamMod(const clap_event* event) {
-    KODE_Print("CLAP_EVENT_PARAM_MOD\n");
-    //KODE_ClapPrint("CLAP_EVENT_PARAM_MOD\n");
-    //KODE_ClapPrint("- time %i\n",event->time);
-    //KODE_ClapPrint("- cookie %p\n",event->param_mod.cookie);
-    //KODE_ClapPrint("- param_id %i\n",event->param_mod.param_id);
-    //KODE_ClapPrint("- port_index %i\n",event->param_mod.port_index);
-    //KODE_ClapPrint("- key %i\n",event->param_mod.key);
-    //KODE_ClapPrint("- channel %i\n",event->param_mod.channel);
-    //KODE_ClapPrint("- amount %.3f\n",event->param_mod.amount);
   }
 
   //----------
 
   void handleTransport(const clap_event* event) {
-    KODE_Print("CLAP_EVENT_TRANSPORT\n");
-    //KODE_ClapPrint("CLAP_EVENT_TRANSPORT\n");
-    //KODE_ClapPrint("- time %i\n",event->time);
-    //KODE_ClapPrint("- flags %i (%08b)\n",event->time_info.flags,event->time_info.flags,event->time_info.flags);
-    //KODE_ClapPrint("- song_pos_beats %i\n",event->time_info.song_pos_beats);
-    //KODE_ClapPrint("- song_pos_seconds %f\n",event->time_info.song_pos_seconds);
-    //KODE_ClapPrint("- tempo %.2f\n",event->time_info.tempo);
-    //KODE_ClapPrint("- tempo_inc %.2f\n",event->time_info.tempo_inc);
-    //KODE_ClapPrint("- bar_start %i\n",event->time_info.bar_start);
-    //KODE_ClapPrint("- bar_number %i\n",event->time_info.bar_number);
-    //KODE_ClapPrint("- loop_start_beats %i\n",event->time_info.loop_start_beats);
-    //KODE_ClapPrint("- loop_end_beats %i\n",event->time_info.loop_end_beats);
-    //KODE_ClapPrint("- loop_start_seconds %f\n",event->time_info.loop_start_seconds);
-    //KODE_ClapPrint("- loop_end_seconds %f\n",event->time_info.loop_end_seconds);
-    //KODE_ClapPrint("- tsig_num %i\n",event->time_info.tsig_num);
-    //KODE_ClapPrint("- tsig_denom %i\n",event->time_info.tsig_denom);
   }
 
   //----------
 
   void handleMidi(const clap_event* event) {
-    KODE_Print("CLAP_EVENT_MIDI\n");
-    //KODE_ClapPrint("CLAP_EVENT_MIDI\n");
-    //KODE_ClapPrint("- time %i\n",event->time);
-    //KODE_ClapPrint("- port_index %i\n",event->midi.port_index);
-    //KODE_ClapPrint("- port_index %i\n",event->midi.port_index);
-    //KODE_ClapPrint("- data %02x 02x 02x\n",event->midi.data[0],event->midi.data[1],event->midi.data[2]);
   }
 
   //----------
 
   void handleMidiSysex(const clap_event* event) {
-    KODE_Print("CLAP_EVENT_MIDI_SYSEX\n");
-    //KODE_ClapPrint("CLAP_EVENT_MIDI_SYSEX\n");
-    //KODE_ClapPrint("- time %i\n",event->time);
-    //KODE_ClapPrint("- port_index %i\n",event->midi_sysex.port_index);
-    //KODE_ClapPrint("- size %i\n",event->midi_sysex.size);
-    //KODE_ClapPrint("- buffer %p\n",event->midi_sysex.buffer);
   }
 
 //------------------------------
@@ -358,6 +231,11 @@ private:
       for (uint32_t i=0; i<num; i++) {
         const clap_event* event = in_events->get(in_events,i);
         if (event) {
+
+          #ifdef KODE_DEBUG_CLAP
+            KODE_PrintClapEvent(event);
+          #endif
+
           switch (event->type) {
             case CLAP_EVENT_NOTE_ON:          handleNoteOn(event);          break;
             case CLAP_EVENT_NOTE_OFF:         handleNoteOff(event);         break;
@@ -435,8 +313,12 @@ public:
   bool clap_instance_init() {
     //KODE_ClapPrint("-> true\n");
     MInstance->on_plugin_init();
+    MInstance->setDefaultParameterValues();
+    MInstance->updateAllParameters();
     return true;
   }
+
+  //----------
 
   /*
     Free the plugin and its resources.
@@ -447,6 +329,8 @@ public:
     //KODE_ClapPrint("\n");
     MInstance->on_plugin_destroy();
   }
+
+  //----------
 
   /*
     Activate and deactivate the plugin.
@@ -467,12 +351,16 @@ public:
     return true;
   }
 
+  //----------
+
   /* */
 
   void clap_instance_deactivate() {
     //KODE_ClapPrint("\n");
     MInstance->on_plugin_deactivate();
   }
+
+  //----------
 
   /*
     Set to true before processing,
@@ -487,6 +375,8 @@ public:
     return true;
   }
 
+  //----------
+
   /* */
 
   void clap_instance_stop_processing() {
@@ -495,10 +385,11 @@ public:
     MInstance->on_plugin_stopProcessing();
   }
 
+  //----------
+
   /*
     process audio, events, ...
     [audio-thread]
-
     TODO: handle ports/channels better..
   */
 
@@ -533,6 +424,8 @@ public:
     return CLAP_PROCESS_CONTINUE;
   }
 
+  //----------
+
   /*
     Query an extension.
     The returned pointer is owned by the plugin.
@@ -557,6 +450,8 @@ public:
     return ptr;
   }
 
+  //----------
+
   /*
     Called by the host on the main thread in response to a previous call to:
     host->request_callback(host);
@@ -571,9 +466,9 @@ public:
 public: // extensions
 //------------------------------
 
-  //--------------------
-  // clap.audio-ports-config
-  //--------------------
+  //------------------------------
+  // audio ports config
+  //------------------------------
 
   /*
     This extension provides a way for the plugin to describe possible ports
@@ -608,6 +503,8 @@ public: // extensions
     return 1;
   }
 
+  //----------
+
   /*
     gets information about a configuration
     [main-thread]
@@ -635,6 +532,8 @@ public: // extensions
     return false;
   }
 
+  //----------
+
   /*
    selects the configuration designated by id
    returns true if the configuration could be applied
@@ -647,9 +546,9 @@ public: // extensions
     return true;
   }
 
-  //--------------------
-  // clap.audio-ports
-  //--------------------
+  //------------------------------
+  // audio ports
+  //------------------------------
 
   /*
     This extension provides a way for the plugin to describe its current audio
@@ -697,6 +596,8 @@ public: // extensions
     }
   }
 
+  //----------
+
   /*
     get info about about an audio port.
     [main-thread]
@@ -740,9 +641,9 @@ public: // extensions
     return false;
   }
 
-  //--------------------
-  // clap.event-filter
-  //--------------------
+  //------------------------------
+  // event filter
+  //------------------------------
 
   /*
     This extension lets the host know which event types the plugin is
@@ -774,9 +675,9 @@ public: // extensions
     return false;
   }
 
-  //--------------------
-  // clap.fd-support
-  //--------------------
+  //------------------------------
+  // fd support
+  //------------------------------
 
   /*
   */
@@ -799,9 +700,9 @@ public: // extensions
     //KODE_ClapPrint("fd %i flags %i\n",fd,flags);
   }
 
-  //--------------------
-  // clap.gui
-  //--------------------
+  //------------------------------
+  // gui
+  //------------------------------
 
   /*
     This extension is split in two interfaces:
@@ -836,11 +737,15 @@ public: // extensions
 
   bool clap_gui_create() {
     MEditorIsOpen = false;
+
     MEditor = _kode_create_editor(this,MDescriptor);
     bool result = MInstance->on_plugin_createEditor(MEditor);
+
     //KODE_ClapPrint("-> %s\n", result ? "true" : "false" );
     return result;
   }
+
+  //----------
 
   /*
     Free all resources associated with the gui.
@@ -857,6 +762,8 @@ public: // extensions
     }
   }
 
+  //----------
+
   /*
     Set the absolute GUI scaling factor.
     [main-thread]
@@ -868,6 +775,8 @@ public: // extensions
       MEditor->setScale(scale);
     }
   }
+
+  //----------
 
   /*
     Get the current size of the plugin UI, with the scaling applied.
@@ -882,6 +791,8 @@ public: // extensions
     return true;
   }
 
+  //----------
+
   /*
     [main-thread]
   */
@@ -891,6 +802,8 @@ public: // extensions
     if (MDescriptor->options.can_resize_editor) return true;
     return false;
   }
+
+  //----------
 
   /*
     If the plugin gui is resizable, then the plugin will calculate the closest
@@ -906,6 +819,8 @@ public: // extensions
     *height = MDescriptor->editorHeight;
   }
 
+  //----------
+
   /*
     Sets the window size
     Returns true if the size is supported.
@@ -920,6 +835,8 @@ public: // extensions
     return true;
   }
 
+  //----------
+
   /*
     Show the window.
     [main-thread]
@@ -929,10 +846,13 @@ public: // extensions
     //KODE_ClapPrint("\n");
     if (MEditor && !MEditorIsOpen) {
       MEditorIsOpen = MInstance->on_plugin_openEditor(MEditor);
+      MInstance->updateAllEditorParameters(MEditor,false);
       MEditor->show();
 
     }
   }
+
+  //----------
 
   /*
     Hide the window, this method do not free the resources, it just hides
@@ -948,9 +868,9 @@ public: // extensions
     }
   }
 
-  //--------------------
-  // clap.gui-x11
-  //--------------------
+  //------------------------------
+  // gui x11
+  //------------------------------
 
   /*
   */
@@ -964,17 +884,14 @@ public: // extensions
 
   bool clap_gui_x11_attach(const char* display_name, unsigned long window) {
     //KODE_ClapPrint("display_name: %s, window: %i -> true\n",display_name,window);
-
     MEditor->attach(display_name,(void*)window);
-
-//    MEditorIsOpen = MInstance->on_plugin_openEditor(MEditor);     // see show?
-
+    //MEditorIsOpen = MInstance->on_plugin_openEditor(MEditor);     // see show?
     return true;
   }
 
-  //--------------------
-  // clap.latency
-  //--------------------
+  //------------------------------
+  // latency
+  //------------------------------
 
   /*
     Returns the plugin latency.
@@ -986,9 +903,9 @@ public: // extensions
     return 0;
   }
 
-  //--------------------
-  // clap.note-name
-  //--------------------
+  //------------------------------
+  // note name
+  //------------------------------
 
   /*
   */
@@ -1005,6 +922,8 @@ public: // extensions
     return 0;
   }
 
+  //----------
+
   /*
     Returns true on success and stores the result into note_name
     [main-thread]
@@ -1015,9 +934,9 @@ public: // extensions
     return false;
   }
 
-  //--------------------
-  // clap.params
-  //--------------------
+  //------------------------------
+  // params
+  //------------------------------
 
   /*
     The host sees the plugin as an atomic entity; and acts as a controler on
@@ -1104,6 +1023,8 @@ public: // extensions
     return MDescriptor->parameters.size();
   }
 
+  //----------
+
   /*
     Copies the parameter's info to param_info and returns true on success.
     [main-thread]
@@ -1134,11 +1055,13 @@ public: // extensions
     param_info->flags         = flags;
     param_info->id            = param_index;
     param_info->cookie        = parameter; //nullptr;
-    param_info->min_value     = parameter->min_value;//0.0;
-    param_info->max_value     = parameter->max_value;//1.0;
-    param_info->default_value = parameter->def_value;//0.5;
+    param_info->min_value     = parameter->min_value; // 0.00
+    param_info->max_value     = parameter->max_value; // 1.0
+    param_info->default_value = parameter->def_value; // parameter->to01(parameter->def_value);
     return true;
   }
+
+  //----------
 
   /*
     Gets the parameter plain value.
@@ -1147,10 +1070,13 @@ public: // extensions
 
   bool clap_params_get_value(clap_id param_id, double *value) {
     float v = MInstance->getParameterValue(param_id); // !!!
+    //v = MDescriptor->parameters[param_id]->from01(v);
     //KODE_ClapPrint("param_id %i -> *value %.3f, true\n",param_id,v);
     *value = v;
     return true;
   }
+
+  //----------
 
   /*
     Formats the display text for the given parameter value.
@@ -1167,6 +1093,8 @@ public: // extensions
     return true;
   }
 
+  //----------
+
   /*
     Converts the display text to a parameter value.
     [main-thread]
@@ -1180,6 +1108,8 @@ public: // extensions
     return true;
   }
 
+  //----------
+
   /*
     Flushes a set of parameter changes.
     This method must not be called concurrently to clap_plugin->process().
@@ -1190,13 +1120,14 @@ public: // extensions
 
   void clap_params_flush(const clap_event_list *input_parameter_changes, const clap_event_list *output_parameter_changes) {
     //KODE_ClapPrint("\n");
+    KODE_Print("\n");
     handleInputEvents(input_parameter_changes);
     handleOutputEvents(output_parameter_changes);
   }
 
-  //--------------------
-  // clap.render
-  //--------------------
+  //------------------------------
+  // render
+  //------------------------------
 
   /*
     The render extension is used to let the plugin know if it has "realtime"
@@ -1219,9 +1150,9 @@ public: // extensions
     MRenderMode = mode;
   }
 
-  //--------------------
-  // clap.state
-  //--------------------
+  //------------------------------
+  // state
+  //------------------------------
 
   /*
   */
@@ -1253,6 +1184,8 @@ public: // extensions
     return true;
   }
 
+  //----------
+
   /*
     Tell the host that the plugin state has changed and should be saved again.
     If a parameter value changes, then it is implicit that the state is dirty.
@@ -1279,9 +1212,9 @@ public: // extensions
     return true;
   }
 
-  //--------------------
-  // clap.timer-support
-  //--------------------
+  //------------------------------
+  // timer support
+  //------------------------------
 
   /*
   */

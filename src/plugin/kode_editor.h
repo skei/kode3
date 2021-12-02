@@ -87,12 +87,10 @@ public: // widget
     if (parameter) {
       int32_t index = parameter->index;
       float   value = AWidget->getValue();
-
-// convert to/from 01 in do_editor_updateparameter instead..
-// KODE_Vst3Instance, KODE_ClapInstance, ..
-//      value = parameter->from01(value);
-
+      // convert to/from 01 in do_editor_updateparameter instead..
+      // KODE_Vst3Instance, KODE_ClapInstance, ..
       //KODE_Print("%i = %.3f\n",index,value);
+      //value = parameter->from01(value);
       MListener->on_editor_updateParameter(index,value);
     }
   }
@@ -265,6 +263,11 @@ public:
 
   //----------
 
+  //void update() {
+  //}
+
+  //----------
+
   void setScale(float AScale) {
     MScale = AScale;
   }
@@ -276,11 +279,6 @@ public:
     //if (MWindow) MWindow->resizeWindow(width,height);
     return false;
   }
-
-  //----------
-
-  //void update() {
-  //}
 
   //----------
 
@@ -301,13 +299,18 @@ public:
 
   //----------
 
-  void updateParameter(uint32_t AIndex, float AValue/*, bool ARedraw*/) {
-    KODE_Parameter* parameter = MDescriptor->parameters[AIndex];
-    KODE_Widget*    widget    = MParameterToWidget[AIndex];
+  // todo: queue parameter changes, update in refresh/timer/idle
+
+  // expects 0..1
+
+  void updateParameter(uint32_t AIndex, float AValue, bool ARedraw=true) {
+    //KODE_Print("%i %f\n",AIndex,AValue);
+    //KODE_Parameter* parameter = MDescriptor->parameters[AIndex];
+    KODE_Widget* widget = MParameterToWidget[AIndex];
     if (widget) {
-      float value = parameter->to01(AValue);
-      widget->setValue(value);
-      widget->redraw();
+      //float value = parameter->to01(AValue);
+      widget->setValue(AValue);
+      if (ARedraw) widget->redraw();
     }
   }
 

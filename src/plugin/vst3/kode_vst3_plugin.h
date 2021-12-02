@@ -141,14 +141,12 @@ public:
     //VST3_PrintIID(cid);
     if (VST3_iidEqual(MDescriptor->getLongId(),cid)) {
       KODE_Vst3DPrint(" (%s) -> Ok\n",MDescriptor->name);
-
       //INSTANCE* instance = new INSTANCE(MDescriptor);
-
       KODE_Instance* instance = _kode_create_instance(MDescriptor);
+      instance->setPluginFormat(KODE_PLUGIN_FORMAT_VST3);
       KODE_Vst3Instance* vst3_instance = new KODE_Vst3Instance(instance);
 
-      instance->on_plugin_init(); //  ->on_plugin_destroy called in vst3_instance.release()
-
+//      instance->on_plugin_init(); //  ->on_plugin_destroy called in vst3_instance.release()
 //      instance->setDefaultParameterValues();
 //      instance->updateAllParameters();
 

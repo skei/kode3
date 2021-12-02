@@ -8,13 +8,13 @@
 #include "plugin/kode_process_context.h"
 
 
-class KODE_Instance
-/*: public KODE_EditorListener*/ {
+class KODE_Instance {
 
 //------------------------------
 private:
 //------------------------------
 
+  uint32_t          MPluginFormat     = KODE_PLUGIN_FORMAT_NONE;
   KODE_Descriptor*  MDescriptor       = nullptr;
   float*            MParameterValues  = nullptr;
 
@@ -23,7 +23,6 @@ public:
 //------------------------------
 
   KODE_Instance(KODE_Descriptor* ADescriptor) {
-    //KODE_PRINT;
     MDescriptor = ADescriptor;
     MParameterValues = (float*)malloc(MDescriptor->parameters.size() * sizeof(float));
   }
@@ -31,7 +30,6 @@ public:
   //----------
 
   virtual ~KODE_Instance() {
-    //KODE_PRINT;
     if (MParameterValues) free(MParameterValues);
     if (MDescriptor) delete MDescriptor;
   }
@@ -40,33 +38,13 @@ public:
 public:
 //------------------------------
 
-  KODE_Descriptor* getDescriptor() {
-    return MDescriptor;
-  }
+  KODE_Descriptor*  getDescriptor()                     { return MDescriptor; }
+  float             getParameterValue(uint32_t AIndex)  { return MParameterValues[AIndex]; }
+  float*            getParameterValueBuffer()           { return MParameterValues; }
+  uint32_t          getPluginFormat()                   { return MPluginFormat; }
 
-  float* getParameterValueBuffer() {
-    return MParameterValues;
-  }
-
-  void setParameterValue(uint32_t AIndex, float AValue) {
-    MParameterValues[AIndex] = AValue;
-  }
-
-  float getParameterValue(uint32_t AIndex) {
-    return MParameterValues[AIndex];
-  }
-
-////------------------------------
-//public: // editor listener
-////------------------------------
-//
-//  void on_editor_updateParameter(uint32_t AIndex, float AValue) override {
-//    KODE_Print("index %i value %.3f\n",AIndex,AValue);
-//  }
-//
-//  void on_editor_resize(uint32_t AWidth, uint32_t AHeight) override {
-//    KODE_Print("width %i height %i\n",AWidth,AHeight);
-//  }
+  void  setPluginFormat(uint32_t APluginFormat)           { MPluginFormat = APluginFormat; }
+  void  setParameterValue(uint32_t AIndex, float AValue)  { MParameterValues[AIndex] = AValue; }
 
 //------------------------------
 public:
@@ -92,9 +70,50 @@ public:
   virtual void          on_plugin_closeEditor(KODE_Editor* AEditor) {}
   virtual void          on_plugin_updateEditor(KODE_Editor* AEditor) {}
 
-//  virtual bool          on_plugin_openEditor(KODE_Editor* AEditor) { return false; }
-//  virtual void          on_plugin_closeEditor(KODE_Editor* AEditor) {}
-//  virtual uint32_t      on_plugin_updateEditor(KODE_Editor* AEditor) { return 0; }
+//------------------------------
+public:
+//------------------------------
+
+  void setDefaultParameterValues() {
+    uint32_t num = MDescriptor->parameters.size();
+    for (uint32_t i=0; i<num; i++) {
+      KODE_Parameter* parameter = MDescriptor->parameters[i];
+      float value = parameter->def_value;
+      MParameterValues[i] = value;
+    }
+  }
+
+  //----------
+
+  void updateAllParameters() {
+    uint32_t num = MDescriptor->parameters.size();
+    for (uint32_t i=0; i<num; i++) {
+      float value = MParameterValues[i];
+      if (MPluginFormat == KODE_PLUGIN_FORMAT_VST3) {
+        KODE_Parameter* parameter = MDescriptor->parameters[i];
+        value = parameter->from01(value);
+      }
+      on_plugin_parameter(i,value);
+    }
+  }
+
+  //----------
+
+  #ifndef KODE_NO_GUI
+  void updateAllEditorParameters(KODE_Editor* AEditor, bool ARedraw=true) {
+    uint32_t num = MDescriptor->parameters.size();
+    for (uint32_t i=0; i<num; i++) {
+      float value = MParameterValues[i];
+      if (MPluginFormat == KODE_PLUGIN_FORMAT_CLAP) {
+        KODE_Parameter* parameter = MDescriptor->parameters[i];
+        value = parameter->to01(value);
+      }
+      AEditor->updateParameter(i,value,ARedraw);
+    }
+  }
+  #endif
+
+  //----------
 
 };
 

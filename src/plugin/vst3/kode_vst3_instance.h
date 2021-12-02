@@ -74,7 +74,7 @@ private:
   KODE_Instance*            MInstance               = nullptr;
   VST3_UpdateQueue          MHostParameterQueue     = {};
   float*                    MHostParameterValues    = nullptr;
-  float*                    MParameterValues        = nullptr;
+//  float*                  MParameterValues        = nullptr;
 //float*                    MEditorParameterValues  = nullptr;
   #ifndef KODE_NO_GUI
   KODE_Editor*              MEditor                 = nullptr;
@@ -92,6 +92,7 @@ public:
     MRefCount = 1;
     MInstance = AInstance;
     MDescriptor = AInstance->getDescriptor();
+    initParameters();
     createParameterBuffers();
     createParameterInfo();
   }
@@ -102,6 +103,7 @@ public:
     //KODE_PRINT;
     deleteParameterInfo();
     destroyParameterBuffers();
+    //initParameters();
   }
 
 //------------------------------
@@ -134,13 +136,13 @@ public: // KODE_EditorListener
   void on_editor_updateParameter(uint32_t AIndex, float AValue) override {
     //KODE_Vst3Print("index: %i value: %.3f\n",AIndex,AValue);
     //MEditorParameterValues[AIndex] = AValue;
-
-    KODE_Parameter* parameter = MDescriptor->parameters[AIndex];
-    float value = parameter->from01(AValue);
-    //float value = AValue;
-
-    MParameterValues[AIndex] = value;//AValue;
-    queueParameterToHost(AIndex,value/*AValue*/);
+    //KODE_Parameter* parameter = MDescriptor->parameters[AIndex];
+    //float value = parameter->from01(AValue);
+    //value = parameter->from01(value);
+    float value = AValue;
+    //MParameterValues[AIndex] = value;
+    MInstance->setParameterValue(AIndex,value);
+    queueParameterToHost(AIndex,value);
   }
 
   //----------
@@ -154,44 +156,44 @@ public: // KODE_EditorListener
 public:
 //------------------------------
 
-  void setDefaultParameterValues() {
-    //KODE_PRINT;
-    uint32_t num = MDescriptor->parameters.size();
-    for (uint32_t i=0; i<num; i++) {
-      KODE_Parameter* parameter = MDescriptor->parameters[i];
-      float value = parameter->def_value;
-      MParameterValues[i] = value;
-    }
-  }
-
-  //----------
-
-  void updateAllParameters() {
-    //KODE_PRINT;
-    uint32_t num = MDescriptor->parameters.size();
-    for (uint32_t i=0; i<num; i++) {
-      KODE_Parameter* parameter = MDescriptor->parameters[i];
-      float value = MParameterValues[i];
-      float v = parameter->from01(value);
-      MInstance->on_plugin_parameter(i,v);
-      // if editor is open ...
-    }
-  }
-
-  //----------
-
-  #ifndef KODE_NO_GUI
-  void updateAllEditorParameters(KODE_Editor* AEditor, bool ARedraw=true) {
-    //KODE_Vst3Print("%s\n",ARedraw?"(redraw=true)":"");
-    uint32_t num = MDescriptor->parameters.size();
-    for (uint32_t i=0; i<num; i++) {
-
-      float value = MInstance->getParameterValue(i);
-      AEditor->updateParameter(i,value/*,ARedraw*/);
-
-    }
-  }
-  #endif
+//  void setDefaultParameterValues() {
+//    //KODE_PRINT;
+//    uint32_t num = MDescriptor->parameters.size();
+//    for (uint32_t i=0; i<num; i++) {
+//      KODE_Parameter* parameter = MDescriptor->parameters[i];
+//      float value = parameter->def_value;
+//      MParameterValues[i] = value;
+//    }
+//  }
+//
+//  //----------
+//
+//  void updateAllParameters() {
+//    //KODE_PRINT;
+//    uint32_t num = MDescriptor->parameters.size();
+//    for (uint32_t i=0; i<num; i++) {
+//      KODE_Parameter* parameter = MDescriptor->parameters[i];
+//      float value = MParameterValues[i];
+//      float v = parameter->from01(value);
+//      MInstance->on_plugin_parameter(i,v);
+//      // if editor is open ...
+//    }
+//  }
+//
+//  //----------
+//
+//  #ifndef KODE_NO_GUI
+//  void updateAllEditorParameters(KODE_Editor* AEditor, bool ARedraw=true) {
+//    //KODE_Vst3Print("%s\n",ARedraw?"(redraw=true)":"");
+//    uint32_t num = MDescriptor->parameters.size();
+//    for (uint32_t i=0; i<num; i++) {
+//
+//      float value = MInstance->getParameterValue(i);
+//      AEditor->updateParameter(i,value/*,ARedraw*/);
+//
+//    }
+//  }
+//  #endif
 
   //----------
 
@@ -217,23 +219,40 @@ public:
 private:
 //------------------------------
 
+  void initParameters() {
+    uint32_t num = MDescriptor->parameters.size();
+    for (uint32_t i=0; i<num; i++) {
+      KODE_Parameter* parameter = MDescriptor->parameters[i];
+      //float value = parameter->def_value;
+      //KODE_Print("%i %f",i,value);
+      parameter->def_value = parameter->to01( parameter->def_value );
+      parameter->min_value = parameter->to01( parameter->min_value );
+      parameter->max_value = parameter->to01( parameter->max_value );
+      //value = parameter->def_value;
+      //KODE_DPrint("-> %f\n",value);
+    }
+  }
+
+  //----------
+
   void createParameterBuffers() {
     //KODE_PRINT;
     uint32_t size = MDescriptor->parameters.size() * sizeof(float);
     //MNumParameters = MDescriptor->getNumParameters();
-    MParameterValues        = (float*)malloc(size);
+//    MParameterValues        = (float*)malloc(size);
     //MEditorParameterValues  = (float*)malloc(size);
     MHostParameterValues    = (float*)malloc(size);
-    memset(MParameterValues,       0,size);
+    memset(MHostParameterValues, 0,size);
+//    memset(MParameterValues, 0,size);
     //memset(MEditorParameterValues, 0,size);
-    memset(MHostParameterValues,   0,size);
+    memset(MHostParameterValues, 0,size);
   }
 
   //----------
 
   void destroyParameterBuffers() {
     //KODE_PRINT;
-    if (MParameterValues)       free(MParameterValues);
+//    if (MParameterValues)       free(MParameterValues);
     //if (MEditorParameterValues) free(MEditorParameterValues);
     if (MHostParameterValues)   free(MHostParameterValues);
   }
@@ -329,7 +348,8 @@ private:
         uint32_t numsteps = param->num_steps;
         if (numsteps > 1) numsteps -= 1;
         MParamInfos[i].stepCount = numsteps;
-        MParamInfos[i].defaultNormalizedValue = param->def_value;
+        //MParamInfos[i].defaultNormalizedValue = param->def_value;
+        MParamInfos[i].defaultNormalizedValue = param->to01( param->getInternalDefValue() );
         MParamInfos[i].unitId = vst3_RootUnitId; //-1;
         int32_t flags = 0;
         if (param->options.can_automate) flags += VST3_ParameterInfo::vst3_CanAutomate;
@@ -374,7 +394,10 @@ private:
                 double value = 0;
                 int32_t pointcount = paramQueue->getPointCount();
                 paramQueue->getPoint(pointcount-1,offset,value); // last point
-                MParameterValues[id] = value;
+
+                //MParameterValues[id] = value;
+                MInstance->setParameterValue(id,value);
+
                 //KODE_Vst3Print("MParameterValues[%i] = %.3f\n",id,value);
                 KODE_Parameter* param = MDescriptor->parameters[id];
                 if (param) value = param->from01(value);
@@ -675,20 +698,19 @@ public: // IPluginBase
   */
 
   int32_t VST3_API initialize(VST3_FUnknown* context) final {
-    //KODE_Vst3Print("contect: %p",context);
     MHostApp = (VST3_IHostApplication*)context;
     //context->queryInterface(IHostApplication_iid, (void**)&MHostApp);
     if (MHostApp) {
       VST3_String u;
       MHostApp->getName(u);
       VST3_Utf16ToChar(&u,MHostName);
-      //KODE_Vst3Print(" (hostname: '%s')",MHostName);
     }
     else {
     }
-    //KODE_Vst3Print(" -> Ok\n");
 
     MInstance->on_plugin_init();
+    MInstance->setDefaultParameterValues();
+    MInstance->updateAllParameters();
 
     return vst3_ResultOk;
   }
@@ -1016,10 +1038,13 @@ public: // IComponent
           float v = 0.f;
           state->read(&v,sizeof(float),&num_read);
           //setParameterValue(i,v);
-          MParameterValues[i] = v;
+
+          //MParameterValues[i] = v;
+          MInstance->setParameterValue(i,v);
+
           //on_plugin_parameter(i,v,0);
         }
-        updateAllParameters();
+        MInstance->updateAllParameters();
         break;
       }
     }
@@ -1048,7 +1073,10 @@ public: // IComponent
 
     if ((size == 0) && (ptr == nullptr)) {
       //ptr = getParameterValues();
-      ptr = MParameterValues;
+
+      //ptr = MParameterValues;
+      ptr = MInstance->getParameterValueBuffer();
+
       size = MDescriptor->parameters.size() * sizeof(float);
       mode = 1;
     }
@@ -1848,7 +1876,10 @@ public: // IEditController
     if (id < MDescriptor->parameters.size()) {
       char temp[129]; // ???
       KODE_Parameter* param = MDescriptor->parameters[id];
-      param->getDisplayText(valueNormalized,temp);
+      //param->getDisplayText(valueNormalized,temp);
+      float v = param->from01(valueNormalized);
+      param->getDisplayText(v,temp);
+      //KODE_Print("%f -> %f -> %s\n",valueNormalized,v,temp);
       VST3_CharToUtf16(temp,string);
       return vst3_ResultOk;
     }
@@ -1906,10 +1937,11 @@ public: // IEditController
   //----------
 
   double VST3_API getParamNormalized(uint32_t id) final {
-    //KODE_PRINT;
     if (id < MDescriptor->parameters.size()) {
       //float v = MEditorParameterValues[id];
-      float v = MParameterValues[id];
+      //float v = MParameterValues[id];
+      float v = MInstance->getParameterValue(id);
+      //KODE_Print("%i returns %f\n",id,v);
       return v;
     }
     else {
@@ -1938,7 +1970,9 @@ public: // IEditController
       return vst3_ResultFalse; // ???
     }
     //MEditorParameterValues[id] = value;
-    MParameterValues[id] = value;
+    //MParameterValues[id] = value;
+    MInstance->setParameterValue(id,value);
+    //KODE_Print("%i set %f\n",id,value);
     #ifndef KODE_NO_GUI
     if (MEditor) {
       MEditor->updateParameter(id,value);
@@ -2056,17 +2090,14 @@ public: // IPlugView
           MPlugFrame->resizeView(this,&r);
         }
 
-/*
-        MEditor = MInstance->on_plugin_openEditor(); // (parent);
-//        updateAllEditorParameters(MEditor,false);
-        MEditor->open(w,h,parent);
-*/
-
         MEditor = _kode_create_editor(this,MDescriptor);
         MInstance->on_plugin_createEditor(MEditor);
+
         MEditor->attach("",parent);
-        MEditor->show();
+
         MInstance->on_plugin_openEditor(MEditor);
+        MInstance->updateAllEditorParameters(MEditor,false);
+        MEditor->show();
 
         //if (MRunLoop)
         MRunLoop->registerTimer(this,KODE_VST3_TIMER_MS);
@@ -2092,11 +2123,6 @@ public: // IPlugView
     if (MDescriptor->options.has_editor) {
       //if (MRunLoop)
       MRunLoop->unregisterTimer(this);
-
-/*
-      MEditor->close();
-      MInstance->on_plugin_closeEditor();
-*/
 
       MInstance->on_plugin_closeEditor(MEditor);
       MEditor->hide();

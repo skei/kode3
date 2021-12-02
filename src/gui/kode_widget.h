@@ -62,6 +62,10 @@ class KODE_Widget {
 private:
 //------------------------------
 
+//------------------------------
+protected:
+//------------------------------
+
   //TODO: cleanup.. define which is run-time, configurable, blabla..
 
   const char*       MName                   = "KODE_Widget";
@@ -82,11 +86,10 @@ private:
   float             MDefaultValue           = 0.0f;             // default/starting value
   KODE_Parameter*   MParameters[MAX_PARAMS] = {0};              // otrs to connected parameters
 
-  // for bitmap based widgets
+  const char*       MText                   = "";
 
-  KODE_Surface*     MWidgetSurface          = KODE_NULL;        // image (if any)
-  bool              MWidgetSurfaceAllocated = false;
-
+  KODE_Surface*     MImageSurface           = KODE_NULL;        // image (if any)
+  bool              MImageSurfaceAllocated  = false;
   uint32_t          MTileCount              = 0;
   uint32_t          MTileXCount             = 0;
   uint32_t          MTileYCount             = 0;
@@ -128,7 +131,7 @@ public:
     #ifndef KODE_NO_AUTODELETE
     deleteChildren();
     #endif
-    if (MWidgetSurface && MWidgetSurfaceAllocated) delete MWidgetSurface;
+    if (MImageSurface && MImageSurfaceAllocated) delete MImageSurface;
   }
 
 //------------------------------
@@ -145,29 +148,30 @@ public: // set
 public: // set
 //------------------------------
 
-  virtual void setChildrenOffset(float AX, float AY)    { MChildrenXOffset = AX; MChildrenYOffset = AY; }
-  virtual void setChildrenXOffset(float AX)             { MChildrenXOffset = AX; }
-  virtual void setChildrenYOffset(float AY)             { MChildrenYOffset = AY; }
-  virtual void setContentRect(KODE_FRect ARect)         { MContentRect = ARect; }
-  virtual void setCursor(int32_t ACursor)               { MCursor = ACursor; }
-  virtual void setDefaultValue(float AValue)            { MDefaultValue = AValue; }
-  virtual void setHeight(float AHeight)                 { MRect.h = AHeight; }
-  virtual void setHint(const char* AHint)               { MHint = AHint; }
-  virtual void setIndex(int32_t AIndex)                 { MIndex = AIndex; }
-  virtual void setInitialHeight(float AH)               { MInitialRect.h = AH; }
-  virtual void setInitialPos(float AX, float AY)        { MInitialRect.x = AX; MInitialRect.y = AY; }
-  virtual void setInitialRect(KODE_FRect ARect)         { MInitialRect = ARect; }
-  virtual void setInitialSize(float AW, float AH)       { MInitialRect.w = AW; MInitialRect.h = AH; }
-  virtual void setInitialWidth(float AW)                { MInitialRect.w = AW; }
-  virtual void setName(const char* AName)               { MName = AName; }
+  virtual void setChildrenOffset(float AX, float AY)        { MChildrenXOffset = AX; MChildrenYOffset = AY; }
+  virtual void setChildrenXOffset(float AX)                 { MChildrenXOffset = AX; }
+  virtual void setChildrenYOffset(float AY)                 { MChildrenYOffset = AY; }
+  virtual void setContentRect(KODE_FRect ARect)             { MContentRect = ARect; }
+  virtual void setCursor(int32_t ACursor)                   { MCursor = ACursor; }
+  virtual void setDefaultValue(float AValue)                { MDefaultValue = AValue; }
+  virtual void setHeight(float AHeight)                     { MRect.h = AHeight; }
+  virtual void setHint(const char* AHint)                   { MHint = AHint; }
+  virtual void setIndex(int32_t AIndex)                     { MIndex = AIndex; }
+  virtual void setInitialHeight(float AH)                   { MInitialRect.h = AH; }
+  virtual void setInitialPos(float AX, float AY)            { MInitialRect.x = AX; MInitialRect.y = AY; }
+  virtual void setInitialRect(KODE_FRect ARect)             { MInitialRect = ARect; }
+  virtual void setInitialSize(float AW, float AH)           { MInitialRect.w = AW; MInitialRect.h = AH; }
+  virtual void setInitialWidth(float AW)                    { MInitialRect.w = AW; }
+  virtual void setName(const char* AName)                   { MName = AName; }
   virtual void setParameter(KODE_Parameter* AParameter, uint32_t AIndex=0) { MParameters[AIndex] = AParameter; }
-  virtual void setParent(KODE_Widget* AParent)          { MParent = AParent; }
-  virtual void setPos(float AXpos, float AYpos)         { MRect.x = AXpos; MRect.y = AYpos; }
-  virtual void setRect(KODE_FRect ARect)                { MRect = ARect; }
+  virtual void setParent(KODE_Widget* AParent)              { MParent = AParent; }
+  virtual void setPos(float AXpos, float AYpos)             { MRect.x = AXpos; MRect.y = AYpos; }
+  virtual void setRect(KODE_FRect ARect)                    { MRect = ARect; }
   virtual void setRect(float x, float y, float w, float h)  { MRect.x=x; MRect.y=y; MRect.w=w;MRect.h=h; }
-  virtual void setSize(float AWidth, float AHeight)     { MRect.w = AWidth; MRect.h = AHeight; }
-  virtual void setValue(float AValue)                   { MValue = AValue; }
-  virtual void setWidth(float AWidth)                   { MRect.w = AWidth; }
+  virtual void setSize(float AWidth, float AHeight)         { MRect.w = AWidth; MRect.h = AHeight; }
+  virtual void setText(const char* AText)                   { MText = AText; }
+  virtual void setValue(float AValue)                       { MValue = AValue; }
+  virtual void setWidth(float AWidth)                       { MRect.w = AWidth; }
 
   //virtual void setOwner(KODE_BaseWindow* AOwner)        { MOwner = AOwner; }
   //virtual void setSelectedParameter(uint32_t AIndex)    { MSelectedParameter = AIndex; }
@@ -198,9 +202,10 @@ public: // get
   virtual KODE_Parameter*     getParameter(uint32_t i=0)    { return MParameters[i]; }
   virtual KODE_Widget*        getParent()                   { return MParent; }
   virtual KODE_FRect          getRect()                     { return MRect; }
+  virtual const char*         getText()                     { return MText; }
   virtual float               getValue()                    { return MValue; }
 
-  virtual KODE_Surface*       getWidgetSurface()            { return MWidgetSurface; }
+  virtual KODE_Surface*       getImageSurface()             { return MImageSurface; }
   virtual uint32_t            getTileXCount()               { return MTileXCount; }
   virtual uint32_t            getTileYCount()               { return MTileYCount; }
 
@@ -230,14 +235,14 @@ public:
   //----------
 
   virtual void setImage(KODE_Drawable* ATarget, KODE_Surface* ASurface) {
-    MWidgetSurface = ASurface;
-    MWidgetSurfaceAllocated = false;
+    MImageSurface = ASurface;
+    MImageSurfaceAllocated = false;
   }
 
   virtual void setImage(KODE_Drawable* ATarget, KODE_Bitmap* ABitmap) {
-    MWidgetSurface = new KODE_Surface(ATarget,ABitmap->getWidth(),ABitmap->getHeight());
-    MWidgetSurfaceAllocated = true;
-    KODE_Painter* painter = new KODE_Painter(MWidgetSurface);
+    MImageSurface = new KODE_Surface(ATarget,ABitmap->getWidth(),ABitmap->getHeight());
+    MImageSurfaceAllocated = true;
+    KODE_Painter* painter = new KODE_Painter(MImageSurface);
     painter->uploadBitmap(0,0,ABitmap);
     //painter->flush();
     delete painter;
@@ -262,8 +267,8 @@ public:
   virtual void setupTiles(uint32_t AXcount, uint32_t AYcount) {
     MTileXCount = AXcount;
     MTileYCount = AYcount;
-    MTileWidth  = MWidgetSurface->getWidth() / AXcount;
-    MTileHeight = MWidgetSurface->getHeight() / AYcount;
+    MTileWidth  = MImageSurface->getWidth() / AXcount;
+    MTileHeight = MImageSurface->getHeight() / AYcount;
   }
 
   KODE_FRect getTileRect(uint32_t AIndex) {

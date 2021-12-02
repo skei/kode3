@@ -40,17 +40,20 @@ public:
 
   KODE_ClapHost(const clap_host* AHost) {
     //KODE_ClapPrint("AHost %p\n",AHost);
+
     MClapHost     = AHost;
     MHostData     = AHost->host_data;
     MHostName     = AHost->name;
     MHostVendor   = AHost->vendor;
     MHostUrl      = AHost->url;
     MHostVersion  = AHost->version;
+
     //KODE_ClapPrint("- name: %s\n",MHostName);
     //KODE_ClapPrint("- vendor: %s\n",MHostVendor);
     //KODE_ClapPrint("- url: %s\n",MHostUrl);
     //KODE_ClapPrint("- version: %s\n",MHostVersion);
     //KODE_ClapPrint("- host_data: %p\n",MHostData);
+
     init_extensions();
   }
 
@@ -71,6 +74,7 @@ public:
     MHostState            = (clap_host_state*)get_extension(CLAP_EXT_STATE);
     MHostThreadCheck      = (clap_host_thread_check*)get_extension(CLAP_EXT_THREAD_CHECK);
     MHostTimerSupport     = (clap_host_timer_support*)get_extension(CLAP_EXT_TIMER_SUPPORT);
+
 //    KODE_ClapPrint("CLAP_EXT_AUDIO_PORTS_CONFIG: %p\n",MHostAudioPortsConfig);
 //    KODE_ClapPrint("CLAP_EXT_AUDIO_PORTS: %p\n",MHostAudioPorts);
 //    KODE_ClapPrint("CLAP_EXT_EVENT_FILTER: %p\n",MHostEventFilter);
@@ -83,6 +87,7 @@ public:
 //    KODE_ClapPrint("CLAP_EXT_STATE: %p\n",MHostState);
 //    KODE_ClapPrint("CLAP_EXT_THREAD_CHECK: %p\n",MHostThreadCheck);
 //    KODE_ClapPrint("CLAP_EXT_TIMER_SUPPORT: %p\n",MHostTimerSupport);
+
   }
 
 //------------------------------
@@ -102,6 +107,8 @@ public:
     }
     return ptr;
   }
+
+  //----------
 
   /*
     Request the host to deactivate and then reactivate the plugin.
@@ -151,9 +158,9 @@ public:
 public: // extensions
 //------------------------------
 
-  //--------------------
-  // audio-ports-config
-  //--------------------
+  //------------------------------
+  // audio ports config
+  //------------------------------
 
   /*
     This extension provides a way for the plugin to describe possible ports
@@ -179,9 +186,9 @@ public: // extensions
     }
   }
 
-  //--------------------
-  // audio-ports
-  //--------------------
+  //------------------------------
+  // audio ports
+  //------------------------------
 
   /*
     This extension provides a way for the plugin to describe its current audio
@@ -205,6 +212,8 @@ public: // extensions
     return 0;
   }
 
+  //----------
+
   /*
     Rescan the full list of audio ports according to the flags.
     [main-thread]
@@ -225,9 +234,9 @@ public: // extensions
     }
   }
 
-  //--------------------
-  // event-filter
-  //--------------------
+  //------------------------------
+  // event filter
+  //------------------------------
 
   /*
     This extension lets the host know which event types the plugin is
@@ -247,11 +256,13 @@ public: // extensions
     }
   }
 
-  //--------------------
-  // fd-support
-  //--------------------
+  //------------------------------
+  // fd support
+  //------------------------------
 
-  // [main-thread]
+  /*
+    [main-thread]
+  */
 
   bool fd_support_register_fd(clap_fd fd, clap_fd_flags flags) {
     bool result = false;
@@ -262,7 +273,11 @@ public: // extensions
     return result;
   }
 
-  // [main-thread]
+  //----------
+
+  /*
+    [main-thread]
+  */
 
   bool fd_support_modify_fd(clap_fd fd, clap_fd_flags flags) {
     bool result = false;
@@ -273,7 +288,11 @@ public: // extensions
     return result;
   }
 
-  // [main-thread]
+  //----------
+
+  /*
+    [main-thread]
+  */
 
   bool fd_support_unregister_fd(clap_fd fd) {
     bool result = false;
@@ -284,9 +303,9 @@ public: // extensions
     return result;
   }
 
-  //--------------------
+  //------------------------------
   // gui
-  //--------------------
+  //------------------------------
 
   /*
     Request the host to resize the client area to width, height.
@@ -303,14 +322,16 @@ public: // extensions
     return result;
   }
 
-  //--------------------
+  //------------------------------
   // latency
-  //--------------------
+  //------------------------------
 
-  // Tell the host that the latency changed.
-  // The latency is only allowed to change if the plugin is deactivated.
-  // If the plugin is activated, call host->request_restart()
-  // [main-thread]
+  /*
+    Tell the host that the latency changed.
+    The latency is only allowed to change if the plugin is deactivated.
+    If the plugin is activated, call host->request_restart()
+    [main-thread]
+  */
 
   void latency_changed() {
     if (MHostLatency) {
@@ -319,12 +340,14 @@ public: // extensions
     }
   }
 
-  //--------------------
+  //------------------------------
   // log
-  //--------------------
+  //------------------------------
 
-  // Log a message through the host.
-  // [thread-safe]
+  /*
+    Log a message through the host.
+    [thread-safe]
+  */
 
   void log(clap_log_severity severity, const char *msg) {
     if (MHostLog) {
@@ -333,12 +356,14 @@ public: // extensions
     }
   }
 
-  //--------------------
-  // note-name
-  //--------------------
+  //------------------------------
+  // note name
+  //------------------------------
 
-  // Informs the host that the note names has changed.
-  // [main-thread]
+  /*
+    Informs the host that the note names has changed.
+    [main-thread]
+  */
 
   void note_name_changed() {
     if (MHostNoteName) {
@@ -347,9 +372,9 @@ public: // extensions
     }
   }
 
-  //--------------------
+  //------------------------------
   // params
-  //--------------------
+  //------------------------------
 
   /*
     Rescan the full list of parameters according to the flags.
@@ -368,6 +393,8 @@ public: // extensions
     }
   }
 
+  //----------
+
   /*
     Clears references to a parameter
     [main-thread]
@@ -383,6 +410,8 @@ public: // extensions
       MHostParams->clear(MClapHost,param_id,flags);
     }
   }
+
+  //----------
 
   /*
     Request the host to call clap_plugin_params->flush().
@@ -401,9 +430,9 @@ public: // extensions
     }
   }
 
-  //--------------------
+  //------------------------------
   // state
-  //--------------------
+  //------------------------------
 
   /*
     Tell the host that the plugin state has changed and should be saved again.
@@ -418,9 +447,9 @@ public: // extensions
     }
   }
 
-  //--------------------
+  //------------------------------
   // thread-check
-  //--------------------
+  //------------------------------
 
   /*
     This interface is useful to do runtime checks and make
@@ -444,6 +473,8 @@ public: // extensions
     return result;
   }
 
+  //----------
+
   /*
     Returns true if "this" thread is one of the audio threads.
     [thread-safe]
@@ -458,9 +489,9 @@ public: // extensions
     return result;
   }
 
-  //--------------------
+  //------------------------------
   // timer-support
-  //--------------------
+  //------------------------------
 
   /*
     Registers a periodic timer.
@@ -474,10 +505,12 @@ public: // extensions
     if (MHostTimerSupport) {
       result = MHostTimerSupport->register_timer(MClapHost,period_ms,timer_id);
       *timer_id = 0;
-      //KODE_ClapPrint("period_ms %i -> %s (*timer_id %i\n",period_ms, result ? "true" : "false", *timer_id );
+      //KODE_Print("period_ms %i -> %s (*timer_id %i\n",period_ms, result ? "true" : "false", *timer_id );
     }
     return result;
   }
+
+  //----------
 
   /*
     [main-thread]
@@ -487,7 +520,7 @@ public: // extensions
     bool result = false;
     if (MHostTimerSupport) {
       result = MHostTimerSupport->unregister_timer(MClapHost,timer_id);
-      //KODE_ClapPrint("timer_id %i -> %s \n",timer_id, result ? "true" : "false" );
+      //KODE_Print("timer_id %i -> %s \n",timer_id, result ? "true" : "false" );
     }
     return result;
   }

@@ -28,7 +28,7 @@ public:
 //------------------------------
 
   virtual void drawImage(KODE_BasePainter* APainter) {
-    KODE_Surface* surface = getWidgetSurface();
+    KODE_Surface* surface = getImageSurface();
     if (surface) {
       KODE_FRect rect = KODE_FRect(0,0,surface->getWidth(),surface->getHeight());
       APainter->drawBitmap(getRect().x,getRect().y,surface,rect);

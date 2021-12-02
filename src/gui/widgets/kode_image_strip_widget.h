@@ -26,7 +26,7 @@ public:
 //------------------------------
 
   virtual void drawTile(KODE_BasePainter* APainter) {
-    KODE_Surface* surface = getWidgetSurface();
+    KODE_Surface* surface = getImageSurface();
     if (surface) {
     uint32_t num_tiles = getTileXCount() * getTileYCount();
     if (num_tiles > 0) {

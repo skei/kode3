@@ -25,7 +25,12 @@ class KODE_Parameter {
 private:
 //------------------------------
 
-  char MDisplayText[32] = {0};
+  char  MDisplayText[32]    = {0};
+
+  // vst3: give these to host (when it asks for param info
+  float internal_def_value  = 0.0;
+  float internal_min_value  = 0.0;
+  float internal_max_value  = 0.0;
 
 //------------------------------
 public:
@@ -50,6 +55,9 @@ public:
     def_value = ADefValue;
     min_value = AMinValue;
     max_value = AMaxValue;
+    internal_def_value = ADefValue;
+    internal_min_value = AMinValue;
+    internal_max_value = AMaxValue;
   }
 
   virtual ~KODE_Parameter() {
@@ -59,16 +67,20 @@ public:
 public:
 //------------------------------
 
+  float getInternalDefValue() { return internal_def_value; }
+  float getInternalMinValue() { return internal_min_value; }
+  float getInternalMaxValue() { return internal_max_value; }
+
   virtual float from01(float value) {
-    float range = max_value - min_value;
-    return min_value + (value * range);
+    float range = internal_max_value - internal_min_value;
+    return internal_min_value + (value * range);
   }
 
   //----------
 
   virtual float to01(float value) {
-    float range = max_value - min_value;
-    return ((value - min_value) / range);
+    float range = internal_max_value - internal_min_value;
+    return ((value - internal_min_value) / range);
   }
 
   //----------

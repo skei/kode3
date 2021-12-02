@@ -4,8 +4,9 @@
 //#define KODE_PLUGIN_DSSI
 //#define KODE_PLUGIN_LV2
 //#define KODE_PLUGIN_VST2
-//#define KODE_PLUGIN_VST3
+#define KODE_PLUGIN_VST3
 #define KODE_PLUGIN_CLAP
+
 //#define KODE_PLUGIN_ALL
 
 //#define KODE_DEBUG_CLAP
@@ -158,7 +159,10 @@ public:
 
 };
 
-
+//----------------------------------------------------------------------
+//
+// descriptor
+//
 //----------------------------------------------------------------------
 
 class myDescriptor
@@ -180,8 +184,8 @@ public:
     appendInput("input 2");
     appendOutput("output 1");
     appendOutput("output 2");
-    appendParameter(new KODE_Parameter( "slider", 1, -2, 2 ));
-    appendParameter(new KODE_Parameter( "knob",   0,  0, 1 ));
+    appendParameter(new KODE_Parameter( "slider", 1.0,  -2.0, 2.0 ));
+    appendParameter(new KODE_Parameter( "knob",   0.25,  0.0, 1.0 ));
     options.is_synth = true;
     options.has_editor = true;
     editorWidth = 400;

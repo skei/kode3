@@ -123,6 +123,10 @@
 			<Add library="SDL2_mixer" />
 		</Linker>
 		<Unit filename="../README.md" />
+		<Unit filename="../docs/LICENSES" />
+		<Unit filename="../docs/doxygen.cfg" />
+		<Unit filename="../docs/makedocs.sh" />
+		<Unit filename="../docs/todo.txt" />
 		<Unit filename="../src/audio/analysis/kode_beat_detector.h" />
 		<Unit filename="../src/audio/analysis/kode_envelope_detector.h" />
 		<Unit filename="../src/audio/analysis/kode_envelope_follower.h" />
@@ -486,6 +490,7 @@
 		<Unit filename="../src/plugin/clap/kode_clap_host.h" />
 		<Unit filename="../src/plugin/clap/kode_clap_instance.h" />
 		<Unit filename="../src/plugin/clap/kode_clap_plugin.h" />
+		<Unit filename="../src/plugin/clap/kode_clap_utils.h" />
 		<Unit filename="../src/plugin/clap/kode_hosted_clap_instance.h" />
 		<Unit filename="../src/plugin/clap/kode_hosted_clap_plugin.h" />
 		<Unit filename="../src/plugin/dssi/kode_dssi.h" />

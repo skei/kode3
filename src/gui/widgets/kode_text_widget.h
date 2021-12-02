@@ -13,13 +13,13 @@ class KODE_TextWidget
 protected:
 //------------------------------
 
+  //const char* MText           = "";
+  float       MTextSize       = 10;
+  uint32_t    MTextAlignment  = KODE_TEXT_ALIGN_LEFT;
+  KODE_Color  MTextColor      = KODE_COLOR_DARK_GRAY;
+  KODE_FRect  MTextOffset     = KODE_FRect(2,2,2,2);
   bool        MDrawText       = true;
   bool        MDrawParamText  = true;
-  const char* MText           = "";
-  KODE_Color  MTextColor      = KODE_COLOR_DARK_GRAY;
-  uint32_t    MTextAlignment  = KODE_TEXT_ALIGN_LEFT;
-  KODE_FRect  MTextOffset     = KODE_FRect(2,2,2,2);
-  float       MTextSize       = 10;
 
 //------------------------------
 public:
@@ -49,10 +49,7 @@ public:
   virtual void setTextOffset(KODE_FRect AOffset)      { MTextOffset = AOffset; }
   virtual void setTextOffset(float x)                 { MTextOffset = KODE_FRect(x,x,x,x); }
   virtual void setTextOffset(float x, float y)        { MTextOffset = KODE_FRect(x,y); }
-  virtual void setText(const char* AText)             { MText = AText; }
   virtual void setTextSize(float ASize)               { MTextSize = ASize; }
-
-  virtual const char* getText()                       { return MText; }
 
   //----------
 

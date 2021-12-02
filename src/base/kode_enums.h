@@ -65,6 +65,18 @@ enum KODE_EPluginEventTypes {
   KODE_PLUGIN_EVENT_MIDI          = 2
 };
 
+enum KODE_EPluginFormat {
+  KODE_PLUGIN_FORMAT_NONE         = 0,
+  KODE_PLUGIN_FORMAT_EXE          = 1,
+  KODE_PLUGIN_FORMAT_LADSPA       = 2,
+  KODE_PLUGIN_FORMAT_DSSI         = 3,
+  KODE_PLUGIN_FORMAT_LV2          = 4,
+  KODE_PLUGIN_FORMAT_VST2         = 5,
+  KODE_PLUGIN_FORMAT_VST3         = 6,
+  KODE_PLUGIN_FORMAT_CLAP         = 7
+};
+
+
 enum KODE_EPluginPlayStates {
   KODE_PLUGIN_PLAYSTATE_NONE      = 0,
   KODE_PLUGIN_PLAYSTATE_PLAYING   = 1,

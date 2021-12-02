@@ -118,8 +118,8 @@ public:
     KODE_ClapHost*      claphost      = new KODE_ClapHost(host);
     clap_plugin*        plugin        = (clap_plugin*)malloc(sizeof(clap_plugin));
     KODE_Instance*      instance      = _kode_create_instance(MDescriptor);  // deleted by KODE_ClapInstance destructor
+    instance->setPluginFormat(KODE_PLUGIN_FORMAT_CLAP);
     KODE_ClapInstance*  clapinstance = new KODE_ClapInstance(instance,claphost);
-
     plugin->desc              = MClapDescriptor;
     plugin->plugin_data       = clapinstance;
     plugin->init              = clap_instance_init_callback;
@@ -131,9 +131,7 @@ public:
     plugin->process           = clap_instance_process_callback;
     plugin->get_extension     = clap_instance_get_extension_callback;
     plugin->on_main_thread    = clap_instance_on_main_thread_callback;
-
     //KODE_ClapPrint("plugin_id %s -> %p\n",plugin_id,plugin);
-
     return plugin;
   }
 
