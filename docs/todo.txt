@@ -1,0 +1,117 @@
+
+todo, ideas, notes to self..
+
+----------------------------------------------------------------------
+BASE
+----------------------------------------------------------------------
+
+
+----------------------------------------------------------------------
+GUI
+----------------------------------------------------------------------
+
+  ------------------------------
+  WIDGETS
+  ------------------------------
+
+  * focus, modal
+
+  * consider parameter values/ranges
+    and conversion, from01/to01
+
+  * MInteractiveValue
+    can be used in on_widget_paint, when MIsInteractive
+
+  * KODE_ScrollBox
+
+  * KODE_Menu, KODE_Popup, KODE_ModalWidget
+
+  * KODE_ModalWidget
+
+  * KODE_OverlayWidget
+
+    always present, on top of everything, but not active/visible
+    (last widget to be added)
+    can capture events ( modal/menu stuff)
+    state (active..) can be changed by other widgets
+    - menu
+    - selection rectangle
+    - things on top of widgets but not clickable, modular wires)
+      (needs to be redrawn if widgets below are updated)
+
+  * combine KODE_Slider, KODE_RangeSlider, KODE_SCrollBar
+
+  * KODE_TextEditWidget: key-codes, conversion..
+
+    widgets are
+
+----------------------------------------------------------------------
+PLUGIN
+----------------------------------------------------------------------
+
+  ------------------------------
+  FORMAT
+  ------------------------------
+
+  * port back from clap-test:
+    - clap hosting code
+      KODE_HostedClapPlugin
+      KODE_HostedClapPluginInstance
+      KODE_HostedClapPluginHost
+    - midi_file, midi_player
+    - audio_file
+
+  ------------------------------
+  PARAMETERS
+  ------------------------------
+
+  * parameters
+
+    normalized vs 'real world' values
+    conversion where needed
+    - vst2/3: normalized
+    - clap: not normalized
+    - ladspa, dssi, lv2:
+      we just tell the host some basic properties, and get ptrs to the
+      (host-controlled) values, not normalized (?)
+
+    typedef float KODE_NormalizedValue;
+    typedef float KODE_RealValue;
+
+    KODE_NormalizedValue  MParameterValues[];
+
+    KODE_NormalizedValue getNormalizedValue(KODE_RealValue);
+    KODE_RealValue       getRealValue(KODE_NormalizedValue);
+
+
+  * KODE_IndexParameter (selections, like int, but from 0, step 1, ..)
+  * KODE_RemapParameter (like textwidget, but actual value)
+
+  * single parameter -> multiple widgets
+
+    - can be done with a widget container, that handles sub-widgets?
+
+  * single widget -> multiple parameters
+
+    widget have array of param ptrs (16)
+    make it configurable (setNumParams(), realloc)
+      KODE_Widget.MParameters[]
+      KODE_Editor.MParameterToWidget[]
+    - xy-pad
+    - filter: freq/res
+    - step-sequencer
+    - grid/row
+
+  * multiple widget <-> multiple parameters
+
+  ------------------------------
+  EDITOR
+  ------------------------------
+
+  * creation, opening/closing
+
+    - attach, open/close:
+    - parameter/widget connection
+
+  * resize
+
