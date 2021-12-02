@@ -19,7 +19,8 @@ struct KODE_VstEvents {
 
 //----------------------------------------------------------------------
 
-class KODE_Vst2Instance  {
+class KODE_Vst2Instance
+: public KODE_EditorListener {
 
 //------------------------------
 private:
@@ -526,14 +527,18 @@ public: // vst2
             MIsEditorOpen = true;
             //MEditor = (KODE_Editor*)MInstance->on_openEditor(ptr);
 
-            MEditor = MInstance->on_plugin_openEditor(/*ptr*/);
+//            MEditor = MInstance->on_plugin_openEditor(/*ptr*/);
+//            //MInstance->copyParameterValuesToEditor(MEditor);
+//            // MEditor->on_realign(true);
+//            uint32_t width = MDescriptor->editorWidth;
+//            uint32_t height = MDescriptor->editorHeight;
+//            MEditor->open(width,height,ptr);
 
-            //MInstance->copyParameterValuesToEditor(MEditor);
-            // MEditor->on_realign(true);
-
-            uint32_t width = MDescriptor->editorWidth;
-            uint32_t height = MDescriptor->editorHeight;
-            MEditor->open(width,height,ptr);
+            MEditor = _kode_create_editor(this,MDescriptor);
+            MInstance->on_plugin_createEditor(MEditor);
+            MEditor->attach("",ptr);
+            MEditor->show();
+            MInstance->on_plugin_openEditor(MEditor);
 
             return 1;
           }
@@ -554,11 +559,15 @@ public: // vst2
             MIsEditorOpen = false;
             if (MEditor) {
 
-              MEditor->close();
+//              MEditor->close();
+//              //MInstance->on_closeEditor(MEditor);
+//              MInstance->on_plugin_closeEditor();
 
-              //MInstance->on_closeEditor(MEditor);
-
-              MInstance->on_plugin_closeEditor();
+              MInstance->on_plugin_closeEditor(MEditor);
+              MEditor->hide();
+              MEditor->detach();
+              MInstance->on_plugin_destroyEditor(MEditor);
+              delete MEditor;
 
               MEditor = nullptr;
               return 1;
@@ -588,7 +597,7 @@ public: // vst2
           if (MIsEditorOpen) {
             //KODE_Assert(MEditor);
 
-            MInstance->on_plugin_updateEditor();
+            MInstance->on_plugin_updateEditor(MEditor);
 
             updateEditorInIdle();
           }
