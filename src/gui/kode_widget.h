@@ -15,8 +15,6 @@ class KODE_Widget;
 typedef KODE_Array<KODE_Widget*> KODE_WidgetArray;
 
 
-//
-
 struct KODE_WidgetFlags {
   bool active           = true;
   bool visible          = true;
@@ -46,6 +44,8 @@ struct KODE_WidgetLayout {
   float       scale         = 1.0;
 };
 
+//
+
 class KODE_Widget;
 typedef KODE_Array<KODE_Widget*> KODE_Widgets;
 
@@ -62,27 +62,29 @@ class KODE_Widget {
 private:
 //------------------------------
 
+  //TODO: cleanup.. define which is run-time, configurable, blabla..
+
   const char*       MName                   = "KODE_Widget";
   const char*       MHint                   = "widget";
   int32_t           MCursor                 = KODE_CURSOR_DEFAULT;
 
-//KODE_BaseWindow*  MOwner                  = KODE_NULL;
-  KODE_Widget*      MParent                 = KODE_NULL;
-  int32_t           MIndex                  = -1;
-  KODE_Widgets      MChildren;
-  float             MChildrenXOffset        = 0.0f;
-  float             MChildrenYOffset        = 0.0f;
+  KODE_Widget*      MParent                 = KODE_NULL;        // parent widget
+  int32_t           MIndex                  = -1;               // index in parent's children, MParent->MChildren[MIndex] = this
+  KODE_Widgets      MChildren               = {};               // sub-widgets
+  float             MChildrenXOffset        = 0.0f;             // offset (relative to parent rect)
+  float             MChildrenYOffset        = 0.0f;             // -"-
 
-  KODE_FRect        MRect                   = KODE_FRect(0,0);
-  KODE_FRect        MInitialRect            = KODE_FRect(0,0);
-  KODE_FRect        MContentRect            = KODE_FRect(0,0);
+  KODE_FRect        MRect                   = KODE_FRect(0,0);  // position on screen
+  KODE_FRect        MInitialRect            = KODE_FRect(0,0);  // starting rect (used by layout
+  KODE_FRect        MContentRect            = KODE_FRect(0,0);  // rect surrounding child widgets
 
-  float             MValue                  = 0.0f;
-  float             MDefaultValue           = 0.0f;
-  KODE_Parameter*   MParameters[MAX_PARAMS] = {0};
-//uint32_t          MSelectedParameter      = 0;
+  float             MValue                  = 0.0f;             // current value
+  float             MDefaultValue           = 0.0f;             // default/starting value
+  KODE_Parameter*   MParameters[MAX_PARAMS] = {0};              // otrs to connected parameters
 
-  KODE_Surface*     MWidgetSurface          = KODE_NULL;
+  // for bitmap based widgets
+
+  KODE_Surface*     MWidgetSurface          = KODE_NULL;        // image (if any)
   bool              MWidgetSurfaceAllocated = false;
 
   uint32_t          MTileCount              = 0;
@@ -90,15 +92,6 @@ private:
   uint32_t          MTileYCount             = 0;
   uint32_t          MTileWidth              = 0;
   uint32_t          MTileHeight             = 0;
-
-//------------------------------
-protected:
-//------------------------------
-
-
-
-
-
 
 //------------------------------
 public:
@@ -207,9 +200,9 @@ public: // get
   virtual KODE_FRect          getRect()                     { return MRect; }
   virtual float               getValue()                    { return MValue; }
 
-  virtual KODE_Surface* getWidgetSurface()  { return MWidgetSurface; }
-  virtual uint32_t      getTileXCount()     { return MTileXCount; }
-  virtual uint32_t      getTileYCount()     { return MTileYCount; }
+  virtual KODE_Surface*       getWidgetSurface()            { return MWidgetSurface; }
+  virtual uint32_t            getTileXCount()               { return MTileXCount; }
+  virtual uint32_t            getTileYCount()               { return MTileYCount; }
 
   //virtual KODE_BaseWindow*    getOwner()                    { return MOwner; }
   //virtual float               getWidth()                    { return MRect.w; }
