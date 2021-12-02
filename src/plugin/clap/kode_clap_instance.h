@@ -133,6 +133,7 @@ private:
 //------------------------------
 
   void handleNoteOn(const clap_event* event) {
+    KODE_Print("CLAP_EVENT_NOTE_ON\n");
     //KODE_ClapPrint("CLAP_EVENT_NOTE_ON\n");
     //KODE_ClapPrint("- time %i\n",event->time);
     //KODE_ClapPrint("- port_index %i\n",event->note.port_index);
@@ -148,6 +149,7 @@ private:
   //----------
 
   void handleNoteOff(const clap_event* event) {
+    KODE_Print("CLAP_EVENT_NOTE_OFF\n");
     //KODE_ClapPrint("CLAP_EVENT_NOTE_OFF\n");
     //KODE_ClapPrint("- time %i\n",event->time);
     //KODE_ClapPrint("- port_index %i\n",event->note.port_index);
@@ -163,6 +165,7 @@ private:
   //----------
 
   void handleNoteEnd(const clap_event* event) {
+    KODE_Print("CLAP_EVENT_NOTE_END\n");
     //KODE_ClapPrint("CLAP_EVENT_NOTE_END\n");
     //KODE_ClapPrint("- time %i\n",event->time);
     //KODE_ClapPrint("- port_index %i\n",event->note.port_index);
@@ -174,6 +177,7 @@ private:
   //----------
 
   void handleNoteChoke(const clap_event* event) {
+    KODE_Print("CLAP_EVENT_NOTE_CHOKE\n");
     //KODE_ClapPrint("CLAP_EVENT_NOTE_CHOKE\n");
     //KODE_ClapPrint("- time %i\n",event->time);
     //KODE_ClapPrint("- port_index %i\n",event->note.port_index);
@@ -201,12 +205,15 @@ private:
     switch (event->note_expression.expression_id) {
 
       case CLAP_NOTE_EXPRESSION_VOLUME:      // x >= 0, use 20 * log(4 * x)
+        KODE_Print("CLAP_NOTE_EXPRESSION_VOLUME\n");
         break;
 
       case CLAP_NOTE_EXPRESSION_PAN:         // pan, 0 left, 0.5 center, 1 right
+        KODE_Print("CLAP_NOTE_EXPRESSION_PAN\n");
         break;
 
       case CLAP_NOTE_EXPRESSION_TUNING:      // relative tuning in semitone, from -120 to +120
+        KODE_Print("CLAP_NOTE_EXPRESSION_TUNING\n");
         f = (event->note_expression.value / 48.0);
         bend = 8192 + (8192.0 * f);
         msg1 = KODE_MIDI_PITCHBEND + event->note_expression.channel;
@@ -216,9 +223,11 @@ private:
         break;
 
       case CLAP_NOTE_EXPRESSION_VIBRATO:     // 0..1
+        KODE_Print("CLAP_NOTE_EXPRESSION_VIBRATO\n");
         break;
 
       case CLAP_NOTE_EXPRESSION_BRIGHTNESS:  // 0..1
+        KODE_Print("CLAP_NOTE_EXPRESSION_BRIGHTNESS\n");
         msg1 = KODE_MIDI_CONTROL_CHANGE + event->note_expression.channel;
         msg2 = 74;
         msg3 = event->note_expression.value * 127;
@@ -226,15 +235,19 @@ private:
         break;
 
       case CLAP_NOTE_EXPRESSION_BREATH:      // 0..1
+        KODE_Print("CLAP_NOTE_EXPRESSION_BREATH\n");
         break;
 
       case CLAP_NOTE_EXPRESSION_PRESSURE:    // 0..1
+        KODE_Print("CLAP_NOTE_EXPRESSION_PRESSURE\n");
         break;
 
       case CLAP_NOTE_EXPRESSION_TIMBRE:      // 0..1
+        KODE_Print("CLAP_NOTE_EXPRESSION_TIMBRE\n");
         break;
 
       default:
+        KODE_Print("unknown CLAP_EVENT_NOTE_EXPRESSION\n");
         // unknown expression
         break;
 
@@ -245,6 +258,7 @@ private:
   //----------
 
   void handleNoteMask(const clap_event* event) {
+    KODE_Print("CLAP_EVENT_NOTE_MASK\n");
     //KODE_ClapPrint("CLAP_EVENT_NOTE_MASK\n");
     //KODE_ClapPrint("- time %i\n",event->time);
     //KODE_ClapPrint("- port_index %i\n",event->note_mask.port_index);
@@ -255,6 +269,7 @@ private:
   //----------
 
   void handleParamValue(const clap_event* event) {
+    KODE_Print("CLAP_EVENT_PARAM_VALUE\n");
     //KODE_Print("CLAP_EVENT_PARAM_VALUE %i %.3f\n",event->param_value.param_id,event->param_value.value);
     //KODE_ClapPrint("CLAP_EVENT_PARAM_VALUE\n");
     //KODE_ClapPrint("- time %i\n",event->time);
@@ -279,6 +294,7 @@ private:
   //----------
 
   void handleParamMod(const clap_event* event) {
+    KODE_Print("CLAP_EVENT_PARAM_MOD\n");
     //KODE_ClapPrint("CLAP_EVENT_PARAM_MOD\n");
     //KODE_ClapPrint("- time %i\n",event->time);
     //KODE_ClapPrint("- cookie %p\n",event->param_mod.cookie);
@@ -292,6 +308,7 @@ private:
   //----------
 
   void handleTransport(const clap_event* event) {
+    KODE_Print("CLAP_EVENT_TRANSPORT\n");
     //KODE_ClapPrint("CLAP_EVENT_TRANSPORT\n");
     //KODE_ClapPrint("- time %i\n",event->time);
     //KODE_ClapPrint("- flags %i (%08b)\n",event->time_info.flags,event->time_info.flags,event->time_info.flags);
@@ -312,6 +329,7 @@ private:
   //----------
 
   void handleMidi(const clap_event* event) {
+    KODE_Print("CLAP_EVENT_MIDI\n");
     //KODE_ClapPrint("CLAP_EVENT_MIDI\n");
     //KODE_ClapPrint("- time %i\n",event->time);
     //KODE_ClapPrint("- port_index %i\n",event->midi.port_index);
@@ -322,6 +340,7 @@ private:
   //----------
 
   void handleMidiSysex(const clap_event* event) {
+    KODE_Print("CLAP_EVENT_MIDI_SYSEX\n");
     //KODE_ClapPrint("CLAP_EVENT_MIDI_SYSEX\n");
     //KODE_ClapPrint("- time %i\n",event->time);
     //KODE_ClapPrint("- port_index %i\n",event->midi_sysex.port_index);
@@ -1105,11 +1124,16 @@ public: // extensions
   bool clap_params_get_info(int32_t param_index, clap_param_info *param_info) {
     //KODE_ClapPrint("param_index %i -> true\n",param_index);
     KODE_Parameter* parameter = MDescriptor->parameters[param_index];
-    param_info->id            = param_index;
-    param_info->flags         = 0;//CLAP_PARAM_IS_MODULATABLE;
-    param_info->cookie        = nullptr; // KODE_Parameter* ?
+    uint32_t flags = 0;
+    if (parameter->options.is_hidden)     param_info->flags |= CLAP_PARAM_IS_HIDDEN;
+    if (parameter->options.is_readonly)   param_info->flags |= CLAP_PARAM_IS_READONLY;
+    if (parameter->options.can_modulate)  param_info->flags |= CLAP_PARAM_IS_MODULATABLE;
+    if (parameter->num_steps > 1)         param_info->flags |= CLAP_PARAM_IS_STEPPED;
     KODE_Strlcpy(param_info->name,parameter->name,CLAP_NAME_SIZE);
     KODE_Strlcpy(param_info->module,"",CLAP_MODULE_SIZE);
+    param_info->flags         = flags;
+    param_info->id            = param_index;
+    param_info->cookie        = parameter; //nullptr;
     param_info->min_value     = parameter->min_value;//0.0;
     param_info->max_value     = parameter->max_value;//1.0;
     param_info->default_value = parameter->def_value;//0.5;

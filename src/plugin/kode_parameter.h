@@ -11,7 +11,10 @@
 //----------------------------------------------------------------------
 
 struct KODE_ParameterOptions {
+  bool is_hidden    = false;
+  bool is_readonly  = false;
   bool can_automate = true;
+  bool can_modulate = false;
 };
 
 //----------------------------------------------------------------------
@@ -32,14 +35,11 @@ public:
   const char*           short_name  = "";
   const char*           label       = "";
   KODE_ParameterOptions options     = {};
-
   float                 def_value   = 0.0;
   float                 min_value   = 0.0;
   float                 max_value   = 1.0;
-
   uint32_t              num_steps   = 0;
-
-  int32_t               index = -1;
+  int32_t               index       = -1;
 
 //------------------------------
 public:
