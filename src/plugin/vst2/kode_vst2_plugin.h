@@ -52,9 +52,9 @@ private: // vst2 callbacks
     KODE_Vst2Instance* vst2_instance = (KODE_Vst2Instance*)effect->object;
     result = vst2_instance->vst2_dispatcher(opcode,index,value,ptr,opt);
     if (opcode==effClose) {
-      KODE_DPrint("deleting vst2_instance\n");
+      //KODE_DPrint("deleting vst2_instance\n");
       delete (KODE_Vst2Instance*)vst2_instance;
-      KODE_DPrint("deleting vst2_instance OK\n");
+      //KODE_DPrint("deleting vst2_instance OK\n");
     }
     return result;
   }

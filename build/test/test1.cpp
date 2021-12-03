@@ -4,8 +4,8 @@
 //#define KODE_PLUGIN_DSSI
 //#define KODE_PLUGIN_LV2
 #define KODE_PLUGIN_VST2
-//#define KODE_PLUGIN_VST3
-//#define KODE_PLUGIN_CLAP
+#define KODE_PLUGIN_VST3
+#define KODE_PLUGIN_CLAP
 
 //#define KODE_PLUGIN_ALL
 

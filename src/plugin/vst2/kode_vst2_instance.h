@@ -34,25 +34,19 @@ private:
 //------------------------------
 
   KODE_Vst2Host*      MVst2Host = nullptr;
-
   KODE_IntQueue       MProcessMessageQueue  = {};
   KODE_IntQueue       MGuiMessageQueue      = {};
-
-
   AEffect             MAEffect        = {0};
   audioMasterCallback MAudioMaster    = nullptr;
   KODE_Descriptor*    MDescriptor     = nullptr;
   KODE_Instance*      MInstance       = nullptr;
-
   uint32_t            MCurrentProgram = 0;
   float               MSampleRate     = 0.0f;
   uint32_t            MMaxBlockSize   = 0;
   ERect               MVstRect        = {0};
   uint32_t            MKnobMode       = 0;
-
   KODE_VstEvents      MVstEvents      = {0};
   VstMidiEvent        MVstMidiSendEvents[KODE_PLUGIN_MAX_MIDI_SEND] = {0};
-
   float               MTempo          = 0.0f;
   uint32_t            MTimeSigNum     = 0;
   uint32_t            MTimeSigDenom   = 0;
@@ -60,18 +54,15 @@ private:
   uint32_t            MPlayState      = 0;
   uint32_t            MPrevPlayState  = 0;
   float               MBeatPos        = 0.0f;
-
   bool                MIsOpen         = false;
   bool                MIsSuspended    = false;
   bool                MIsProcessing   = false;
 //bool                MIsInitialized  = false;
 //bool                MNeedToInitializeParameters = true;
-
   #ifndef KODE_NO_GUI
     KODE_Editor*        MEditor         = nullptr;
     bool                MIsEditorOpen   = false;
   #endif // KODE_NO_GUI
-
   KODE_ProcessContext MProcessContext = {0};
 
 //------------------------------
@@ -79,15 +70,11 @@ public:
 //------------------------------
 
   KODE_Vst2Instance(KODE_Instance* AInstance, audioMasterCallback AAudioMaster) {
-
     MAudioMaster = AAudioMaster;
     MInstance = AInstance;
     MDescriptor = MInstance->getDescriptor();
-
     initParameters();
-
     MVst2Host = new KODE_Vst2Host(&MAEffect,AAudioMaster);
-
     //memset(&MVstEvents,0,sizeof(KODE_VstEvents));
     memset(&MVstMidiSendEvents,0,sizeof(MVstMidiSendEvents));
     for (uint32_t i=0; i<KODE_PLUGIN_MAX_MIDI_SEND; i++) {
@@ -98,9 +85,9 @@ public:
   //----------
 
   virtual ~KODE_Vst2Instance() {
-    KODE_DPrint("deleting MInstance\n");
+    //KODE_DPrint("deleting MInstance\n");
     //if (MInstance) delete MInstance;
-    KODE_DPrint("deleting MDescriptor OK\n");
+    //KODE_DPrint("deleting MDescriptor OK\n");
   }
 
 //------------------------------
@@ -130,7 +117,7 @@ public: // KODE_EditorListener
   // TODO: convert via parameter if necessary..
 
   void on_editor_updateParameter(uint32_t AIndex, float AValue) override {
-    KODE_Print("index: %i value: %.3f\n",AIndex,AValue);
+    //KODE_Print("index: %i value: %.3f\n",AIndex,AValue);
     //MEditorParameterValues[AIndex] = AValue;
     //KODE_Parameter* parameter = MDescriptor->parameters[AIndex];
     //float value = parameter->from01(AValue);
@@ -185,31 +172,57 @@ private:
     MProcessMessageQueue.write(AMessage);
   }
 
+  //----------
+
   void flushProcessMessages() {
     uint32_t message = 0;
     while (MProcessMessageQueue.read(&message)) {
       // handle message
-      KODE_Print("on_plugin_parameter(%i)\n",message);
+      //KODE_Print("on_plugin_parameter(%i)\n",message);
       float value = MInstance->getParameterValue(message);
       value = MDescriptor->parameters[message]->from01(value);
       MInstance->on_plugin_parameter(message,value);
     }
   }
 
+  //----------
+
   void queueGuiMessage(uint32_t AMessage) {
     MGuiMessageQueue.write(AMessage);
   }
+
+  //----------
 
   void flushGuiMessages() {
     uint32_t message = 0;
     while (MGuiMessageQueue.read(&message)) {
       // handle message
-      KODE_Print("KODE_Editor->updateParameter(%i)\n",message);
+      //KODE_Print("KODE_Editor->updateParameter(%i)\n",message);
       float value = MInstance->getParameterValue(message);
       MEditor->updateParameter(message,value);
     }
   }
 
+  //----------
+
+  void queueMidiOut(uint32_t AOffset, uint8_t AMsg1, uint8_t AMsg2, uint8_t AMsg3) {
+    // see flushMidi
+    int32_t       num   = MVstEvents.numEvents;
+    VstMidiEvent* event = &MVstMidiSendEvents[num];
+    event->type         = kVstMidiType;
+    event->deltaFrames  = AOffset;
+    event->midiData[0]  = AMsg1;
+    event->midiData[1]  = AMsg2;
+    event->midiData[2]  = AMsg3;
+    event->midiData[3]  = 0;
+    event->byteSize     = sizeof(VstMidiEvent) - 2 * sizeof(int32_t);
+    event->flags        = 0; // kVstMidiEventIsRealtime;
+    event->noteLength   = 0;
+    event->noteOffset   = 0;
+    event->detune       = 0;
+    num += 1;
+    MVstEvents.numEvents = num;
+  }
 
   //----------
 
@@ -295,7 +308,11 @@ public: // vst2
     MInstance->on_plugin_process(&MProcessContext);
 
 //    //on_postProcess();
-//    if (MDescriptor->hasFlag(KODE_PLUGIN_SEND_MIDI)) host_flushMidi();
+
+    if (MDescriptor->options.can_send_midi) {
+      MVst2Host->flushMidi( (VstEvents*)&MVstEvents );
+      MVstEvents.numEvents = 0;
+    }
 
   }
 
