@@ -99,11 +99,17 @@ public:
 
   AEffect* entrypoint(audioMasterCallback audioMaster) {
     //KODE_Print("\n");
-    //if (!MDescriptor) MDescriptor     = new DESCRIPTOR();                             // deleted in: ~KODE_Instance()
-    //KODE_Instance* instance           = new INSTANCE(MDescriptor);                    // deleted in ~KODE_Vst2Instance()
-    if (!MDescriptor) MDescriptor     = _kode_create_descriptor(); // new DESCRIPTOR();                             // deleted in: ~KODE_Instance()
-    KODE_Instance* instance           = _kode_create_instance(MDescriptor); //new INSTANCE(MDescriptor);                    // deleted in ~KODE_Vst2Instance()
-    KODE_Vst2Instance* vst2_instance  = new KODE_Vst2Instance(instance,audioMaster);  // deleted in:
+
+    //if (!MDescriptor) MDescriptor = new DESCRIPTOR(); // deleted in: ~KODE_Instance()
+    //KODE_Instance* instance = new INSTANCE(MDescriptor); // deleted in ~KODE_Vst2Instance()
+
+    if (!MDescriptor) MDescriptor = _kode_create_descriptor(); // deleted in: ~KODE_Instance()
+
+    KODE_Instance* instance = _kode_create_instance(MDescriptor); // deleted in ~KODE_Vst2Instance()
+    instance->setPluginFormat(KODE_PLUGIN_FORMAT_VST2);
+
+    KODE_Vst2Instance* vst2_instance  = new KODE_Vst2Instance(instance,audioMaster); // deleted in:
+    AEffect* effect = vst2_instance->getAEffect();
 
 //    instance->setListener(vst2_instance);
 
@@ -120,7 +126,6 @@ public:
     //#ifndef KODE_PLUGIN_VST2_VESTIGE
     //if (MDescriptor->options.can_process_double) flags |= effFlagsCanDoubleReplacing;
     //#endif
-    AEffect* effect = vst2_instance->getAEffect();
     memset(effect,0,sizeof(AEffect));
     effect->magic                     = kEffectMagic;
     effect->uniqueID                  = MDescriptor->short_id;

@@ -12,18 +12,19 @@ private:
 //------------------------------
 
   audioMasterCallback   MAudioMaster  = nullptr;
-  //AEffect*              MAEffect      = nullptr;
+  AEffect*              MAEffect      = nullptr;
 
 //------------------------------
 public:
 //------------------------------
 
-  KODE_Vst2Host(audioMasterCallback AAudioMaster/*, AEffect* AAEffect*/) {
+  KODE_Vst2Host(AEffect* AAEffect, audioMasterCallback AAudioMaster) {
+    MAEffect = AAEffect;
     MAudioMaster = AAudioMaster;
   }
 
 //------------------------------
-private:
+public:
 //------------------------------
 
   //bool processEvents(VstEvents* events) {
@@ -33,10 +34,10 @@ private:
   //  return false;
   //}
 
-  void flushMidi(AEffect* AAEffect, VstEvents* AVstEvents) {
+  void flushMidi(VstEvents* AVstEvents) {
     if (MAudioMaster) {
       //MAudioMaster(MAEffect,audioMasterProcessEvents,0,0,(VstEvents*)&MVstEvents,0);
-      MAudioMaster(AAEffect,audioMasterProcessEvents,0,0,AVstEvents,0);
+      MAudioMaster(MAEffect,audioMasterProcessEvents,0,0,AVstEvents,0);
       AVstEvents->numEvents = 0;
     }
   }
@@ -50,9 +51,9 @@ private:
   //  return false;
   //}
 
-  void resizeEditor(AEffect* AAEffect, uint32_t AWidth, uint32_t AHeight) {
+  void resizeEditor(uint32_t AWidth, uint32_t AHeight) {
     if (MAudioMaster) {
-      MAudioMaster(AAEffect,audioMasterSizeWindow,AWidth,AHeight,0,0);
+      MAudioMaster(MAEffect,audioMasterSizeWindow,AWidth,AHeight,0,0);
     }
   }
 
@@ -72,7 +73,7 @@ private:
   //  return 0;
   //}
 
-  void updateInfo(AEffect* AAEffect) {
+  void updateInfo() {
 
     /*
 
@@ -125,13 +126,13 @@ private:
     MHostVstVer = version();
 
     //KODE_HostInfo* info;
-    MAudioMaster(AAEffect,audioMasterGetVendorString,0,0,MHostInfo.vendor,0);
-    MAudioMaster(AAEffect,audioMasterGetProductString,0,0,MHostInfo.product,0);
-    MHostInfo.version   = MAudioMaster(AAEffect,audioMasterGetVendorVersion,0,0,0,0);
-    MHostInfo.language  = MAudioMaster(AAEffect,audioMasterGetLanguage,0,0,0,0);
-    char* path = (char*)MAudioMaster(AAEffect,audioMasterGetDirectory,0,0,0,0);
+    MAudioMaster(MAEffect,audioMasterGetVendorString,0,0,MHostInfo.vendor,0);
+    MAudioMaster(MAEffect,audioMasterGetProductString,0,0,MHostInfo.product,0);
+    MHostInfo.version   = MAudioMaster(MAEffect,audioMasterGetVendorVersion,0,0,0,0);
+    MHostInfo.language  = MAudioMaster(MAEffect,audioMasterGetLanguage,0,0,0,0);
+    char* path = (char*)MAudioMaster(MAEffect,audioMasterGetDirectory,0,0,0,0);
     strcpy(MHostInfo.directory,path);
-    //if (MAudioMaster(AAEffect,audioMasterCanDo,0,0,(char*)"acceptIOChanges",0) == 1) MHostInfo.canDo += khc_acceptIoChange;
+    //if (MAudioMaster(MAEffect,audioMasterCanDo,0,0,(char*)"acceptIOChanges",0) == 1) MHostInfo.canDo += khc_acceptIoChange;
 
     */
 
@@ -161,11 +162,11 @@ private:
   //}
 
 
-  void updateParameter(AEffect* AAEffect, uint32_t AIndex, float AValue) {
+  void updateParameter(uint32_t AIndex, float AValue) {
     if (MAudioMaster) {
-      MAudioMaster(AAEffect,audioMasterBeginEdit,AIndex,0,0,0);
-      MAudioMaster(AAEffect,audioMasterAutomate,AIndex,0,0,AValue);
-      MAudioMaster(AAEffect,audioMasterEndEdit,AIndex,0,0,0);
+      MAudioMaster(MAEffect,audioMasterBeginEdit,AIndex,0,0,0);
+      MAudioMaster(MAEffect,audioMasterAutomate,AIndex,0,0,AValue);
+      MAudioMaster(MAEffect,audioMasterEndEdit,AIndex,0,0,0);
     }
   }
 
@@ -234,9 +235,9 @@ private:
     };
   */
 
-  void updateTime(AEffect* AAEffect) {
+  void updateTime() {
 //    VstIntPtr mask = 0xffff;
-//    VstIntPtr result = MAudioMaster(AAEffect,audioMasterGetTime,0,mask,0,0);
+//    VstIntPtr result = MAudioMaster(MAEffect,audioMasterGetTime,0,mask,0,0);
 //    VstTimeInfo* timeinfo = (VstTimeInfo*)result;
 //    if (timeinfo) {
 //      MTempo          = timeinfo->tempo;
@@ -264,64 +265,64 @@ private:
   //----------
   //----------
 
-  uint32_t getAutomationState(AEffect* AAEffect) {
-    return MAudioMaster(AAEffect,audioMasterGetAutomationState,0,0,0,0);
+  uint32_t getAutomationState() {
+    return MAudioMaster(MAEffect,audioMasterGetAutomationState,0,0,0,0);
   }
 
   //----------
 
-  uint32_t getBlockSize(AEffect* AAEffect) {
-    return MAudioMaster(AAEffect,audioMasterGetBlockSize,0,0,0,0);
+  uint32_t getBlockSize() {
+    return MAudioMaster(MAEffect,audioMasterGetBlockSize,0,0,0,0);
   }
 
   //----------
 
-  uint32_t getInputLatency(AEffect* AAEffect) {
-    return MAudioMaster(AAEffect,audioMasterGetInputLatency,0,0,0,0);
+  uint32_t getInputLatency() {
+    return MAudioMaster(MAEffect,audioMasterGetInputLatency,0,0,0,0);
   }
 
   //----------
 
-  uint32_t getOutputLatency(AEffect* AAEffect) {
-    return MAudioMaster(AAEffect,audioMasterGetOutputLatency,0,0,0,0);
+  uint32_t getOutputLatency() {
+    return MAudioMaster(MAEffect,audioMasterGetOutputLatency,0,0,0,0);
   }
 
   //----------
 
-  uint32_t getProcessLevel(AEffect* AAEffect) {
-    return MAudioMaster(AAEffect,audioMasterGetCurrentProcessLevel,0,0,0,0);
+  uint32_t getProcessLevel() {
+    return MAudioMaster(MAEffect,audioMasterGetCurrentProcessLevel,0,0,0,0);
   }
 
   //----------
 
-  uint32_t getSampleRate(AEffect* AAEffect) {
-    return MAudioMaster(AAEffect,audioMasterGetSampleRate,0,0,0,0);
+  uint32_t getSampleRate() {
+    return MAudioMaster(MAEffect,audioMasterGetSampleRate,0,0,0,0);
   }
 
   //----------
 
-  void idle(AEffect* AAEffect) {
-    if (MAudioMaster) MAudioMaster(AAEffect,audioMasterIdle,0,0,nullptr,0);
+  void idle() {
+    if (MAudioMaster) MAudioMaster(MAEffect,audioMasterIdle,0,0,nullptr,0);
   }
 
   //----------
 
-  bool ioChanged(AEffect* AAEffect) {
-    if (MAudioMaster(AAEffect,audioMasterIOChanged,0,0,0,0) == 1) return true;
+  bool ioChanged() {
+    if (MAudioMaster(MAEffect,audioMasterIOChanged,0,0,0,0) == 1) return true;
     return false;
   }
 
   //----------
 
-  void updateDisplay(AEffect* AAEffect) {
-    MAudioMaster(AAEffect,audioMasterUpdateDisplay,0,0,0,0);
+  void updateDisplay() {
+    MAudioMaster(MAEffect,audioMasterUpdateDisplay,0,0,0,0);
   }
 
   //----------
 
-  VstInt32 version(AEffect* AAEffect) {
+  VstInt32 version() {
     VstInt32 result = 1;
-    if (MAudioMaster) result = (VstInt32)MAudioMaster(AAEffect,audioMasterVersion,0,0,nullptr,0);
+    if (MAudioMaster) result = (VstInt32)MAudioMaster(MAEffect,audioMasterVersion,0,0,nullptr,0);
     if (result==0) result = 1; // old (!version)
     return result;
   }

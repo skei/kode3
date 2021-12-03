@@ -1872,7 +1872,6 @@ public: // IEditController
   //----------
 
   int32_t VST3_API getParamStringByValue(uint32_t id, double valueNormalized, VST3_String string) final {
-    //KODE_PRINT;
     if (id < MDescriptor->parameters.size()) {
       char temp[129]; // ???
       KODE_Parameter* param = MDescriptor->parameters[id];

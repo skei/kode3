@@ -6,10 +6,17 @@
 #include "plugin/kode_instance.h"
 #include "plugin/kode_process_context.h"
 //#include "plugin/kode_instance_listener.h"
+#include "plugin/vst2/kode_vst2_host.h"
 
 //----------------------------------------------------------------------
 
 #define KODE_PLUGIN_MAX_MIDI_SEND   256
+#define KODE_PLUGIN_MESSAGE_QUEUE_SIZE 32
+
+typedef KODE_Queue<uint32_t,KODE_PLUGIN_MESSAGE_QUEUE_SIZE> KODE_IntQueue;
+
+
+
 
 struct KODE_VstEvents {
   VstInt32  numEvents;
@@ -25,6 +32,12 @@ class KODE_Vst2Instance
 //------------------------------
 private:
 //------------------------------
+
+  KODE_Vst2Host*      MVst2Host = nullptr;
+
+  KODE_IntQueue       MProcessMessageQueue  = {};
+  KODE_IntQueue       MGuiMessageQueue      = {};
+
 
   AEffect             MAEffect        = {0};
   audioMasterCallback MAudioMaster    = nullptr;
@@ -66,9 +79,15 @@ public:
 //------------------------------
 
   KODE_Vst2Instance(KODE_Instance* AInstance, audioMasterCallback AAudioMaster) {
+
     MAudioMaster = AAudioMaster;
     MInstance = AInstance;
     MDescriptor = MInstance->getDescriptor();
+
+    initParameters();
+
+    MVst2Host = new KODE_Vst2Host(&MAEffect,AAudioMaster);
+
     //memset(&MVstEvents,0,sizeof(KODE_VstEvents));
     memset(&MVstMidiSendEvents,0,sizeof(MVstMidiSendEvents));
     for (uint32_t i=0; i<KODE_PLUGIN_MAX_MIDI_SEND; i++) {
@@ -93,76 +112,118 @@ public:
   }
 
 //------------------------------
-public: // instance listener
+public: // KODE_EditorListener
 //------------------------------
 
-  //uint32_t getPluginFormat() override {
-  //  //KODE_Trace("VST2\n");
-  //  return KODE_PLUGIN_FORMAT_VST2;
-  //}
+  #ifndef KODE_NO_GUI
+
+  /*
+    we run our gui in its own thread, but need to communicate with the
+    host on its gui thread.. so, when we tweak a parameter, we queue the
+    parameter (index), and send all updated ones to the host during onTimer
+    (see bottom)
+    the host should communicate the parameter change (audio thread) during
+    next process()
+  */
+
+  // AValue is 0..1 (widget-value)
+  // TODO: convert via parameter if necessary..
+
+  void on_editor_updateParameter(uint32_t AIndex, float AValue) override {
+    KODE_Print("index: %i value: %.3f\n",AIndex,AValue);
+    //MEditorParameterValues[AIndex] = AValue;
+    //KODE_Parameter* parameter = MDescriptor->parameters[AIndex];
+    //float value = parameter->from01(AValue);
+    //value = parameter->from01(value);
+    float value = AValue;
+    //MParameterValues[AIndex] = value;
+    MInstance->setParameterValue(AIndex,value);
+    //queueParameterToHost(AIndex,value);
+
+    //void updateParameter(AEffect* AAEffect, uint32_t AIndex, float AValue) {
+    //  if (MAudioMaster) {
+    //    MAudioMaster(AAEffect,audioMasterBeginEdit,AIndex,0,0,0);
+    //    MAudioMaster(AAEffect,audioMasterAutomate,AIndex,0,0,AValue);
+    //    MAudioMaster(AAEffect,audioMasterEndEdit,AIndex,0,0,0);
+    //  }
+    //}
+
+    MVst2Host->updateParameter(AIndex,value);
+
+//    queueHostMessages
+
+  }
 
   //----------
 
-  //float getSamplerate() override {
-  //  //KODE_Trace("VST2\n");
-  //  return MSampleRate;
-  //}
+  void on_editor_resize(uint32_t AWidth, uint32_t AHeight) override {
+  }
 
-  //----------
-
-  //void notifyHostUpdateParameter(uint32_t AIndex, float AValue) override {
-  //  //KODE_TRACE;
-  //  host_updateParameter(AIndex,AValue);
-  //}
-
-  //----------
-
-  //void notifyHostResizeWindow(uint32_t AWidth, uint32_t AHeight) override {
-  //  host_resizeEditor(AWidth,AHeight);
-  //}
-
-  //----------
-
-  // see: host_flushMidi();
-
-  //void notifyHostMidiOutput(uint32_t AOffset, uint8_t AMsg1, uint8_t AMsg2, uint8_t AMsg3) override {
-  //  if (MAudioMaster) {
-  //    // see flushMidi
-  //    int32_t       num   = MVstEvents.numEvents;
-  //    VstMidiEvent* event = &MVstMidiSendEvents[num];
-  //    event->type         = kVstMidiType;
-  //    event->deltaFrames  = AOffset;
-  //    event->midiData[0]  = AMsg1;
-  //    event->midiData[1]  = AMsg2;
-  //    event->midiData[2]  = AMsg3;
-  //    event->midiData[3]  = 0;
-  //    event->byteSize     = sizeof(VstMidiEvent) - 2 * sizeof(int32_t);
-  //    event->flags        = 0; // kVstMidiEventIsRealtime;
-  //    event->noteLength   = 0;
-  //    event->noteOffset   = 0;
-  //    event->detune       = 0;
-  //    num += 1;
-  //    MVstEvents.numEvents = num;
-  //  }
-  //}
+  #endif
 
 //------------------------------
 private:
 //------------------------------
 
+  void initParameters() {
+    uint32_t num = MDescriptor->parameters.size();
+    for (uint32_t i=0; i<num; i++) {
+      KODE_Parameter* parameter = MDescriptor->parameters[i];
+      //float value = parameter->def_value;
+      //KODE_Print("%i %f",i,value);
+      parameter->def_value = parameter->to01( parameter->def_value );
+      parameter->min_value = parameter->to01( parameter->min_value );
+      parameter->max_value = parameter->to01( parameter->max_value );
+      //value = parameter->def_value;
+      //KODE_DPrint("-> %f\n",value);
+    }
+  }
+
+  //----------
+
+  void queueProcessMessage(uint32_t AMessage) {
+    MProcessMessageQueue.write(AMessage);
+  }
+
+  void flushProcessMessages() {
+    uint32_t message = 0;
+    while (MProcessMessageQueue.read(&message)) {
+      // handle message
+      KODE_Print("on_plugin_parameter(%i)\n",message);
+      float value = MInstance->getParameterValue(message);
+      value = MDescriptor->parameters[message]->from01(value);
+      MInstance->on_plugin_parameter(message,value);
+    }
+  }
+
+  void queueGuiMessage(uint32_t AMessage) {
+    MGuiMessageQueue.write(AMessage);
+  }
+
+  void flushGuiMessages() {
+    uint32_t message = 0;
+    while (MGuiMessageQueue.read(&message)) {
+      // handle message
+      KODE_Print("KODE_Editor->updateParameter(%i)\n",message);
+      float value = MInstance->getParameterValue(message);
+      MEditor->updateParameter(message,value);
+    }
+  }
+
+
+  //----------
+
   void updateParametersInProcess() {
-
-//    MInstance->flushParamsToProcess();
-
+    //MInstance->flushParamsToProcess();
+    flushProcessMessages();
   }
 
   //----------
 
   #ifndef KODE_NO_GUI
   void updateEditorInIdle() {
-
-//    MInstance->flushParamsToEditor();
-
+    //MInstance->flushParamsToEditor();
+    flushGuiMessages();
   }
   #endif
 
@@ -189,12 +250,12 @@ public: // vst2
     //MInstance->updateEditorValue(index,parameter);
     MInstance->setParameterValue(index,parameter);
 
-//    MInstance->queueParamToProcess(index);
+    //MInstance->queueParamToProcess(index);
+    queueProcessMessage(index);
 
     #ifndef KODE_NO_GUI
-
-//      if (MIsEditorOpen) MInstance->queueParamToEditor(index);
-
+      //if (MIsEditorOpen) MInstance->queueParamToEditor(index);
+      if (MIsEditorOpen) queueGuiMessage(index);
     #endif // KODE_NO_GUI
   }
 
@@ -268,7 +329,9 @@ public: // vst2
         //updateHostInfo();
         //MInstance->on_open();
 
-//        MInstance->on_initialize();
+        MInstance->on_plugin_init();
+        MInstance->setDefaultParameterValues();
+        MInstance->updateAllParameters();
 
         break;
 
@@ -283,8 +346,7 @@ public: // vst2
         //KODE_Vst2Trace("vst2: dispatcher/effClose\n");
         MIsOpen = false;
 
-//        MInstance->on_terminate();
-//        MInstance->on_close();
+        MInstance->on_plugin_destroy();
 
         break;
 
@@ -376,6 +438,7 @@ public: // vst2
         //KODE_Vst2Trace("vst2: dispatcher/effGetParamDisplay %i\n",index);
         KODE_Parameter* pa = MDescriptor->parameters[index];
         float v = MInstance->getParameterValue(index);
+        v = pa->from01(v);
         char str[32];
         pa->getDisplayText(v,str);
         strcpy((char*)ptr,(char*)str);
@@ -469,7 +532,7 @@ public: // vst2
           MIsProcessing = false;
           MIsSuspended = true;
 
-//          MInstance->on_deactivate();
+          MInstance->on_plugin_deactivate();
 
         }
         else { // resume
@@ -480,7 +543,7 @@ public: // vst2
           MIsProcessing = true;
           MIsSuspended = false;
 
-//          MInstance->on_activate();
+          MInstance->on_plugin_activate(MSampleRate,0,MMaxBlockSize);
 
         }
         break;
@@ -536,9 +599,12 @@ public: // vst2
 
             MEditor = _kode_create_editor(this,MDescriptor);
             MInstance->on_plugin_createEditor(MEditor);
+
             MEditor->attach("",ptr);
-            MEditor->show();
+
             MInstance->on_plugin_openEditor(MEditor);
+            MInstance->updateAllEditorParameters(MEditor,false);
+            MEditor->show();
 
             return 1;
           }
@@ -694,7 +760,7 @@ public: // vst2
             float v = buffer[i];
             MInstance->setParameterValue(i,v);
           }
-//          MInstance->updateAllParameters();
+          MInstance->updateAllParameters();
         }
         break;
 

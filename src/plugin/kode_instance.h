@@ -89,7 +89,8 @@ public:
     uint32_t num = MDescriptor->parameters.size();
     for (uint32_t i=0; i<num; i++) {
       float value = MParameterValues[i];
-      if (MPluginFormat == KODE_PLUGIN_FORMAT_VST3) {
+      if ((MPluginFormat == KODE_PLUGIN_FORMAT_VST2)
+       || (MPluginFormat == KODE_PLUGIN_FORMAT_VST3)) {
         KODE_Parameter* parameter = MDescriptor->parameters[i];
         value = parameter->from01(value);
       }
@@ -100,17 +101,33 @@ public:
   //----------
 
   #ifndef KODE_NO_GUI
+
+  void updateEditorParameter(KODE_Editor* AEditor, uint32_t AIndex, bool ARedraw=true) {
+    float value = MParameterValues[AIndex];
+    if (MPluginFormat == KODE_PLUGIN_FORMAT_CLAP) {
+      KODE_Parameter* parameter = MDescriptor->parameters[AIndex];
+      value = parameter->to01(value);
+    }
+    AEditor->updateParameter(AIndex,value,ARedraw);
+  }
+
+  //----------
+
   void updateAllEditorParameters(KODE_Editor* AEditor, bool ARedraw=true) {
     uint32_t num = MDescriptor->parameters.size();
     for (uint32_t i=0; i<num; i++) {
-      float value = MParameterValues[i];
-      if (MPluginFormat == KODE_PLUGIN_FORMAT_CLAP) {
-        KODE_Parameter* parameter = MDescriptor->parameters[i];
-        value = parameter->to01(value);
-      }
-      AEditor->updateParameter(i,value,ARedraw);
+      //float value = MParameterValues[i];
+      //if (MPluginFormat == KODE_PLUGIN_FORMAT_CLAP) {
+      //  KODE_Parameter* parameter = MDescriptor->parameters[i];
+      //  value = parameter->to01(value);
+      //}
+      //AEditor->updateParameter(i,value,ARedraw);
+
+      updateEditorParameter(AEditor,i,ARedraw);
+
     }
   }
+
   #endif
 
   //----------
