@@ -1,0 +1,21 @@
+
+in progress !!
+
+----------------------------------------------------------------------
+
+syntax
+
+  KODE_
+
+  int KODE_GLOBAL_INT = 0;
+
+  #define KODE_MACRO_NAME
+
+  'important' and exported stuff, like global functions, types (classes, structs,
+
+  low_level_or_internal
+
+  KODE_ClassName {
+    float MMemberVariable;
+    int functionName(int AArgument) { return 0; }
+  };

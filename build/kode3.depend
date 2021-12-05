@@ -271,7 +271,7 @@
 	"plugin/kode_parameter.h"
 	"plugin/kode_preset.h"
 
-1638483434 /DISKS/sda2/code/git/kode3/src/plugin/kode_instance.h
+1638617467 /DISKS/sda2/code/git/kode3/src/plugin/kode_instance.h
 	"kode.h"
 	"plugin/kode_descriptor.h"
 	"plugin/kode_editor.h"
@@ -355,7 +355,7 @@
 	<lv2/urid/urid.h>
 	<lv2/lv2plug.in/ns/extensions/ui/ui.h>
 
-1636635797 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_plugin.h
+1638566344 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_plugin.h
 	"kode.h"
 	"plugin/kode_descriptor.h"
 	"plugin/vst2/kode_vst2.h"
@@ -557,7 +557,7 @@
 1638095229 /DISKS/sda2/code/git/kode3/src/extern/clap/ext/draft/midi-mappings.h
 	"../../clap.h"
 
-1638478407 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_host.h
+1638570365 /DISKS/sda2/code/git/kode3/src/plugin/clap/kode_clap_host.h
 	"kode.h"
 	"plugin/clap/kode_clap.h"
 
@@ -619,12 +619,13 @@
 1440689074 /DISKS/sda2/code/git/kode3/src/extern/vst2/aeffectx.h
 	"aeffect.h"
 
-1638443592 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_instance.h
+1638566808 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_instance.h
 	"kode.h"
 	"plugin/kode_instance.h"
 	"plugin/kode_process_context.h"
+	"plugin/vst2/kode_vst2_host.h"
 
-1638485759 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_instance.h
+1638487053 /DISKS/sda2/code/git/kode3/src/plugin/vst3/kode_vst3_instance.h
 	"plugin/kode_editor.h"
 	"base/types/kode_queue.h"
 	"plugin/kode_instance.h"
@@ -641,7 +642,7 @@
 1636129665 /DISKS/sda2/code/git/kode3/src/base/kode_array.h
 	<stdlib.h>
 
-1638485725 /DISKS/sda2/code/git/kode3/src/plugin/kode_parameter.h
+1638618599 /DISKS/sda2/code/git/kode3/src/plugin/kode_parameter.h
 	<stdio.h>
 	"base/types/kode_array.h"
 
@@ -757,11 +758,11 @@
 	"plugin/vst2/kode_vst2_host.h"
 	"plugin/vst2/kode_hosted_vst2_instance.h"
 
-1636581537 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_host.h
+1638489701 /DISKS/sda2/code/git/kode3/src/plugin/vst2/kode_vst2_host.h
 	"kode.h"
 	"plugin/vst2/kode_vst2.h"
 
-1638483287 /DISKS/sda2/code/git/kode3/build/test/test1.cpp
+1638617518 /DISKS/sda2/code/git/kode3/build/test/test1.cpp
 	"kode.h"
 	"plugin/kode_plugin.h"
 	"plugin/kode_voice_manager.h"
@@ -779,7 +780,7 @@
 	"base/system/kode_system.h"
 	"base/utils/kode_utils.h"
 
-1636756297 /DISKS/sda2/code/git/kode3/src/base/kode_config.h
+1638486438 /DISKS/sda2/code/git/kode3/src/base/kode_config.h
 
 1637107337 /DISKS/sda2/code/git/kode3/src/base/kode_defines.h
 

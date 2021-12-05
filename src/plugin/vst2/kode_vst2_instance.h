@@ -5,7 +5,6 @@
 #include "kode.h"
 #include "plugin/kode_instance.h"
 #include "plugin/kode_process_context.h"
-//#include "plugin/kode_instance_listener.h"
 #include "plugin/vst2/kode_vst2_host.h"
 
 //----------------------------------------------------------------------
@@ -33,37 +32,37 @@ class KODE_Vst2Instance
 private:
 //------------------------------
 
-  KODE_Vst2Host*      MVst2Host = nullptr;
+  KODE_Vst2Host*      MVst2Host             = nullptr;
   KODE_IntQueue       MProcessMessageQueue  = {};
   KODE_IntQueue       MGuiMessageQueue      = {};
-  AEffect             MAEffect        = {0};
-  audioMasterCallback MAudioMaster    = nullptr;
-  KODE_Descriptor*    MDescriptor     = nullptr;
-  KODE_Instance*      MInstance       = nullptr;
-  uint32_t            MCurrentProgram = 0;
-  float               MSampleRate     = 0.0f;
-  uint32_t            MMaxBlockSize   = 0;
-  ERect               MVstRect        = {0};
-  uint32_t            MKnobMode       = 0;
-  KODE_VstEvents      MVstEvents      = {0};
+  AEffect             MAEffect              = {0};
+  audioMasterCallback MAudioMaster          = nullptr;
+  KODE_Descriptor*    MDescriptor           = nullptr;
+  KODE_Instance*      MInstance             = nullptr;
+  uint32_t            MCurrentProgram       = 0;
+  float               MSampleRate           = 0.0f;
+  uint32_t            MMaxBlockSize         = 0;
+  ERect               MVstRect              = {0};
+  uint32_t            MKnobMode             = 0;
+  KODE_VstEvents      MVstEvents            = {0};
   VstMidiEvent        MVstMidiSendEvents[KODE_PLUGIN_MAX_MIDI_SEND] = {0};
-  float               MTempo          = 0.0f;
-  uint32_t            MTimeSigNum     = 0;
-  uint32_t            MTimeSigDenom   = 0;
-  uint32_t            MSamplePos      = 0;
-  uint32_t            MPlayState      = 0;
-  uint32_t            MPrevPlayState  = 0;
-  float               MBeatPos        = 0.0f;
-  bool                MIsOpen         = false;
-  bool                MIsSuspended    = false;
-  bool                MIsProcessing   = false;
-//bool                MIsInitialized  = false;
+  float               MTempo                = 0.0f;
+  uint32_t            MTimeSigNum           = 0;
+  uint32_t            MTimeSigDenom         = 0;
+  uint32_t            MSamplePos            = 0;
+  uint32_t            MPlayState            = 0;
+  uint32_t            MPrevPlayState        = 0;
+  float               MBeatPos              = 0.0f;
+  bool                MIsOpen               = false;
+  bool                MIsSuspended          = false;
+  bool                MIsProcessing         = false;
+//bool                MIsInitialized        = false;
 //bool                MNeedToInitializeParameters = true;
   #ifndef KODE_NO_GUI
-    KODE_Editor*        MEditor         = nullptr;
-    bool                MIsEditorOpen   = false;
+    KODE_Editor*        MEditor             = nullptr;
+    bool                MIsEditorOpen       = false;
   #endif // KODE_NO_GUI
-  KODE_ProcessContext MProcessContext = {0};
+  KODE_ProcessContext MProcessContext       = {0};
 
 //------------------------------
 public:
@@ -75,7 +74,6 @@ public:
     MDescriptor = MInstance->getDescriptor();
     initParameters();
     MVst2Host = new KODE_Vst2Host(&MAEffect,AAudioMaster);
-    //memset(&MVstEvents,0,sizeof(KODE_VstEvents));
     memset(&MVstMidiSendEvents,0,sizeof(MVstMidiSendEvents));
     for (uint32_t i=0; i<KODE_PLUGIN_MAX_MIDI_SEND; i++) {
       MVstEvents.events[i] = (VstEvent*)&MVstMidiSendEvents[i];
@@ -85,9 +83,7 @@ public:
   //----------
 
   virtual ~KODE_Vst2Instance() {
-    //KODE_DPrint("deleting MInstance\n");
     //if (MInstance) delete MInstance;
-    //KODE_DPrint("deleting MDescriptor OK\n");
   }
 
 //------------------------------
@@ -117,28 +113,12 @@ public: // KODE_EditorListener
   // TODO: convert via parameter if necessary..
 
   void on_editor_updateParameter(uint32_t AIndex, float AValue) override {
-    //KODE_Print("index: %i value: %.3f\n",AIndex,AValue);
     //MEditorParameterValues[AIndex] = AValue;
     //KODE_Parameter* parameter = MDescriptor->parameters[AIndex];
     //float value = parameter->from01(AValue);
-    //value = parameter->from01(value);
     float value = AValue;
-    //MParameterValues[AIndex] = value;
     MInstance->setParameterValue(AIndex,value);
-    //queueParameterToHost(AIndex,value);
-
-    //void updateParameter(AEffect* AAEffect, uint32_t AIndex, float AValue) {
-    //  if (MAudioMaster) {
-    //    MAudioMaster(AAEffect,audioMasterBeginEdit,AIndex,0,0,0);
-    //    MAudioMaster(AAEffect,audioMasterAutomate,AIndex,0,0,AValue);
-    //    MAudioMaster(AAEffect,audioMasterEndEdit,AIndex,0,0,0);
-    //  }
-    //}
-
     MVst2Host->updateParameter(AIndex,value);
-
-//    queueHostMessages
-
   }
 
   //----------
@@ -156,13 +136,9 @@ private:
     uint32_t num = MDescriptor->parameters.size();
     for (uint32_t i=0; i<num; i++) {
       KODE_Parameter* parameter = MDescriptor->parameters[i];
-      //float value = parameter->def_value;
-      //KODE_Print("%i %f",i,value);
       parameter->def_value = parameter->to01( parameter->def_value );
       parameter->min_value = parameter->to01( parameter->min_value );
       parameter->max_value = parameter->to01( parameter->max_value );
-      //value = parameter->def_value;
-      //KODE_DPrint("-> %f\n",value);
     }
   }
 
@@ -177,8 +153,6 @@ private:
   void flushProcessMessages() {
     uint32_t message = 0;
     while (MProcessMessageQueue.read(&message)) {
-      // handle message
-      //KODE_Print("on_plugin_parameter(%i)\n",message);
       float value = MInstance->getParameterValue(message);
       value = MDescriptor->parameters[message]->from01(value);
       MInstance->on_plugin_parameter(message,value);
@@ -196,8 +170,6 @@ private:
   void flushGuiMessages() {
     uint32_t message = 0;
     while (MGuiMessageQueue.read(&message)) {
-      // handle message
-      //KODE_Print("KODE_Editor->updateParameter(%i)\n",message);
       float value = MInstance->getParameterValue(message);
       MEditor->updateParameter(message,value);
     }
@@ -205,8 +177,8 @@ private:
 
   //----------
 
+  // see flushMidi
   void queueMidiOut(uint32_t AOffset, uint8_t AMsg1, uint8_t AMsg2, uint8_t AMsg3) {
-    // see flushMidi
     int32_t       num   = MVstEvents.numEvents;
     VstMidiEvent* event = &MVstMidiSendEvents[num];
     event->type         = kVstMidiType;
@@ -227,7 +199,6 @@ private:
   //----------
 
   void updateParametersInProcess() {
-    //MInstance->flushParamsToProcess();
     flushProcessMessages();
   }
 
@@ -235,7 +206,6 @@ private:
 
   #ifndef KODE_NO_GUI
   void updateEditorInIdle() {
-    //MInstance->flushParamsToEditor();
     flushGuiMessages();
   }
   #endif
@@ -262,14 +232,10 @@ public: // vst2
     //MInstance->updateProcessValue(index,parameter);
     //MInstance->updateEditorValue(index,parameter);
     MInstance->setParameterValue(index,parameter);
-
-    //MInstance->queueParamToProcess(index);
     queueProcessMessage(index);
-
     #ifndef KODE_NO_GUI
-      //if (MIsEditorOpen) MInstance->queueParamToEditor(index);
       if (MIsEditorOpen) queueGuiMessage(index);
-    #endif // KODE_NO_GUI
+    #endif
   }
 
   //----------
@@ -288,12 +254,8 @@ public: // vst2
 
   void vst2_process(float** inputs, float** outputs, VstInt32 sampleFrames) {
     updateParametersInProcess();
-
-//    host_updateTime();
-//    KODE_ProcessContext context;// = {0};
-
+    //MHost->updateTime();
     uint32_t i;
-
     for (i=0; i<MDescriptor->inputs.size(); i++)  { MProcessContext.inputs[i]  = inputs[i]; }
     for (i=0; i<MDescriptor->outputs.size(); i++) { MProcessContext.outputs[i] = outputs[i]; }
     MProcessContext.numsamples    = sampleFrames;
@@ -306,14 +268,11 @@ public: // vst2
     MProcessContext.timesigdenom  = MTimeSigDenom; // getTimeSigDenom();
     MProcessContext.playstate     = MPlayState;
     MInstance->on_plugin_process(&MProcessContext);
-
-//    //on_postProcess();
-
+    //on_postProcess();
     if (MDescriptor->options.can_send_midi) {
       MVst2Host->flushMidi( (VstEvents*)&MVstEvents );
       MVstEvents.numEvents = 0;
     }
-
   }
 
   //----------
@@ -325,15 +284,11 @@ public: // vst2
 
   VstIntPtr vst2_dispatcher(VstInt32 opcode, VstInt32 index, VstIntPtr value, void* ptr, float opt) {
     VstIntPtr result    = 0;
-
     char*     cptr      = (char*)ptr;
     char      str[256]  = {0};
-
     switch (opcode) {
 
-//--------------------
-//
-//--------------------
+      //--------------------
 
       /*
         called when plug-in is initialized
@@ -813,7 +768,7 @@ public: // vst2
 
       case effProcessEvents: { // 25
         //KODE_Vst2Trace("vst2: dispatcher/effProcessEvents\n");
-        if (MDescriptor->options.can_receive_midi) {
+        if ((MDescriptor->options.is_synth) || (MDescriptor->options.can_receive_midi)) {
           VstEvents* ev = (VstEvents*)ptr;
           int num_events = ev->numEvents;
           for (int32_t i=0; i<num_events; i++) {
@@ -1565,16 +1520,15 @@ public: // vst2
         //KODE_Vst2Trace("vst2: dispatcher/effGetNumMidiOutputChannels\n");
         break;
 
-//--------------------
-//
-//--------------------
-
+      //----------
 
       default:
         //KODE_Vst2Trace("unhandled opcode: %i\n",opcode);
         break;
 
-    }
+      //--------------------
+
+    } // switch
 
     return result;
   }

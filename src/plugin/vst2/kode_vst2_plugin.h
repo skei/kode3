@@ -4,7 +4,6 @@
 
 #include "kode.h"
 #include "plugin/kode_descriptor.h"
-//#include "plugin/kode_instance_listener.h"
 #include "plugin/vst2/kode_vst2.h"
 #include "plugin/vst2/kode_vst2_instance.h"
 
@@ -21,24 +20,20 @@ class KODE_Vst2Plugin {
 private:
 //------------------------------
 
-  KODE_Descriptor*  MDescriptor = nullptr;  // create in entrypoint, deleted in destructor
+  // create in entrypoint, deleted in ~KODE_Instance();
+  KODE_Descriptor*  MDescriptor = nullptr;
 
 //------------------------------
 public:
 //------------------------------
 
   KODE_Vst2Plugin() {
-    //KODE_Print("\n");
-    //MDescriptor = KODE_New DESC();
   }
 
   //----------
 
   ~KODE_Vst2Plugin() {
-    //KODE_Print("\n");
-//    KODE_DPrint("deleting MDescriptor\n");
-//    if (MDescriptor) delete MDescriptor;    // deleted in ~KODE_Descriptor()
-//    KODE_DPrint("deleting MDescriptor OK\n");
+    //if (MDescriptor) delete MDescriptor; // deleted in ~KODE_Instance()
   }
 
 //------------------------------
@@ -98,26 +93,15 @@ public:
 //------------------------------
 
   AEffect* entrypoint(audioMasterCallback audioMaster) {
-    //KODE_Print("\n");
-
-    //if (!MDescriptor) MDescriptor = new DESCRIPTOR(); // deleted in: ~KODE_Instance()
-    //KODE_Instance* instance = new INSTANCE(MDescriptor); // deleted in ~KODE_Vst2Instance()
-
-    if (!MDescriptor) MDescriptor = _kode_create_descriptor(); // deleted in: ~KODE_Instance()
-
+    if (!MDescriptor) MDescriptor = _kode_create_descriptor();    // deleted in: ~KODE_Instance()
     KODE_Instance* instance = _kode_create_instance(MDescriptor); // deleted in ~KODE_Vst2Instance()
     instance->setPluginFormat(KODE_PLUGIN_FORMAT_VST2);
-
-    KODE_Vst2Instance* vst2_instance  = new KODE_Vst2Instance(instance,audioMaster); // deleted in:
+    KODE_Vst2Instance* vst2_instance  = new KODE_Vst2Instance(instance,audioMaster); // deleted in vst2_dispatcher_callback
     AEffect* effect = vst2_instance->getAEffect();
-
-//    instance->setListener(vst2_instance);
-
+    //instance->setListener(vst2_instance);
     instance->on_plugin_init();
-
-//    instance->setDefaultParameterValues();
-//    instance->updateAllParameters();
-
+    //instance->setDefaultParameterValues();
+    //instance->updateAllParameters();
     int32_t flags = effFlagsCanReplacing;
     if (MDescriptor->options.is_synth)    flags |= effFlagsIsSynth;
     if (MDescriptor->options.has_editor)  flags |= effFlagsHasEditor;
@@ -153,15 +137,14 @@ public:
 //
 //----------------------------------------------------------------------
 
-//#define KODE_VST2_MAIN_SYMBOL asm ("VSTPluginMain");
-AEffect* kode_vst2_entrypoint(audioMasterCallback audioMaster) asm ("VSTPluginMain"); // KODE_VST2_MAIN_SYMBOL
+AEffect* kode_vst2_entrypoint(audioMasterCallback audioMaster) asm ("VSTPluginMain");
 
 #define KODE_VST2_MAIN(D,I,E)                                       \
                                                                     \
   KODE_Vst2Plugin<D,I,E> VST2_PLUGIN;                               \
                                                                     \
   /*__attribute__((visibility("default")))*/                        \
-  __KODE_DLLEXPORT                                                     \
+  __KODE_DLLEXPORT                                                  \
   AEffect* kode_vst2_entrypoint(audioMasterCallback audioMaster) {  \
     printf("VST2\n");                                               \
     if (!audioMaster(0,audioMasterVersion,0,0,0,0)) return 0;       \

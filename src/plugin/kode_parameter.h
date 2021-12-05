@@ -67,9 +67,15 @@ public:
 public:
 //------------------------------
 
+  // the values the parameter were created with
+  // def/min/max might change depending on plugin format
+  // (converted to 0..1)
+
   float getInternalDefValue() { return internal_def_value; }
   float getInternalMinValue() { return internal_min_value; }
   float getInternalMaxValue() { return internal_max_value; }
+
+  //----------
 
   virtual float from01(float value) {
     float range = internal_max_value - internal_min_value;
@@ -85,15 +91,15 @@ public:
 
   //----------
 
-//  virtual char* getDisplayText(float value) {
-//    // TODO: KODE_FloatToString
-//    sprintf(MDisplayText,"%.2f",value);
-//    return MDisplayText;
-//  }
-
-  virtual char* getDisplayText(float value, char* buffer) {
-    // TODO: KODE_FloatToString
-    sprintf(buffer,"%.2f",value);
+  virtual char* getDisplayText(float value, char* buffer, uint32_t num_digits=2) {
+    char format[16] = {0};
+    //sprintf(buffer,"%.2f",value);
+    format[0] = '%';
+    format[1] = '.';
+    format[2] = 48 + num_digits;
+    format[3] = 'f';
+    format[4] = 0;
+    sprintf(buffer,format,value);
     return buffer;
   }
 

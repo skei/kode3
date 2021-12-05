@@ -262,6 +262,10 @@ public: // extensions
 
   /*
     [main-thread]
+
+    CLAP_FD_READ
+    CLAP_FD_WRITE
+    CLAP_FD_ERROR
   */
 
   bool fd_support_register_fd(clap_fd fd, clap_fd_flags flags) {
@@ -347,6 +351,13 @@ public: // extensions
   /*
     Log a message through the host.
     [thread-safe]
+
+    CLAP_LOG_DEBUG
+    CLAP_LOG_INFO
+    CLAP_LOG_WARNING
+    CLAP_LOG_ERROR
+    CLAP_LOG_FATAL
+
   */
 
   void log(clap_log_severity severity, const char *msg) {

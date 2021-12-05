@@ -225,25 +225,62 @@ public:
 public:
 
   bool on_plugin_init() final {
+    KODE_PRINT;
     return true;
   }
 
   void on_plugin_destroy() final {
+    KODE_PRINT;
   }
 
   bool on_plugin_activate(float ASampleRate, uint32_t AMinFrames, uint32_t AMaxFrames) final {
+    KODE_PRINT;
     MVoices.prepare(ASampleRate/*,ABlocksize*/);
     return false;
   }
 
   void on_plugin_deactivate() final {
+    KODE_PRINT;
   }
 
   bool on_plugin_startProcessing() final {
+    KODE_PRINT;
     return false;
   }
 
   void on_plugin_stopProcessing() final {
+    KODE_PRINT;
+  }
+
+  //void on_plugin_expression() final {
+  //  KODE_PRINT;
+  //}
+
+  void on_plugin_modulation(uint32_t AIndex, float AValue) final {
+    KODE_PRINT;
+  }
+
+  void on_plugin_parameter(uint32_t AIndex, float AValue) final {
+    KODE_PRINT;
+    uint32_t AOffset = 0;
+    uint32_t AMode = 0;
+    MVoices.parameter(AOffset,AIndex,AValue,AMode);
+  }
+
+  void on_plugin_midi(uint32_t AOffset, uint8_t AMsg1, uint8_t AMsg2, uint8_t AMsg3) final {
+    KODE_PRINT;
+    uint32_t AMode = 0;
+    MVoices.midi(AOffset,AMsg1,AMsg2,AMsg3,AMode);
+  }
+
+  uint32_t on_plugin_saveState(void** ABuffer, uint32_t AMode) final {
+    KODE_PRINT;
+    *ABuffer = nullptr; return 0;
+  }
+
+  uint32_t on_plugin_loadState(uint32_t ASize, void* ABuffer, uint32_t AMode) final {
+    KODE_PRINT;
+    return 0;
   }
 
   uint32_t on_plugin_process(KODE_ProcessContext* AContext) final {
@@ -257,46 +294,18 @@ public:
     return 0;
   }
 
-  void on_plugin_parameter(uint32_t AIndex, float AValue) final {
-    uint32_t AOffset = 0;
-    uint32_t AMode = 0;
-    MVoices.parameter(AOffset,AIndex,AValue,AMode);
-  }
-
-  void on_plugin_midi(uint32_t AOffset, uint8_t AMsg1, uint8_t AMsg2, uint8_t AMsg3) final {
-    uint32_t AMode = 0;
-    MVoices.midi(AOffset,AMsg1,AMsg2,AMsg3,AMode);
-  }
-
-  uint32_t on_plugin_saveState(void** ABuffer, uint32_t AMode) final { *ABuffer = nullptr; return 0; }
-  uint32_t on_plugin_loadState(uint32_t ASize, void* ABuffer, uint32_t AMode) final { return 0; }
-
-  //KODE_Editor* on_plugin_openEditor() final {
-  //  MEditor = new KODE_Editor(this,MDescriptor);
-  //  return MEditor;
-  //}
-
-  //void on_plugin_closeEditor() final {
-  //  delete MEditor;
-  //  MEditor = nullptr;
-  //}
-
-  //uint32_t on_plugin_updateEditor() final {
-  //  return 0;
-  //}
-
   // we don't have a window yet
   bool on_plugin_createEditor(KODE_Editor* AEditor) final {
-    //KODE_PRINT;
+    KODE_PRINT;
     return true;
   }
 
   void on_plugin_destroyEditor(KODE_Editor* AEditor) final {
-    //KODE_PRINT;
+    KODE_PRINT;
   }
 
   bool on_plugin_openEditor(KODE_Editor* AEditor) final {
-    //KODE_PRINT;
+    KODE_PRINT;
     KODE_Window* window = AEditor->getWindow();
     if (window) {
       KODE_SliderWidget* slider = new KODE_SliderWidget( KODE_FRect(10,10,150,20) );
@@ -311,7 +320,7 @@ public:
   }
 
   void on_plugin_closeEditor(KODE_Editor* AEditor) final {
-    //KODE_PRINT;
+    KODE_PRINT;
   }
 
   void on_plugin_updateEditor(KODE_Editor* AEditor) final {
