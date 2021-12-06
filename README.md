@@ -8,7 +8,6 @@ plugin toolkit/framework..
 # os
 
 - linux
-- windows (planned)
 
 # plugin formats
 
@@ -20,6 +19,12 @@ plugin toolkit/framework..
 - clap
 - standalone executable
 
+# plugin hosting
+
+- ladspa
+- dssi
+- clap
+
 # gui
 
 - xcb
@@ -28,12 +33,12 @@ plugin toolkit/framework..
 
 # notes, considerations, ..
 
-- header-only
+- header-only (except your plugin)
 - low-level, un-modern c++
 - no build system
 - no external dependencies (almost)
 - no vst2/vst3 sdk needed (depends)
-- 'fat' plugins
+- 'fat' plugins (all formats in one file)
 
 # roadmap
 
