@@ -214,6 +214,11 @@ private:
   //----------
 
   void handleMidi(const clap_event* event) {
+    uint8_t msg1 = event->midi.data[0];
+    uint8_t msg2 = event->midi.data[1];
+    uint8_t msg3 = event->midi.data[2];
+    KODE_Print("MIDI %i : %02x %02x %02x\n",event->time,msg1,msg2,msg3);
+    MInstance->on_plugin_midi(event->time,msg1,msg2,msg3);
   }
 
   //----------
@@ -228,6 +233,7 @@ private:
   void handleInputEvents(const clap_event_list* in_events) {
     if (in_events) {
       uint32_t num = in_events->size(in_events);
+      //KODE_Print("num %i\n",num);
       for (uint32_t i=0; i<num; i++) {
         const clap_event* event = in_events->get(in_events,i);
         if (event) {

@@ -147,8 +147,7 @@ void KODE_PrintClapEvent(const clap_event* event) {
       KODE_Print("CLAP_EVENT_MIDI\n");
       KODE_Print("- time %i\n",event->time);
       KODE_Print("- port_index %i\n",event->midi.port_index);
-      KODE_Print("- port_index %i\n",event->midi.port_index);
-      KODE_Print("- data %02x 02x 02x\n",event->midi.data[0],event->midi.data[1],event->midi.data[2]);
+      KODE_Print("- data %02x %02x %02x\n",event->midi.data[0],event->midi.data[1],event->midi.data[2]);
       break;
     case CLAP_EVENT_MIDI_SYSEX:
       KODE_Print("CLAP_EVENT_MIDI_SYSEX\n");

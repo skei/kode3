@@ -268,9 +268,9 @@ public:
   }
 
   void on_plugin_midi(uint32_t AOffset, uint8_t AMsg1, uint8_t AMsg2, uint8_t AMsg3) final {
-    KODE_PRINT;
-    uint32_t AMode = 0;
-    MVoices.midi(AOffset,AMsg1,AMsg2,AMsg3,AMode);
+    KODE_Print("%i : %02x %02x %02x\n",AOffset,AMsg1,AMsg2,AMsg3);
+    //uint32_t AMode = 0;
+    //MVoices.midi(AOffset,AMsg1,AMsg2,AMsg3,AMode);
   }
 
   uint32_t on_plugin_saveState(void** ABuffer, uint32_t AMode) final {
