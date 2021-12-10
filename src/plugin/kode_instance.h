@@ -25,8 +25,8 @@ public:
 
   KODE_Instance(KODE_Descriptor* ADescriptor) {
     MDescriptor = ADescriptor;
-    MParameterValues = (float*)malloc(MDescriptor->parameters.size() * sizeof(float));
-    MModulationValues = (float*)malloc(MDescriptor->parameters.size() * sizeof(float));
+    MParameterValues = (float*)malloc(MDescriptor->getNumParameters() * sizeof(float));
+    MModulationValues = (float*)malloc(MDescriptor->getNumParameters() * sizeof(float));
   }
 
   //----------
@@ -83,10 +83,10 @@ public:
 //------------------------------
 
   void setDefaultParameterValues() {
-    uint32_t num = MDescriptor->parameters.size();
+    uint32_t num = MDescriptor->getNumParameters();
     for (uint32_t i=0; i<num; i++) {
-      KODE_Parameter* parameter = MDescriptor->parameters[i];
-      float value = parameter->def_value;
+      KODE_Parameter* parameter = MDescriptor->getParameter(i);
+      float value = parameter->MDefValue;
       MParameterValues[i] = value;
     }
   }
@@ -94,12 +94,12 @@ public:
   //----------
 
   void updateAllParameters() {
-    uint32_t num = MDescriptor->parameters.size();
+    uint32_t num = MDescriptor->getNumParameters();
     for (uint32_t i=0; i<num; i++) {
       float value = MParameterValues[i];
       if ((MPluginFormat == KODE_PLUGIN_FORMAT_VST2)
        || (MPluginFormat == KODE_PLUGIN_FORMAT_VST3)) {
-        KODE_Parameter* parameter = MDescriptor->parameters[i];
+        KODE_Parameter* parameter = MDescriptor->getParameter(i);
         value = parameter->from01(value);
       }
       on_plugin_parameter(i,value);
@@ -113,7 +113,7 @@ public:
   void updateEditorParameter(KODE_Editor* AEditor, uint32_t AIndex, bool ARedraw=true) {
     float value = MParameterValues[AIndex];
     if (MPluginFormat == KODE_PLUGIN_FORMAT_CLAP) {
-      KODE_Parameter* parameter = MDescriptor->parameters[AIndex];
+      KODE_Parameter* parameter = MDescriptor->getParameter(AIndex);
       value = parameter->to01(value);
     }
     AEditor->updateParameter(AIndex,value,ARedraw);
@@ -122,7 +122,7 @@ public:
   //----------
 
   void updateAllEditorParameters(KODE_Editor* AEditor, bool ARedraw=true) {
-    uint32_t num = MDescriptor->parameters.size();
+    uint32_t num = MDescriptor->getNumParameters();
     for (uint32_t i=0; i<num; i++) {
       //float value = MParameterValues[i];
       //if (MPluginFormat == KODE_PLUGIN_FORMAT_CLAP) {

@@ -31,10 +31,10 @@ public:
 
   // AValue = 0..1
 
-  char* getDisplayString(float AValue, char* buffer) override {
+  char* getDisplayText(float AValue, char* ABuffer, uint32_t ANumDigits=0) override {
     //KODE_PRINT;
-    sprintf(buffer,"%i",(int)from01(AValue));
-    return buffer;
+    sprintf(ABuffer,"%i",(int)from01(AValue));
+    return ABuffer;
   }
 
 };

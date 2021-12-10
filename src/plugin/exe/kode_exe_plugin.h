@@ -60,7 +60,7 @@ public:
 
         // editor
 
-        if (descriptor->options.has_editor) {
+        if (descriptor->hasEditor()) {
           KODE_Editor* editor = _kode_create_editor(this,descriptor);
           if (editor) {
             KODE_Print("editor %p\n",editor);

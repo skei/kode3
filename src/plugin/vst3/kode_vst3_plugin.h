@@ -94,9 +94,9 @@ public:
 
   int32_t VST3_API getFactoryInfo(VST3_PFactoryInfo* info) final {
     KODE_Vst3Print(" -> Ok\n");
-    strcpy(info->vendor,MDescriptor->author);
-    strcpy(info->url,MDescriptor->url);
-    strcpy(info->email,MDescriptor->email);
+    strcpy(info->vendor,MDescriptor->getAuthor());
+    strcpy(info->url,MDescriptor->getUrl());
+    strcpy(info->email,MDescriptor->getEmail());
     info->flags = VST3_PFactoryInfo::vst3_NoFlags;
     //KODE_Vst3DPrint(". author: '%s'\n",info->vendor);
     //KODE_Vst3DPrint(". url: '%s'\n",info->url);
@@ -122,7 +122,7 @@ public:
         memcpy(info->cid,MDescriptor->getLongId(),16);
         info->cardinality = VST3_PClassInfo::vst3_ManyInstances;
         strncpy(info->category,vst3_VstAudioEffectClass,VST3_PClassInfo::vst3_CategorySize);
-        strncpy(info->name,MDescriptor->name,VST3_PClassInfo::vst3_NameSize);
+        strncpy(info->name,MDescriptor->getName(),VST3_PClassInfo::vst3_NameSize);
         //KODE_Vst3DPrint(". cid: ");   VST3_PrintIID(info->cid);   KODE_Vst3DPrint("\n");
         //KODE_Vst3DPrint(". cardinality: %i (%s)\n",info->cardinality,info->cardinality?"ManyInstances":"");
         //KODE_Vst3DPrint(". category: '%s'\n",info->category);
@@ -140,7 +140,7 @@ public:
     //KODE_Vst3DPrint(cid);
     //VST3_PrintIID(cid);
     if (VST3_iidEqual(MDescriptor->getLongId(),cid)) {
-      KODE_Vst3DPrint(" (%s) -> Ok\n",MDescriptor->name);
+      KODE_Vst3DPrint(" (%s) -> Ok\n",MDescriptor->getName());
       //INSTANCE* instance = new INSTANCE(MDescriptor);
       KODE_Instance* instance = _kode_create_instance(MDescriptor);
       instance->setPluginFormat(KODE_PLUGIN_FORMAT_VST3);
@@ -170,15 +170,15 @@ public: // IPluginFactory2
         memcpy(info->cid,MDescriptor->getLongId(),16);
         info->cardinality = VST3_PClassInfo::vst3_ManyInstances;
         strcpy(info->category,vst3_VstAudioEffectClass);
-        strcpy(info->name,MDescriptor->name);
+        strcpy(info->name,MDescriptor->getName());
         info->classFlags = 0;
-        if (MDescriptor->options.is_synth) {
+        if (MDescriptor->isSynth()) {
           strcpy(info->subCategories,vst3_Instrument);
         }
         else {
           strcpy(info->subCategories,vst3_Fx);
         }
-        strcpy(info->vendor,MDescriptor->author);
+        strcpy(info->vendor,MDescriptor->getAuthor());
         strcpy(info->version,MDescriptor->getVersionString());
         strcpy(info->sdkVersion,vst3_VstVersionString);
         KODE_Vst3DPrint(" -> Ok\n");

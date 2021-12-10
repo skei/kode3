@@ -15,9 +15,9 @@ struct KODE_LadspaPorts {
 // returns numports
 
 uint32_t KODE_LadspaSetupPorts(KODE_Descriptor* ADescriptor, KODE_LadspaPorts* APorts) {
-  uint32_t numin      = ADescriptor->inputs.size();
-  uint32_t numout     = ADescriptor->outputs.size();
-  uint32_t numpar     = ADescriptor->parameters.size();
+  uint32_t numin      = ADescriptor->getNumInputs();
+  uint32_t numout     = ADescriptor->getNumOutputs();
+  uint32_t numpar     = ADescriptor->getNumParameters();
   uint32_t numports   = numin + numout + numpar;
   APorts->descriptors = (LADSPA_PortDescriptor*)malloc(numports * sizeof(LADSPA_PortDescriptor));
   APorts->names       = (char**)malloc(numports * sizeof(char*));
@@ -50,20 +50,20 @@ uint32_t KODE_LadspaSetupPorts(KODE_Descriptor* ADescriptor, KODE_LadspaPorts* A
     port++;
   }
   for (i=0; i<numpar; i++) {
-    KODE_Parameter* param = ADescriptor->parameters[i];
+    KODE_Parameter* param = ADescriptor->getParameter(i);
     APorts->descriptors[port] = LADSPA_PORT_CONTROL | LADSPA_PORT_INPUT;
     //const char* pname = param->getName();
     //const char* port_name = pname;
     //KODE_Trace("%i %s\n",i,port_name);
     char* ptr = APorts->namesBuffer + (port * KODE_PLUGIN_LADSPA_MAX_PORT_NAME_LENGTH);
-    strncpy(ptr,param->name,KODE_PLUGIN_LADSPA_MAX_PORT_NAME_LENGTH-1);
+    strncpy(ptr,param->getName(),KODE_PLUGIN_LADSPA_MAX_PORT_NAME_LENGTH-1);
     ptr[KODE_PLUGIN_LADSPA_MAX_PORT_NAME_LENGTH] = 0;
     APorts->names[port] = ptr;//(char*)"param";
     // LADSPA_HINT_TOGGLED, LADSPA_HINT_SAMPLE_RATE, LADSPA_HINT_LOGARITHMIC
     // LADSPA_HINT_INTEGER,
     APorts->rangeHints[port].HintDescriptor = LADSPA_HINT_BOUNDED_BELOW | LADSPA_HINT_BOUNDED_ABOVE;
-    APorts->rangeHints[port].LowerBound = param->min_value;
-    APorts->rangeHints[port].UpperBound = param->max_value;
+    APorts->rangeHints[port].LowerBound = param->getMinValue();
+    APorts->rangeHints[port].UpperBound = param->getMaxValue();
     port++;
   }
   return port;

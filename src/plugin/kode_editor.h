@@ -85,7 +85,7 @@ public: // widget
     KODE_Window::do_widget_update(AWidget);
     KODE_Parameter* parameter = AWidget->getParameter();
     if (parameter) {
-      int32_t index = parameter->index;
+      int32_t index = parameter->MIndex;
       float   value = AWidget->getValue();
       // convert to/from 01 in do_editor_updateparameter instead..
       // KODE_Vst3Instance, KODE_ClapInstance, ..
@@ -149,6 +149,11 @@ class KODE_Editor {
 private:
 //------------------------------
 
+
+//------------------------------
+protected:
+//------------------------------
+
   KODE_EditorListener*  MListener           = nullptr;
   KODE_Descriptor*      MDescriptor         = nullptr;
   bool                  MIsOpen             = false;
@@ -157,13 +162,16 @@ private:
   KODE_Widget**         MParameterToWidget  = nullptr;
 
 //------------------------------
+
+
+//------------------------------
 public:
 //------------------------------
 
   KODE_Editor(KODE_EditorListener* AListener, KODE_Descriptor* ADescriptor) {
     MListener = AListener;
     MDescriptor = ADescriptor;
-    uint32_t num = ADescriptor->parameters.size();
+    uint32_t num = ADescriptor->getNumParameters();
     MParameterToWidget = (KODE_Widget**)malloc( num * sizeof(KODE_Widget*) );
   }
 
@@ -199,9 +207,9 @@ public:
 //------------------------------
 
   //void attach(const char* display_name="", unsigned long window=0) {
-  void attach(const char* display_name="", void* window=nullptr) {
+  virtual void attach(const char* display_name="", void* window=nullptr) {
     //TODO: save arguments, use in open();
-    MWindow = new KODE_EditorWindow(MListener,MDescriptor,MDescriptor->editorWidth,MDescriptor->editorHeight,"test",(void*)window);
+    MWindow = new KODE_EditorWindow(MListener,MDescriptor,MDescriptor->getEditorWidth(),MDescriptor->getEditorHeight(),"test",(void*)window);
     MWindow->setFillBackground(true);
     //MWindow->open();
     //MIsOpen = true;
@@ -209,7 +217,7 @@ public:
 
   //----------
 
-  void detach() {
+  virtual void detach() {
     if (MWindow) {
       delete MWindow;
       MWindow = nullptr;
@@ -240,7 +248,7 @@ public:
 
   //----------
 
-  void show() {
+  virtual void show() {
     //if (MIsOpen) return;
     if (MWindow) MWindow->open();
     MIsOpen = true;
@@ -248,7 +256,7 @@ public:
 
   //----------
 
-  void hide() {
+  virtual void hide() {
     if (MWindow) MWindow->close();
     MIsOpen = false;
 
@@ -268,13 +276,13 @@ public:
 
   //----------
 
-  void setScale(float AScale) {
+  virtual void setScale(float AScale) {
     MScale = AScale;
   }
 
   //----------
 
-  bool resize(uint32_t width, uint32_t height) {
+  virtual bool resize(uint32_t width, uint32_t height) {
     KODE_PRINT;
     //if (MWindow) MWindow->resizeWindow(width,height);
     return false;
@@ -290,8 +298,8 @@ public:
 
   //----------
 
-  void connect(KODE_Widget* AWidget, uint32_t AParameterIndex) {
-    KODE_Parameter* parameter = MDescriptor->parameters[AParameterIndex];
+  virtual void connect(KODE_Widget* AWidget, uint32_t AParameterIndex) {
+    KODE_Parameter* parameter = MDescriptor->getParameter(AParameterIndex);
     AWidget->setParameter(parameter);
     MParameterToWidget[AParameterIndex] = AWidget;
     AWidget->on_widget_connect(parameter);
@@ -303,7 +311,7 @@ public:
 
   // expects 0..1
 
-  void updateParameter(uint32_t AIndex, float AValue, bool ARedraw=true) {
+  virtual void updateParameter(uint32_t AIndex, float AValue, bool ARedraw=true) {
     //KODE_Print("%i %f\n",AIndex,AValue);
     //KODE_Parameter* parameter = MDescriptor->parameters[AIndex];
     KODE_Widget* widget = MParameterToWidget[AIndex];
@@ -316,7 +324,7 @@ public:
 
   //----------
 
-  void eventLoop() {
+  virtual void eventLoop() {
     if (MWindow) {
       MWindow->eventLoop();
     }

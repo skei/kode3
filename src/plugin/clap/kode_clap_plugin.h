@@ -48,16 +48,16 @@ public:
     MClapDescriptor = (clap_plugin_descriptor*)malloc(sizeof(clap_plugin_descriptor));
     MClapDescriptor->clap_version = CLAP_VERSION;
     MClapDescriptor->id           = MDescriptor->getIdString();
-    MClapDescriptor->name         = MDescriptor->name;
-    MClapDescriptor->vendor       = MDescriptor->author;
-    MClapDescriptor->url          = MDescriptor->url;
+    MClapDescriptor->name         = MDescriptor->getName();
+    MClapDescriptor->vendor       = MDescriptor->getAuthor();
+    MClapDescriptor->url          = MDescriptor->getUrl();
     MClapDescriptor->manual_url   = "";
     MClapDescriptor->support_url  = "";
     MClapDescriptor->version      = MDescriptor->getVersionString();
     MClapDescriptor->description  = "";
     MClapDescriptor->keywords     = ""; // Arbitrary list of keywords, separated by `;'
 
-    if (MDescriptor->options.is_synth) MClapDescriptor->plugin_type  = CLAP_PLUGIN_INSTRUMENT;
+    if (MDescriptor->isSynth()) MClapDescriptor->plugin_type  = CLAP_PLUGIN_INSTRUMENT;
     else MClapDescriptor->plugin_type  = CLAP_PLUGIN_AUDIO_EFFECT; //CLAP_PLUGIN_EVENT_EFFECT, CLAP_PLUGIN_ANALYZER
 
     return true;

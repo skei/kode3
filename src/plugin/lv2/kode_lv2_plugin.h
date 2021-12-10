@@ -113,9 +113,9 @@ private:
     //KODE_LV2PRINT;
     memset(MLv2Uri,0,KODE_LV2_MAX_URI_LENGTH+1);
     strcpy(MLv2Uri,"urn:");
-    strcat(MLv2Uri,MDescriptor.author);
+    strcat(MLv2Uri,MDescriptor.getAuthor());
     strcat(MLv2Uri,"/");
-    strcat(MLv2Uri,MDescriptor.name);
+    strcat(MLv2Uri,MDescriptor.getName());
   }
 
   //----------
@@ -124,9 +124,9 @@ private:
     //KODE_LV2PRINT;
     memset(MLv2UIUri,0,KODE_LV2_MAX_URI_LENGTH+1);
     strcpy(MLv2UIUri,"urn:");
-    strcat(MLv2UIUri,MDescriptor.author);
+    strcat(MLv2UIUri,MDescriptor.getAuthor());
     strcat(MLv2UIUri,"/");
-    strcat(MLv2UIUri,MDescriptor.name);
+    strcat(MLv2UIUri,MDescriptor.getName());
     strcat(MLv2UIUri,"_ui");
   }
 

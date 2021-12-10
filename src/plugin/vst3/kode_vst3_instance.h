@@ -220,14 +220,14 @@ private:
 //------------------------------
 
   void initParameters() {
-    uint32_t num = MDescriptor->parameters.size();
+    uint32_t num = MDescriptor->getNumParameters();
     for (uint32_t i=0; i<num; i++) {
-      KODE_Parameter* parameter = MDescriptor->parameters[i];
+      KODE_Parameter* parameter = MDescriptor->getParameter(i);
       //float value = parameter->def_value;
       //KODE_Print("%i %f",i,value);
-      parameter->def_value = parameter->to01( parameter->def_value );
-      parameter->min_value = parameter->to01( parameter->min_value );
-      parameter->max_value = parameter->to01( parameter->max_value );
+      parameter->setDefValue( parameter->to01( parameter->getDefValue() ));
+      parameter->setMinValue( parameter->to01( parameter->getMinValue() ));
+      parameter->setMaxValue( parameter->to01( parameter->getMaxValue() ));
       //value = parameter->def_value;
       //KODE_DPrint("-> %f\n",value);
     }
@@ -237,7 +237,7 @@ private:
 
   void createParameterBuffers() {
     //KODE_PRINT;
-    uint32_t size = MDescriptor->parameters.size() * sizeof(float);
+    uint32_t size = MDescriptor->getNumParameters() * sizeof(float);
     //MNumParameters = MDescriptor->getNumParameters();
 //    MParameterValues        = (float*)malloc(size);
     //MEditorParameterValues  = (float*)malloc(size);
@@ -337,22 +337,22 @@ private:
   void createParameterInfo() {
     //KODE_PRINT;
     if (!MParamInfos) {
-      uint32_t num = MDescriptor->parameters.size();
+      uint32_t num = MDescriptor->getNumParameters();
       MParamInfos = (VST3_ParameterInfo*)malloc( num * sizeof(VST3_ParameterInfo) );
       for (uint32_t i=0; i<num; i++) {
-        KODE_Parameter* param = MDescriptor->parameters[i];
+        KODE_Parameter* param = MDescriptor->getParameter(i);
         MParamInfos[i].id = i;
-        VST3_CharToUtf16(param->name,&MParamInfos[i].title);
-        VST3_CharToUtf16(param->short_name,&MParamInfos[i].shortTitle);
-        VST3_CharToUtf16(param->label,&MParamInfos[i].units);
-        uint32_t numsteps = param->num_steps;
+        VST3_CharToUtf16(param->getName(),&MParamInfos[i].title);
+        VST3_CharToUtf16(param->getShortName(),&MParamInfos[i].shortTitle);
+        VST3_CharToUtf16(param->getLabel(),&MParamInfos[i].units);
+        uint32_t numsteps = param->getNumSteps();
         if (numsteps > 1) numsteps -= 1;
         MParamInfos[i].stepCount = numsteps;
         //MParamInfos[i].defaultNormalizedValue = param->def_value;
         MParamInfos[i].defaultNormalizedValue = param->to01( param->getInternalDefValue() );
         MParamInfos[i].unitId = vst3_RootUnitId; //-1;
         int32_t flags = 0;
-        if (param->options.can_automate) flags += VST3_ParameterInfo::vst3_CanAutomate;
+        if (param->canAutomate()) flags += VST3_ParameterInfo::vst3_CanAutomate;
         else flags += VST3_ParameterInfo::vst3_IsReadOnly; // ??
         MParamInfos[i].flags = flags;
       }
@@ -388,7 +388,7 @@ private:
           VST3_IParamValueQueue* paramQueue = paramChanges->getParameterData(i);
           if (paramQueue) {
             uint32_t id = paramQueue->getParameterId();
-            if (id < MDescriptor->parameters.size()) {
+            if (id < MDescriptor->getNumParameters()) {
               //for (int32_t j=0; j<paramQueue->getPointCount(); j++) {
                 int32_t offset = 0;
                 double value = 0;
@@ -399,7 +399,7 @@ private:
                 MInstance->setParameterValue(id,value);
 
                 //KODE_Vst3Print("MParameterValues[%i] = %.3f\n",id,value);
-                KODE_Parameter* param = MDescriptor->parameters[id];
+                KODE_Parameter* param = MDescriptor->getParameter(id);
                 if (param) value = param->from01(value);
                 MInstance->on_plugin_parameter(id,value);
               //}
@@ -750,7 +750,7 @@ public: // IComponent
   int32_t VST3_API getControllerClassId(VST3_Id classId) final {
     //KODE_Vst3Print("classId: ");
     //VST3_PrintIID(classId);
-    if (MDescriptor->options.has_editor) {
+    if (MDescriptor->hasEditor()) {
       memcpy(classId,MDescriptor->getLongEditorId(),16);
       //KODE_Vst3Print("-> ");
       //VST3_PrintIID(classId);
@@ -795,7 +795,7 @@ public: // IComponent
       case vst3_Audio:
         switch (dir) {
           case vst3_Input:
-            if (MDescriptor->inputs.size() > 0) {
+            if (MDescriptor->getNumInputs() > 0) {
               //KODE_Vst3Print(" -> 1\n");
               return 1;
             }
@@ -804,7 +804,7 @@ public: // IComponent
               return 0;
             }
           case vst3_Output:
-            if (MDescriptor->outputs.size() > 0) {
+            if (MDescriptor->getNumOutputs() > 0) {
               //KODE_Vst3Print(" -> 1\n");
               return 1;
             }
@@ -816,7 +816,7 @@ public: // IComponent
       case vst3_Event:
         switch (dir) {
           case vst3_Input:
-            if (MDescriptor->options.can_receive_midi || MDescriptor->options.is_synth) {
+            if (MDescriptor->canReceiveMidi() || MDescriptor->isSynth()) {
               //KODE_Vst3Print(" -> 1\n");
               return 1;
             }
@@ -848,7 +848,7 @@ public: // IComponent
           case vst3_Input:
             bus.mediaType = vst3_Audio;
             bus.direction = vst3_Input;
-            bus.channelCount = MDescriptor->inputs.size();
+            bus.channelCount = MDescriptor->getNumInputs();
             VST3_CharToUtf16("Audio In",&bus.name);
             bus.busType = vst3_Main;         // Aux
             bus.flags = VST3_BusInfo::vst3_DefaultActive;  // 0
@@ -863,7 +863,7 @@ public: // IComponent
           case vst3_Output:
             bus.mediaType = vst3_Audio;
             bus.direction = vst3_Output;
-            bus.channelCount = MDescriptor->outputs.size();
+            bus.channelCount = MDescriptor->getNumOutputs();
             VST3_CharToUtf16("Audio Out",&bus.name);
             bus.busType = vst3_Main;         // Aux
             bus.flags = VST3_BusInfo::vst3_DefaultActive;  // 0
@@ -1033,7 +1033,7 @@ public: // IComponent
         break;
       }
       case 1: {
-        uint32_t num_params = MDescriptor->parameters.size();
+        uint32_t num_params = MDescriptor->getNumParameters();
         for (uint32_t i=0; i<num_params; i++) {
           float v = 0.f;
           state->read(&v,sizeof(float),&num_read);
@@ -1064,7 +1064,7 @@ public: // IComponent
 
   int32_t VST3_API getState(VST3_IBStream* state) final {
     //KODE_PRINT;
-    uint32_t  version = MDescriptor->version;
+    uint32_t  version = MDescriptor->getVersion();
     uint32_t  mode    = 0;
     void*     ptr     = nullptr;
     uint32_t  size    = 0;;
@@ -1077,7 +1077,7 @@ public: // IComponent
       //ptr = MParameterValues;
       ptr = MInstance->getParameterValueBuffer();
 
-      size = MDescriptor->parameters.size() * sizeof(float);
+      size = MDescriptor->getNumParameters() * sizeof(float);
       mode = 1;
     }
     int num_written  = 0;
@@ -1115,8 +1115,8 @@ public: // IAudioProcessor
     //KODE_Vst3Print("numIns %i numOuts %i",numIns,numOuts);
     bool inputs_ok = false;
     bool outputs_ok = false;
-    uint32_t num_inputs = MDescriptor->inputs.size();
-    uint32_t num_outputs = MDescriptor->outputs.size();
+    uint32_t num_inputs = MDescriptor->getNumInputs();
+    uint32_t num_outputs = MDescriptor->getNumOutputs();
     if (numIns == 1) {
       if ((*inputs == vst3_Mono) && (num_inputs == 1)) {
         //KODE_Vst3Print(" {m_in}");
@@ -1160,7 +1160,7 @@ public: // IAudioProcessor
     if (index == 0) {
       switch (dir) {
         case vst3_Input:
-          switch (MDescriptor->inputs.size()) {
+          switch (MDescriptor->getNumInputs()) {
             case 0:
               arr = vst3_Empty;
               //KODE_Vst3Print(" -> (Empty) -> False\n");
@@ -1176,7 +1176,7 @@ public: // IAudioProcessor
           }
           break;
         case vst3_Output:
-          switch (MDescriptor->outputs.size()) {
+          switch (MDescriptor->getNumOutputs()) {
             case 0:
               arr = vst3_Empty;
               //KODE_Vst3Print(" -> (Empty) -> False\n");
@@ -1349,14 +1349,14 @@ public: // IAudioProcessor
       bool not_flush = (data.numSamples != 0);
       if (not_flush) {
         uint32_t i;
-        for (i=0; i<MDescriptor->inputs.size(); i++) {
+        for (i=0; i<MDescriptor->getNumInputs(); i++) {
           MProcessContext.inputs[i]  = data.inputs[0].channelBuffers32[i];
         }
-        for (i=0; i<MDescriptor->outputs.size(); i++) {
+        for (i=0; i<MDescriptor->getNumOutputs(); i++) {
           MProcessContext.outputs[i] = data.outputs[0].channelBuffers32[i];
         }
-        MProcessContext.numinputs    = MDescriptor->inputs.size();
-        MProcessContext.numoutputs   = MDescriptor->outputs.size();
+        MProcessContext.numinputs    = MDescriptor->getNumInputs();
+        MProcessContext.numoutputs   = MDescriptor->getNumOutputs();
         MProcessContext.numsamples   = data.numSamples;
         //MProcessContext.oversample    = 1;
         MProcessContext.samplerate   = data.processContext->sampleRate;
@@ -1831,7 +1831,7 @@ public: // IEditController
 
   int32_t VST3_API getParameterCount() final {
     //KODE_Vst3Print("-> %i\n",MDescriptor->parameters.size());
-    return MDescriptor->parameters.size();
+    return MDescriptor->getNumParameters();
   }
 
   //----------
@@ -1839,7 +1839,7 @@ public: // IEditController
   int32_t VST3_API getParameterInfo(int32_t paramIndex, VST3_ParameterInfo& info) final {
     //KODE_PRINT;
     if (paramIndex >= 0) {
-      if (paramIndex < (int32_t)MDescriptor->parameters.size()) {
+      if (paramIndex < (int32_t)MDescriptor->getNumParameters()) {
         //VST3_Parameter* param = MDescriptor->getParameter(paramIndex);
         //if (param) {
           memcpy(&info,&MParamInfos[paramIndex],sizeof(VST3_ParameterInfo));
@@ -1872,9 +1872,9 @@ public: // IEditController
   //----------
 
   int32_t VST3_API getParamStringByValue(uint32_t id, double valueNormalized, VST3_String string) final {
-    if (id < MDescriptor->parameters.size()) {
+    if (id < MDescriptor->getNumParameters()) {
       char temp[129]; // ???
-      KODE_Parameter* param = MDescriptor->parameters[id];
+      KODE_Parameter* param = MDescriptor->getParameter(id);
       //param->getDisplayText(valueNormalized,temp);
       float v = param->from01(valueNormalized);
       param->getDisplayText(v,temp);
@@ -1891,11 +1891,11 @@ public: // IEditController
 
   int32_t VST3_API getParamValueByString(uint32_t id, char16_t* string, double& valueNormalized) final {
     //KODE_PRINT;
-    if (id < MDescriptor->parameters.size()) {
+    if (id < MDescriptor->getNumParameters()) {
       char temp[129];
       VST3_Utf16ToChar(string,temp);
       float v = atoi(temp);
-      KODE_Parameter* param = MDescriptor->parameters[id];
+      KODE_Parameter* param = MDescriptor->getParameter(id);
       float v2 = param->to01(v);
       valueNormalized = v2;
       return vst3_ResultOk;
@@ -1909,8 +1909,8 @@ public: // IEditController
 
   double VST3_API normalizedParamToPlain(uint32_t id, double valueNormalized) final {
     //KODE_PRINT;
-    if (id < MDescriptor->parameters.size()) {
-      KODE_Parameter* param = MDescriptor->parameters[id];
+    if (id < MDescriptor->getNumParameters()) {
+      KODE_Parameter* param = MDescriptor->getParameter(id);
       float v = param->from01(valueNormalized);
       return v;
     }
@@ -1923,8 +1923,8 @@ public: // IEditController
 
   double VST3_API plainParamToNormalized(uint32_t id, double plainValue) final {
     //KODE_PRINT;
-    if (id < MDescriptor->parameters.size()) {
-      KODE_Parameter* param = MDescriptor->parameters[id];
+    if (id < MDescriptor->getNumParameters()) {
+      KODE_Parameter* param = MDescriptor->getParameter(id);
       float v = param->to01(plainValue);
       return v;
     }
@@ -1936,7 +1936,7 @@ public: // IEditController
   //----------
 
   double VST3_API getParamNormalized(uint32_t id) final {
-    if (id < MDescriptor->parameters.size()) {
+    if (id < MDescriptor->getNumParameters()) {
       //float v = MEditorParameterValues[id];
       //float v = MParameterValues[id];
       float v = MInstance->getParameterValue(id);
@@ -1965,7 +1965,7 @@ public: // IEditController
 
   int32_t VST3_API setParamNormalized(uint32_t id, double value) final {
     //KODE_PRINT;
-    if (id >= MDescriptor->parameters.size()) {
+    if (id >= MDescriptor->getNumParameters()) {
       return vst3_ResultFalse; // ???
     }
     //MEditorParameterValues[id] = value;
@@ -2006,7 +2006,7 @@ public: // IEditController
 
   VST3_IPlugView* VST3_API createView(const char* name) final {
     //KODE_Vst3Print("name: '%s'",name);
-    if (MDescriptor->options.has_editor) {
+    if (MDescriptor->hasEditor()) {
       if (name && (strcmp(name,vst3_Editor) == 0)) {
         addRef();
         //KODE_Vst3Print(" -> %p\n",this);
@@ -2077,9 +2077,9 @@ public: // IPlugView
   int32_t VST3_API attached(void* parent, const char* type) final {
     //KODE_Vst3Print("parent: %p type: %s",parent,type);
     #ifndef KODE_NO_GUI
-      if (MDescriptor->options.has_editor) {
-        uint32_t w = MDescriptor->editorWidth;
-        uint32_t h = MDescriptor->editorHeight;
+      if (MDescriptor->hasEditor()) {
+        uint32_t w = MDescriptor->getEditorWidth();
+        uint32_t h = MDescriptor->getEditorHeight();
         if (MPlugFrame) {
           VST3_ViewRect r;
           r.left    = 0;
@@ -2119,7 +2119,7 @@ public: // IPlugView
   int32_t VST3_API removed() final {
     //KODE_PRINT;
     #ifndef KODE_NO_GUI
-    if (MDescriptor->options.has_editor) {
+    if (MDescriptor->hasEditor()) {
       //if (MRunLoop)
       MRunLoop->unregisterTimer(this);
 
@@ -2167,11 +2167,11 @@ public: // IPlugView
 
   int32_t VST3_API getSize(VST3_ViewRect* size) final {
     //KODE_PRINT;
-    if (MDescriptor->options.has_editor) {
+    if (MDescriptor->hasEditor()) {
       size->left    = 0;
       size->top     = 0;
-      size->right   = MDescriptor->editorWidth;
-      size->bottom  = MDescriptor->editorHeight;
+      size->right   = MDescriptor->getEditorWidth();
+      size->bottom  = MDescriptor->getEditorHeight();
       //KODE_Vst3Print("%i,%i,%i,%i -> Ok\n",0,0,size->right,size->bottom);
       return vst3_ResultOk;
     }
@@ -2189,7 +2189,7 @@ public: // IPlugView
 
   int32_t VST3_API onSize(VST3_ViewRect* newSize) final {
     //KODE_Vst3Print("newsize: %i,%i,%i,%i\n",0,0,newSize->left,newSize->top,newSize->right,newSize->bottom);
-    if (MDescriptor->options.has_editor) {
+    if (MDescriptor->hasEditor()) {
       //TODO: resize/redraw editor
       //KODE_Vst3Print("-> Ok\n");
       return vst3_ResultOk;
@@ -2220,7 +2220,7 @@ public: // IPlugView
 
   int32_t VST3_API setFrame(VST3_IPlugFrame* frame) final {
     //KODE_Vst3Print("frame: %p",frame);
-    if (MDescriptor->options.has_editor) {
+    if (MDescriptor->hasEditor()) {
       MPlugFrame = frame;
       if (frame) {
         MPlugFrame->queryInterface(VST3_IRunLoop_iid, (void**)&MRunLoop);

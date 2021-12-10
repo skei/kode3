@@ -43,9 +43,9 @@ public:
     MInstance = AInstance;
     MDescriptor = AInstance->getDescriptor();
     MSampleRate = ASampleRate;
-    MNumInputs      = MDescriptor->inputs.size();
-    MNumOutputs     = MDescriptor->outputs.size();
-    MNumParameters  = MDescriptor->parameters.size();
+    MNumInputs      = MDescriptor->getNumInputs();
+    MNumOutputs     = MDescriptor->getNumOutputs();
+    MNumParameters  = MDescriptor->getNumParameters();
     MInputPtrs      = (float**)malloc(MNumInputs     * sizeof(float*));
     MOutputPtrs     = (float**)malloc(MNumOutputs    * sizeof(float*));
     MParameterPtrs  = (float**)malloc(MNumParameters * sizeof(float*));
@@ -79,7 +79,7 @@ private:
      float v = *MParameterPtrs[i];
       if (v != MInstance->getParameterValue(i)) {
         MInstance->setParameterValue(i,v);
-        KODE_Parameter* param = MDescriptor->parameters[i];
+        KODE_Parameter* param = MDescriptor->getParameter(i);
         v = param->from01(v);
 //        MInstance->on_parameterChange(i,v);
       }

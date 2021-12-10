@@ -48,9 +48,9 @@ public:
     MDescriptor     = AInstance->getDescriptor();
     MInstance       = AInstance;
     MSampleRate     = ASampleRate;
-    MNumInputs      = MDescriptor->inputs.size();
-    MNumOutputs     = MDescriptor->outputs.size();
-    MNumParameters  = MDescriptor->parameters.size();
+    MNumInputs      = MDescriptor->getNumInputs();
+    MNumOutputs     = MDescriptor->getNumOutputs();
+    MNumParameters  = MDescriptor->getNumParameters();
     MInputPtrs      = (float**)malloc(MNumInputs     * sizeof(float*));
     MOutputPtrs     = (float**)malloc(MNumOutputs    * sizeof(float*));
     MParameterPtrs  = (float**)malloc(MNumParameters * sizeof(float*));
@@ -190,15 +190,15 @@ public:
         if (v != MInstance->getParameterValue(i)) {
           MInstance->setParameterValue(i,v); // almoste3qual
 
-          KODE_Parameter* param = MDescriptor->parameters[i];
+          KODE_Parameter* param = MDescriptor->getParameter(i);
           /*if (param)*/ v = param->from01(v);
 
 //          MInstance->on_parameterChange(i,v);
         }
       }
 
-      uint32_t num_in  = MDescriptor->inputs.size();
-      uint32_t num_out = MDescriptor->outputs.size();
+      uint32_t num_in  = MDescriptor->getNumInputs();
+      uint32_t num_out = MDescriptor->getNumOutputs();
       for (uint32_t i=0; i<num_in; i++)  { MProcessContext.inputs[i]  = MInputPtrs[i]; }
       for (uint32_t i=0; i<num_out; i++) { MProcessContext.outputs[i] = MOutputPtrs[i]; }
       MProcessContext.playstate     = 0;//KODE_PLUGIN_PLAYSTATE_NONE;

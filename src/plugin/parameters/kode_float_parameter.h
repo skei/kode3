@@ -19,14 +19,14 @@ protected:
 
   //bool      MStepped  = false;
   //int32_t   MNumSteps = 0;
-  //float     MStepSize = 0.0f;
+  float     MStepSize = 0.0f;
 
 //------------------------------
 public:
 //------------------------------
 
   KODE_FloatParameter()
-  : KODE_Parameter() {
+  : KODE_Parameter("") {
   }
 
   //----------

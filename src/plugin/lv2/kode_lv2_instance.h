@@ -74,9 +74,9 @@ public:
     //MInstance->on_initialize(); // open?
     MDescriptor       = AInstance->getDescriptor();
     //MSampleRate       = ASampleRate;
-    MNumInputs        = MDescriptor->inputs.size();
-    MNumOutputs       = MDescriptor->outputs.size();
-    MNumParameters    = MDescriptor->parameters.size();
+    MNumInputs        = MDescriptor->getNumInputs();
+    MNumOutputs       = MDescriptor->getNumOutputs();
+    MNumParameters    = MDescriptor->getNumParameters();
     MInputPtrs        = (float**)malloc(MNumInputs     * sizeof(float*));
     MOutputPtrs       = (float**)malloc(MNumOutputs    * sizeof(float*));
     MParameterPtrs    = (float**)malloc(MNumParameters * sizeof(float*));
@@ -187,7 +187,7 @@ public:
     MSampleRate = ASampleRate;
     LV2_URID_Map* urid_map = (LV2_URID_Map*)KODE_Lv2FindFeature(LV2_URID__map,features);
     if (urid_map) {
-      if (MDescriptor->options.can_receive_midi) {
+      if (MDescriptor->canReceiveMidi()) {
         MMidiInputUrid = KODE_Lv2MapUrid(LV2_MIDI__MidiEvent,urid_map);
       }
     }
@@ -252,7 +252,7 @@ public:
       return;
     }
     port -= MNumParameters;
-    if (MDescriptor->options.can_receive_midi) {
+    if (MDescriptor->canReceiveMidi()) {
       MAtomSequence = (const LV2_Atom_Sequence*)data_location;
       port -= 1;
     }
@@ -333,7 +333,7 @@ public:
 
     // midi
 
-    if (MDescriptor->options.can_receive_midi) {
+    if (MDescriptor->canReceiveMidi()) {
       uint32_t offset = 0;
       LV2_ATOM_SEQUENCE_FOREACH(MAtomSequence, ev) {
         if (ev->body.type == MMidiInputUrid) {
@@ -344,8 +344,8 @@ public:
       }
     }
 
-    MProcessContext.numinputs = MDescriptor->inputs.size();
-    MProcessContext.numoutputs = MDescriptor->outputs.size();
+    MProcessContext.numinputs = MDescriptor->getNumInputs();
+    MProcessContext.numoutputs = MDescriptor->getNumOutputs();
     for (uint32_t i=0; i<MProcessContext.numinputs; i++)  { MProcessContext.inputs[i]  = MInputPtrs[i]; }
     for (uint32_t i=0; i<MProcessContext.numoutputs; i++) { MProcessContext.outputs[i] = MOutputPtrs[i]; }
     MProcessContext.numsamples  = sample_count;

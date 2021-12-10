@@ -21,11 +21,11 @@
 //};
 
 struct KODE_PluginPort {
-  const char* name;
-  uint32_t    type;
-  uint32_t    channels;
-  uint32_t    direction;
-  KODE_PluginPort(const char* AName, uint32_t AType, uint32_t AChannels, uint32_t ADirection) {
+  const char* name      = "";
+  uint32_t    type      = KODE_PLUGIN_PORT_AUDIO;
+  uint32_t    channels  = 2;
+  uint32_t    direction = KODE_PLUGIN_PORT_OUTPUT;
+  KODE_PluginPort(const char* AName="", uint32_t AType=KODE_PLUGIN_PORT_AUDIO, uint32_t AChannels=2, uint32_t ADirection=KODE_PLUGIN_PORT_OUTPUT) {
     name      = AName;
     type      = AType;
     channels  = AChannels;
@@ -64,31 +64,101 @@ private:
 
 
 //------------------------------
-public:
+//public:
+protected:
 //------------------------------
 
-  const char*           name          = "name";
-  const char*           author        = "author";
-  uint32_t              version       = 0;
-  uint32_t              short_id      = 0;
-  const char*           email         = "email";
-  const char*           url           = "url";
-  const char*           description   = "description";
-  const char*           keywords      = "keywords";
-  const char*           license_text  = "";
+  const char*           MName          = "name";
+  const char*           MAuthor        = "author";
+  uint32_t              MVersion       = 0;
+  uint32_t              MShortId      = 0;
+  const char*           MEmail         = "email";
+  const char*           MUrl           = "url";
+  const char*           MDescription   = "description";
+  const char*           MKeywords      = "keywords";
+  const char*           MLicenseText  = "";
 
-  uint32_t              editorWidth   = 640;  // default width
-  uint32_t              editorHeight  = 480;  // default height
+  uint32_t              MEditorWidth   = 640;  // default width
+  uint32_t              MEditorHeight  = 480;  // default height
 
 //int32_t             plugin_type = 0;
 //const char*         id          = "skei.audio/kode_debug/0.0.0";
 //const char*         version     = "0.0.0";
 
-  KODE_PluginOptions    options     = {};
-  KODE_PluginPortArray  inputs      = {};
-  KODE_PluginPortArray  outputs     = {};
-  KODE_ParameterArray   parameters  = {};
-  KODE_PresetArray      presets     = {};
+  KODE_PluginOptions    MOptions     = {};
+  KODE_PluginPortArray  MInputs      = {};
+  KODE_PluginPortArray  MOutputs     = {};
+  KODE_ParameterArray   MParameters  = {};
+  KODE_PresetArray      MPresets     = {};
+
+//------------------------------
+public:
+//------------------------------
+
+  const char*           getName()         { return MName; }
+  const char*           getAuthor()       { return MAuthor; }
+  uint32_t              getVersion()      { return MVersion; }
+  uint32_t              getShortId()      { return MShortId; }
+  const char*           getEmail()        { return MEmail; }
+  const char*           getUrl()          { return MUrl; }
+  const char*           getDescription()  { return MDescription; }
+  const char*           getKeywords()     { return MKeywords; }
+  const char*           getLicenseText()  { return MLicenseText; }
+  uint32_t              getEditorWidth()  { return MEditorWidth; }
+  uint32_t              getEditorHeight() { return MEditorHeight; }
+
+  //KODE_PluginOptions    options     = {};
+  //KODE_PluginPortArray  inputs      = {};
+  //KODE_PluginPortArray  outputs     = {};
+  //KODE_ParameterArray   parameters  = {};
+  //KODE_PresetArray      presets     = {};
+
+  bool hasEditor()        { return MOptions.has_editor; }
+  bool canResizeEditor()  { return MOptions.can_resize_editor; }
+  bool isSynth()          { return MOptions.is_synth; }
+  bool canSendMidi()      { return MOptions.can_send_midi; }
+  bool canReceiveMidi()   { return MOptions.can_receive_midi; }
+
+  KODE_PluginPortArray*  getInputs()     { return &MInputs; }
+  KODE_PluginPortArray*  getOutputs()    { return &MOutputs; }
+  KODE_ParameterArray*   getParameters() { return &MParameters; }
+  KODE_PresetArray*      getPresets()    { return &MPresets; }
+
+  uint32_t          getNumInputs()                { return MInputs.size(); }
+  uint32_t          getNumOutputs()               { return MOutputs.size(); }
+  uint32_t          getNumParameters()            { return MParameters.size(); }
+  uint32_t          getNumPresets()               { return MPresets.size(); }
+
+  KODE_PluginPort*  getInput(uint32_t AIndex)     { return MInputs[AIndex]; }
+  KODE_PluginPort*  getOutput(uint32_t AIndex)    { return MOutputs[AIndex]; }
+  KODE_Parameter*   getParameter(uint32_t AIndex) { return MParameters[AIndex]; }
+  KODE_Preset*      getPreset(uint32_t AIndex)    { return MPresets[AIndex]; }
+
+  void setName(const char* txt)               { MName = txt; }
+  void setAuthor(const char* txt)             { MAuthor = txt; }
+  void setVersion(uint32_t value)             { MVersion = value; }
+  void setShortId(uint32_t value)             { MShortId = value; }
+  void setEmail(const char* txt)              { MEmail = txt; }
+  void setUrl(const char* txt)                { MUrl = txt; }
+  void setDescription(const char* txt)        { MDescription = txt; }
+  void setKeywords(const char* txt)           { MKeywords = txt; }
+  void setLicenseText(const char* txt)        { MLicenseText = txt; }
+  void setEditorWidth(uint32_t value)         { MEditorWidth = value; }
+  void setEditorHeight(uint32_t value)        { MEditorHeight = value; }
+  void setEditorSize(uint32_t w, uint32_t h)  { MEditorWidth = w; MEditorHeight = h; }
+
+  //KODE_PluginOptions    options     = {};
+  //KODE_PluginPortArray  inputs      = {};
+  //KODE_PluginPortArray  outputs     = {};
+  //KODE_ParameterArray   parameters  = {};
+  //KODE_PresetArray      presets     = {};
+
+  void setHasEditor(bool AState=true)        { MOptions.has_editor = AState; }
+  void setCanResizeEditor(bool AState=true)  { MOptions.can_resize_editor = AState; }
+  void setIsSynth(bool AState=true)          { MOptions.is_synth = AState; }
+  void setCanSendMidi(bool AState=true)      { MOptions.can_send_midi = AState; }
+  void setCanReceiveMidi(bool AState=true)   { MOptions.can_receive_midi = AState; }
+
 
 //------------------------------
 public:
@@ -124,22 +194,22 @@ public:
 //------------------------------
 
   void print() {
-    KODE_DPrint("name          = %s\n",name);
-    KODE_DPrint("author        = %s\n",author);
-    KODE_DPrint("version       = 0x%08x\n",version);
-    KODE_DPrint("short_id      = 0x%08x (%c%c%c%c)\n",short_id,((short_id & 0xff000000) >> 24),((short_id & 0x00ff0000) >> 16),((short_id & 0x0000ff00) >> 8),(short_id & 0x000000ff));
-    KODE_DPrint("email         = %s\n",email);
-    KODE_DPrint("url           = %s\n",url);
-    KODE_DPrint("description   = %s\n",description);
-    KODE_DPrint("keywords      = %s\n",keywords);
-    KODE_DPrint("license_text  = %s\n",license_text);
+    KODE_DPrint("name          = %s\n",MName);
+    KODE_DPrint("author        = %s\n",MAuthor);
+    KODE_DPrint("version       = 0x%08x\n",MVersion);
+    KODE_DPrint("short_id      = 0x%08x (%c%c%c%c)\n",MShortId,((MShortId & 0xff000000) >> 24),((MShortId & 0x00ff0000) >> 16),((MShortId & 0x0000ff00) >> 8),(MShortId & 0x000000ff));
+    KODE_DPrint("email         = %s\n",MEmail);
+    KODE_DPrint("url           = %s\n",MUrl);
+    KODE_DPrint("description   = %s\n",MDescription);
+    KODE_DPrint("keywords      = %s\n",MKeywords);
+    KODE_DPrint("license_text  = %s\n",MLicenseText);
 
-    KODE_DPrint("editorWidth   = %i\n",editorWidth);  // default width
-    KODE_DPrint("editorHeight  = %i\n",editorHeight);  // default height
+    KODE_DPrint("editorWidth   = %i\n",MEditorWidth);  // default width
+    KODE_DPrint("editorHeight  = %i\n",MEditorHeight);  // default height
 
-    KODE_DPrint("num inputs    = %i\n",inputs.size());
-    KODE_DPrint("num outputs   = %i\n",outputs.size());
-    KODE_DPrint("num params    = %i\n",parameters.size());
+    KODE_DPrint("num inputs    = %i\n",MInputs.size());
+    KODE_DPrint("num outputs   = %i\n",MOutputs.size());
+    KODE_DPrint("num params    = %i\n",MParameters.size());
 
   }
 
@@ -150,9 +220,9 @@ public:
   uint8_t* getLongId() {
     uint32_t* ptr = (uint32_t*)MLongId;
     ptr[0] = KODE_MAGIC_K_PL;
-    ptr[1] = KODE_HashString(name);
-    ptr[2] = KODE_HashString(author);
-    ptr[3] = version;
+    ptr[1] = KODE_HashString(MName);
+    ptr[2] = KODE_HashString(MAuthor);
+    ptr[3] = MVersion;
     return MLongId;
   }
 
@@ -161,9 +231,9 @@ public:
   uint8_t* getLongEditorId() {
     uint32_t* ptr = (uint32_t*)MLongEditorId;
     ptr[0] = KODE_MAGIC_K_ED;
-    ptr[1] = KODE_HashString(name);
-    ptr[2] = KODE_HashString(author);
-    ptr[3] = version;
+    ptr[1] = KODE_HashString(MName);
+    ptr[2] = KODE_HashString(MAuthor);
+    ptr[3] = MVersion;
     return MLongEditorId;
   }
 
@@ -179,9 +249,9 @@ public:
     snprintf( buffer,
               31, // safety...
               "%i.%i.%i",
-              ((version & 0xff000000) >> 24),
-              ((version & 0x00ff0000) >> 16),
-               (version & 0x0000ffff)
+              ((MVersion & 0xff000000) >> 24),
+              ((MVersion & 0x00ff0000) >> 16),
+               (MVersion & 0x0000ffff)
     );
     return buffer;
   }
@@ -205,7 +275,7 @@ public:
     //strcat(buffer,ver);
     snprintf( buffer,
               255, // safety...
-              "%s/%s/%s",name,author,ver
+              "%s/%s/%s",MName,MAuthor,ver
     );
     return buffer;
   }
@@ -215,58 +285,58 @@ public:
 //------------------------------
 
   void appendInput(KODE_PluginPort* APort) {
-    inputs.append(APort);
+    MInputs.append(APort);
   }
 
   void appendInput(const char* AName) {
     KODE_PluginPort* port = new KODE_PluginPort(AName,KODE_PLUGIN_PORT_AUDIO,1,KODE_PLUGIN_PORT_INPUT);
-    inputs.append(port);
+    MInputs.append(port);
   }
 
   void deleteInputs() {
-    for (uint32_t i=0; i<inputs.size(); i++) {
-      delete inputs[i];
-      inputs[i] = nullptr;
+    for (uint32_t i=0; i<MInputs.size(); i++) {
+      delete MInputs[i];
+      MInputs[i] = nullptr;
     }
   }
 
   void appendOutput(KODE_PluginPort* APort) {
-    outputs.append(APort);
+    MOutputs.append(APort);
   }
 
   void appendOutput(const char* AName) {
     KODE_PluginPort* port = new KODE_PluginPort(AName,KODE_PLUGIN_PORT_AUDIO,1,KODE_PLUGIN_PORT_OUTPUT);
-    outputs.append(port);
+    MOutputs.append(port);
   }
 
   void deleteOutputs() {
-    for (uint32_t i=0; i<outputs.size(); i++) {
-      delete outputs[i];
-      outputs[i] = nullptr;
+    for (uint32_t i=0; i<MOutputs.size(); i++) {
+      delete MOutputs[i];
+      MOutputs[i] = nullptr;
     }
   }
 
   void appendParameter(KODE_Parameter* AParameter) {
-    int32_t index = parameters.size();
-    AParameter->index = index;
-    parameters.append(AParameter);
+    int32_t index = MParameters.size();
+    AParameter->MIndex = index;
+    MParameters.append(AParameter);
   }
 
   void deleteParameters() {
-    for (uint32_t i=0; i<parameters.size(); i++) {
-      delete parameters[i];
-      parameters[i] = nullptr;
+    for (uint32_t i=0; i<MParameters.size(); i++) {
+      delete MParameters[i];
+      MParameters[i] = nullptr;
     }
   }
 
   void appendPreset(KODE_Preset* APreset) {
-    presets.append(APreset);
+    MPresets.append(APreset);
   }
 
   void deletePresets() {
-    for (uint32_t i=0; i<presets.size(); i++) {
-      delete presets[i];
-      presets[i] = nullptr;
+    for (uint32_t i=0; i<MPresets.size(); i++) {
+      delete MPresets[i];
+      MPresets[i] = nullptr;
     }
   }
 

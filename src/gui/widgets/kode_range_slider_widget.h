@@ -146,7 +146,7 @@ public:
       const char* label = "";
       KODE_Parameter* param = getParameter();
       if (param) {
-        label = param->label;
+        label = param->getLabel();
         param->getDisplayText(value1,MValue1Text);
         param->getDisplayText(value2,MValue2Text);
       }

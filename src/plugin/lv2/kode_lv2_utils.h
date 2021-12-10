@@ -74,20 +74,20 @@ void KODE_Lv2CreateManifest(KODE_Descriptor* descriptor, char* manifest_ttl, cha
     #endif
     strcat(manifest_ttl,"\n");
 
-    sprintf(temp,"<urn:%s/%s>\n",descriptor->author,descriptor->name);        //"urn:skei.audio/kode_debug";
+    sprintf(temp,"<urn:%s/%s>\n",descriptor->getAuthor(),descriptor->getName());        //"urn:skei.audio/kode_debug";
     strcat(manifest_ttl,temp);
     strcat(manifest_ttl,"  a lv2:Plugin ;\n");                                     // , lv2:InstrumentPlugin ;\n");
-    sprintf(temp,"  lv2:binary <%s.so>  ;\n",descriptor->name);                    // TODO: this.filename?
+    sprintf(temp,"  lv2:binary <%s.so>  ;\n",descriptor->getName());                    // TODO: this.filename?
     strcat(manifest_ttl,temp);
-    sprintf(temp,"  rdfs:seeAlso <%s.ttl> .\n",descriptor->name);
+    sprintf(temp,"  rdfs:seeAlso <%s.ttl> .\n",descriptor->getName());
     strcat(manifest_ttl,temp);
     strcat(manifest_ttl,"\n");
 
     #ifndef KODE_NO_GUI
-    sprintf(temp,"<urn:%s/%s_ui>\n",descriptor->author,descriptor->name); //"urn:skei.audio/kode_debug_ui";
+    sprintf(temp,"<urn:%s/%s_ui>\n",descriptor->getAuthor(),descriptor->getName()); //"urn:skei.audio/kode_debug_ui";
     strcat(manifest_ttl,temp);
     strcat(manifest_ttl,"  a ui:X11UI ;\n");
-    sprintf(temp,"  ui:binary <%s.so>  .\n",descriptor->name);                     // TODO: this.filename?
+    sprintf(temp,"  ui:binary <%s.so>  .\n",descriptor->getName());                     // TODO: this.filename?
     strcat(manifest_ttl,temp);
     //strcat(manifest_ttl,"  lv2:extensionData ui:idle; .\n");
     strcat(manifest_ttl,"\n");
@@ -114,10 +114,10 @@ void KODE_Lv2CreateManifest(KODE_Descriptor* descriptor, char* manifest_ttl, cha
     strcat(plugin_ttl,"@prefix urid:   <http://lv2plug.in/ns/ext/urid#> .\n");
     strcat(plugin_ttl,"\n");
 
-    sprintf(temp,"<urn:%s/%s>\n",descriptor->author,descriptor->name); // "urn:skei.audio/kode_debug";
+    sprintf(temp,"<urn:%s/%s>\n",descriptor->getAuthor(),descriptor->getName()); // "urn:skei.audio/kode_debug";
     strcat(plugin_ttl,temp);
     strcat(plugin_ttl,"  a lv2:Plugin ;\n"); // , lv2:InstrumentPlugin ;\n");
-    sprintf(temp,"  doap:name           \"%s\" ;\n",descriptor->name);
+    sprintf(temp,"  doap:name           \"%s\" ;\n",descriptor->getName());
     strcat(plugin_ttl,temp);
     strcat(plugin_ttl,"  lv2:optionalFeature lv2:hardRTCapable ;\n");
     strcat(plugin_ttl,"  lv2:requiredFeature urid:map ;\n");
@@ -130,11 +130,11 @@ void KODE_Lv2CreateManifest(KODE_Descriptor* descriptor, char* manifest_ttl, cha
     // ports
     //----------
 
-    uint32_t  numin     = descriptor->inputs.size();
-    uint32_t  numout    = descriptor->outputs.size();
-    uint32_t  numpar    = descriptor->parameters.size();
+    uint32_t  numin     = descriptor->getNumInputs();
+    uint32_t  numout    = descriptor->getNumOutputs();
+    uint32_t  numpar    = descriptor->getNumParameters();
     uint32_t  numports  = numin + numout + numpar;
-    if (descriptor->options.can_receive_midi) { numports += 1; }
+    if (descriptor->canReceiveMidi()) { numports += 1; }
     uint32_t  i = 0;
     uint32_t  p = 0;
     char      symbol[64];
@@ -191,8 +191,8 @@ void KODE_Lv2CreateManifest(KODE_Descriptor* descriptor, char* manifest_ttl, cha
       //----------
 
       for (i=0; i<numpar; i++) {
-        KODE_Parameter* par = descriptor->parameters[i];
-        strcpy(name,par->name);
+        KODE_Parameter* par = descriptor->getParameter(i);
+        strcpy(name,par->getName());
         strcpy(symbol,name);
 //        KODE_MakeValidSymbol(symbol);
         strcat(plugin_ttl,"    a lv2:InputPort , lv2:ControlPort ;\n");
@@ -202,11 +202,11 @@ void KODE_Lv2CreateManifest(KODE_Descriptor* descriptor, char* manifest_ttl, cha
         strcat(plugin_ttl,temp);
         sprintf(temp,     "    lv2:name          \"%s\" ;\n",name);
         strcat(plugin_ttl,temp);
-        sprintf(temp,     "    lv2:default       %f ;\n",    par->def_value);
+        sprintf(temp,     "    lv2:default       %f ;\n",    par->getDefValue());
         strcat(plugin_ttl,temp);
-        sprintf(temp,     "    lv2:minimum       %f ;\n",    par->min_value);
+        sprintf(temp,     "    lv2:minimum       %f ;\n",    par->getMinValue());
         strcat(plugin_ttl,temp);
-        sprintf(temp,     "    lv2:maximum       %f ;\n",    par->max_value);
+        sprintf(temp,     "    lv2:maximum       %f ;\n",    par->getMaxValue());
         strcat(plugin_ttl,temp);
         p++;
         if (p < numports) strcat(plugin_ttl," ] , [\n");
@@ -217,7 +217,7 @@ void KODE_Lv2CreateManifest(KODE_Descriptor* descriptor, char* manifest_ttl, cha
       // midi input
       //----------
 
-      if (descriptor->options.can_receive_midi) {
+      if (descriptor->canReceiveMidi()) {
         //strcat(plugin_ttl,"    a lv2:InputPort , atom:AtomPort ;\n");
         strcat(plugin_ttl,"    a atom:AtomPort , lv2:InputPort ;\n");
         strcat(plugin_ttl,"    atom:bufferType   atom:Sequence ;\n");
@@ -259,7 +259,7 @@ void KODE_Lv2WriteManifest(KODE_Descriptor* ADescriptor) {
   if (fp) fprintf(fp,"%s",manifest_ttl);
   char buffer[KODE_MAX_PATH_LENGTH] = {0};
   buffer[0] = 0;
-  strcat(buffer,ADescriptor->name);
+  strcat(buffer,ADescriptor->getName());
   strcat(buffer,".ttl");
   fp = fopen(buffer,"w");
   if (fp) fprintf(fp,"%s",plugin_ttl);

@@ -98,7 +98,7 @@ public:
       KODE_Parameter* param = getParameter();
 
       if (param) {
-        label = param->label;
+        label = param->getLabel();
         value = param->from01(value);
         param->getDisplayText(value,MValueText);
       }

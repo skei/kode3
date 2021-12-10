@@ -119,7 +119,7 @@ public:
   void on_widget_connect(KODE_Parameter* AParameter, uint32_t ASubIndex) override {
     wdg_knob->setParameter(AParameter);
     if (AParameter) {
-      wdg_label->setText( AParameter->name );
+      wdg_label->setText( AParameter->getName() );
       float value = 0.0f;
       //const char* txt = AParameter->getDisplayText(value);
       //KODE_FloatToString(value_text,AValue);

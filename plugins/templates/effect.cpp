@@ -6,139 +6,18 @@
 //#define KODE_PLUGIN_VST2
 //#define KODE_PLUGIN_VST3
 //#define KODE_PLUGIN_CLAP
-
 #define KODE_PLUGIN_ALL
-//#define KODE_DEBUG_CLAP
-//#define SKIP_STATE_SAVE
 
 #define KODE_GUI_XCB
-#define KODE_DEBUG_PRINT_SOCKET
+
+//#define KODE_DEBUG_PRINT_SOCKET
 // nc -U -l -k /tmp/kode.socket
 
 //----------
 
 #include "kode.h"
 #include "plugin/kode_plugin.h"
-#include "plugin/kode_voice_manager.h"
 #include "gui/kode_widgets.h"
-
-//----------------------------------------------------------------------
-//
-// voice
-//
-//----------------------------------------------------------------------
-
-class myVoice {
-
-//------------------------------
-private:
-//------------------------------
-
-  KODE_VoiceContext*  MContext      = KODE_NULL;
-  float               MNote         = 0.0f;
-  float               MBend         = 0.0f;
-  float               MMasterBend   = 0.0f;
-  float               MMasterPress  = 0.0f;
-
-  float srate = 0.0f; // sample rate
-  float ph    = 0.0f; // phase
-  float phadd = 0.0f; // phase add
-
-//------------------------------
-public:
-//------------------------------
-
-  // content of AContext not valid yet..
-  // just keep track of the ptr..
-
-  void prepare(KODE_VoiceContext* AContext, float ASampleRate/*, uint32_t ABlockSize*/) {
-    MContext = AContext;
-    srate = ASampleRate;
-  }
-
-  //----------
-
-  uint32_t strike(float note, float vel) {
-    MNote = note;
-    MBend = 0.0f;
-    float hz = KODE_NoteToHz(MNote + (MMasterBend * 2.0f) + (MBend*48.0f));
-    ph = 0.0f;
-    phadd = hz / srate;
-    return KODE_VOICE_PLAYING;
-  }
-
-  //----------
-
-  uint32_t lift(float vel) {
-    return KODE_VOICE_FINISHED;
-  }
-
-  //----------
-
-  void bend(float b) {
-    MBend = b;
-    float hz = KODE_NoteToHz(MNote + (MMasterBend * 2.0f) + (MBend*48.0f));
-    phadd = hz / srate;
-  }
-
-  //----------
-
-  void press(float p) {
-  }
-
-  //----------
-
-  void slide(float s) {
-  }
-
-  //----------
-
-  void ctrl(uint32_t i, uint32_t v) {
-  }
-
-  //----------
-
-  void master_bend(float mb) {
-    MMasterBend = mb;
-    float hz = KODE_NoteToHz(MNote + (MMasterBend * 2.0f) + (MBend*48.0f));
-    phadd = hz / srate;
-  }
-
-  //----------
-
-  void master_press(float mp) {
-    MMasterPress = mp;
-  }
-
-  //----------
-
-  void master_ctrl(uint32_t i, float mc) {
-  }
-
-  //----------
-
-  void parameter(uint32_t i, float c) {
-  }
-
-  //----------
-
-  uint32_t process(uint32_t AMode) {
-    uint32_t num = MContext->processContext->numsamples;
-    float*out0 = MContext->processContext->outputs[0];
-    float*out1 = MContext->processContext->outputs[1];
-    for (uint32_t i=0; i<num; i++) {
-      float v = (ph * 2.0f) - 1.0f;
-      ph += phadd;
-      ph = KODE_Fract(ph);
-      *out0++ += v * 0.1f;
-      *out1++ += v * 0.1f;
-    }
-    return AMode;
-  }
-
-  //----------
-
-};
 
 //----------------------------------------------------------------------
 //
@@ -171,7 +50,6 @@ public:
     appendOutput("output 2");
     appendParameter(new KODE_Parameter( "slider", 1.0,  -2.0, 2.0 ));
     appendParameter(new KODE_Parameter( "knob",   0.25,  0.0, 1.0 ));
-    MOptions.is_synth = true;
     MOptions.has_editor = true;
     MEditorWidth = 400;
     MEditorHeight = 300;
@@ -186,6 +64,59 @@ public:
 };
 
 //----------------------------------------------------------------------
+//
+// editor
+//
+//----------------------------------------------------------------------
+
+class myEditor
+: public KODE_Editor {
+
+//------------------------------
+private:
+//------------------------------
+
+  KODE_SliderWidget*  MSlider1      = nullptr;
+  KODE_KnobWidget*    MKnob1        = nullptr;
+
+//------------------------------
+public:
+//------------------------------
+
+  myEditor(KODE_EditorListener* AListener, KODE_Descriptor* ADescriptor)
+  : KODE_Editor(AListener,ADescriptor) {
+    //KODE_PRINT;
+  }
+
+  //----------
+
+  virtual ~myEditor() {
+    //KODE_PRINT;
+  }
+
+  //----------
+
+  void show() override {
+    KODE_PRINT;
+    if (MWindow) {
+      KODE_PRINT;
+      MSlider1  = new KODE_SliderWidget( KODE_FRect(10,10,150,20) );
+      MKnob1    = new KODE_KnobWidget( KODE_FRect(10,40,50,50) );
+      MWindow->appendWidget(MSlider1);
+      MWindow->appendWidget(MKnob1);
+      connect( MSlider1, 0 );
+      connect( MKnob1,   1 );
+    }
+    KODE_Editor::show();
+  }
+
+};
+
+//----------------------------------------------------------------------
+//
+// instance
+//
+//----------------------------------------------------------------------
 
 class myInstance
 : public KODE_Instance
@@ -195,9 +126,8 @@ class myInstance
 private:
 //------------------------------
 
-  KODE_Descriptor*              MDescriptor = nullptr;
-  KODE_Editor*                  MEditor     = nullptr;
-  KODE_VoiceManager<myVoice,16> MVoices     = {};
+  KODE_Descriptor*  MDescriptor = nullptr;
+  KODE_Editor*      MEditor     = nullptr;
 
 //------------------------------
 public:
@@ -234,7 +164,6 @@ public:
 
   bool on_plugin_activate(float ASampleRate, uint32_t AMinFrames, uint32_t AMaxFrames) final {
     KODE_PRINT;
-    MVoices.prepare(ASampleRate/*,ABlocksize*/);
     return false;
   }
 
@@ -273,17 +202,12 @@ public:
 
   void on_plugin_parameter(uint32_t AIndex, float AValue) final {
     KODE_PRINT;
-    uint32_t AOffset = 0;
-    uint32_t AMode = 0;
-    MVoices.parameter(AOffset,AIndex,AValue,AMode);
   }
 
   //----------
 
   void on_plugin_midi(uint32_t AOffset, uint8_t AMsg1, uint8_t AMsg2, uint8_t AMsg3) final {
     //KODE_Print("%i : %02x %02x %02x\n",AOffset,AMsg1,AMsg2,AMsg3);
-    uint32_t AMode = 0;
-    MVoices.midi(AOffset,AMsg1,AMsg2,AMsg3,AMode);
   }
 
   //----------
@@ -309,7 +233,6 @@ public:
     //  *out0++ = KODE_RandomSigned() * 0.5;
     //  *out1++ = KODE_RandomSigned() * 0.5;
     //}
-    MVoices.processBlock(AContext);
     return 0;
   }
 
@@ -333,12 +256,6 @@ public:
     KODE_PRINT;
     KODE_Window* window = AEditor->getWindow();
     if (window) {
-      KODE_SliderWidget* slider = new KODE_SliderWidget( KODE_FRect(10,10,150,20) );
-      KODE_KnobWidget*    knob  = new KODE_KnobWidget( KODE_FRect(10,40,50,50) );
-      window->appendWidget(slider);
-      window->appendWidget(knob);
-      AEditor->connect(slider,0);
-      AEditor->connect(knob,1);
       return true;
     }
     return false;
@@ -361,29 +278,9 @@ public:
 };
 
 //----------------------------------------------------------------------
-
-/*
-class myEditor
-: public KODE_Editor {
-
-//------------------------------
-public:
-//------------------------------
-
-  myEditor(KODE_EditorListener* AListener, KODE_Descriptor* ADescriptor)
-  : KODE_Editor(AListener,ADescriptor) {
-    //KODE_PRINT;
-  }
-
-  //----------
-
-  virtual ~myEditor() {
-    //KODE_PRINT;
-  }
-
-};
-*/
-
+//
+//
+//
 //----------------------------------------------------------------------
 
-KODE_MAIN(myDescriptor,myInstance,KODE_Editor)
+KODE_MAIN(myDescriptor,myInstance,myEditor)

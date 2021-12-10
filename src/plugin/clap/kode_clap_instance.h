@@ -81,7 +81,7 @@ public: // editor listener
 
   void on_editor_updateParameter(uint32_t AIndex, float AValue) override {
     //KODE_Print("index %i value %.3f\n",AIndex,AValue);
-    KODE_Parameter* parameter = MDescriptor->parameters[AIndex];
+    KODE_Parameter* parameter = MDescriptor->getParameter(AIndex);
     float value = parameter->from01(AValue);
     MInstance->setParameterValue(AIndex,value);
     MHostParameterQueue.write(AIndex);
@@ -195,7 +195,7 @@ private:
     MInstance->setParameterValue(index,value);
     MInstance->on_plugin_parameter(index,value);
     if (MEditor && MEditorIsOpen) {
-      value = MDescriptor->parameters[index]->to01(value);
+      value = MDescriptor->getParameter(index)->to01(value);
       //TODO queue, and do all in refresh/timer ((or is it done already?)
       MEditor->updateParameter(index,value);
     }
@@ -217,7 +217,7 @@ private:
     uint8_t msg1 = event->midi.data[0];
     uint8_t msg2 = event->midi.data[1];
     uint8_t msg3 = event->midi.data[2];
-    KODE_Print("MIDI %i : %02x %02x %02x\n",event->time,msg1,msg2,msg3);
+    //KODE_Print("MIDI %i : %02x %02x %02x\n",event->time,msg1,msg2,msg3);
     MInstance->on_plugin_midi(event->time,msg1,msg2,msg3);
   }
 
@@ -286,7 +286,7 @@ private:
     if (out_events) {
       uint32_t index;
       while (MHostParameterQueue.read(&index)) {
-        if (index < MDescriptor->parameters.size()) {
+        if (index < MDescriptor->getNumParameters()) {
           float value = MInstance->getParameterValue(index);
           clap_event event;
           event.type                    = CLAP_EVENT_PARAM_VALUE;
@@ -580,7 +580,7 @@ public: // extensions
       //  return 0;
       //}
       //else {
-        if (MDescriptor->inputs.size() > 0) {
+        if (MDescriptor->getNumInputs() > 0) {
           //KODE_ClapDPrint(" -> 1\n");
           return 1;
         }
@@ -591,7 +591,7 @@ public: // extensions
       //}
     }
     else {
-      if (MDescriptor->outputs.size() > 0) {
+      if (MDescriptor->getNumOutputs() > 0) {
         //KODE_ClapDPrint(" -> 1\n");
         return 1;
       }
@@ -618,7 +618,7 @@ public: // extensions
         case 0:
           info->id = 0;
           KODE_Strlcpy(info->name,"ports",CLAP_NAME_SIZE);
-          info->channel_count = MDescriptor->inputs.size();
+          info->channel_count = MDescriptor->getNumInputs();
           info->channel_map   = CLAP_CHMAP_STEREO;
           info->sample_size   = 32;     // 32 for float and 64 for double
           info->is_main       = true;   // there can only be 1 main input and output
@@ -633,7 +633,7 @@ public: // extensions
         case 0:
           info->id = 0;
           KODE_Strlcpy(info->name,"ports",CLAP_NAME_SIZE);
-          info->channel_count = MDescriptor->outputs.size();;
+          info->channel_count = MDescriptor->getNumOutputs();;
           info->channel_map   = CLAP_CHMAP_STEREO;
           info->sample_size   = 32;     // 32 for float and 64 for double
           info->is_main       = true;   // there can only be 1 main input and output
@@ -792,8 +792,8 @@ public: // extensions
 
   bool clap_gui_get_size(uint32_t *width, uint32_t *height) {
     //KODE_ClapPrint("-> true (*width %i *height %i)\n",MDescriptor->editorWidth,MDescriptor->editorHeight);
-    *width  = MDescriptor->editorWidth;
-    *height = MDescriptor->editorHeight;
+    *width  = MDescriptor->getEditorWidth();
+    *height = MDescriptor->getEditorHeight();
     return true;
   }
 
@@ -805,7 +805,7 @@ public: // extensions
 
   bool clap_gui_can_resize() {
     //KODE_ClapPrint("-> false\n");
-    if (MDescriptor->options.can_resize_editor) return true;
+    if (MDescriptor->canResizeEditor()) return true;
     return false;
   }
 
@@ -821,8 +821,8 @@ public: // extensions
 
   void clap_gui_round_size(uint32_t *width, uint32_t *height) {
     //KODE_ClapPrint("-> (*width %i *height %i)\n",MDescriptor->editorWidth,MDescriptor->editorHeight);
-    *width  = MDescriptor->editorWidth;
-    *height = MDescriptor->editorHeight;
+    *width  = MDescriptor->getEditorWidth();
+    *height = MDescriptor->getEditorHeight();
   }
 
   //----------
@@ -1026,7 +1026,7 @@ public: // extensions
 
   uint32_t clap_params_count() {
     //KODE_ClapPrint("-> %i\n",MDescriptor->parameters.size());
-    return MDescriptor->parameters.size();
+    return MDescriptor->getNumParameters();
   }
 
   //----------
@@ -1050,20 +1050,20 @@ public: // extensions
 
   bool clap_params_get_info(int32_t param_index, clap_param_info *param_info) {
     //KODE_ClapPrint("param_index %i -> true\n",param_index);
-    KODE_Parameter* parameter = MDescriptor->parameters[param_index];
+    KODE_Parameter* parameter = MDescriptor->getParameter(param_index);
     uint32_t flags = 0;
-    if (parameter->options.is_hidden)     param_info->flags |= CLAP_PARAM_IS_HIDDEN;
-    if (parameter->options.is_readonly)   param_info->flags |= CLAP_PARAM_IS_READONLY;
-    if (parameter->options.can_modulate)  param_info->flags |= CLAP_PARAM_IS_MODULATABLE;
-    if (parameter->num_steps > 1)         param_info->flags |= CLAP_PARAM_IS_STEPPED;
-    KODE_Strlcpy(param_info->name,parameter->name,CLAP_NAME_SIZE);
+    if (parameter->isHidden())    param_info->flags |= CLAP_PARAM_IS_HIDDEN;
+    if (parameter->isReadOnly())  param_info->flags |= CLAP_PARAM_IS_READONLY;
+    if (parameter->canModulate()) param_info->flags |= CLAP_PARAM_IS_MODULATABLE;
+    if (parameter->getNumSteps() > 1)         param_info->flags |= CLAP_PARAM_IS_STEPPED;
+    KODE_Strlcpy(param_info->name,parameter->getName(),CLAP_NAME_SIZE);
     KODE_Strlcpy(param_info->module,"",CLAP_MODULE_SIZE);
     param_info->flags         = flags;
     param_info->id            = param_index;
     param_info->cookie        = parameter; //nullptr;
-    param_info->min_value     = parameter->min_value; // 0.00
-    param_info->max_value     = parameter->max_value; // 1.0
-    param_info->default_value = parameter->def_value; // parameter->to01(parameter->def_value);
+    param_info->min_value     = parameter->getMinValue(); // 0.00
+    param_info->max_value     = parameter->getMaxValue(); // 1.0
+    param_info->default_value = parameter->getDefValue(); // parameter->to01(parameter->def_value);
     return true;
   }
 
@@ -1091,7 +1091,7 @@ public: // extensions
 
   bool clap_params_value_to_text(clap_id param_id, double value, char *display, uint32_t size) {
     char buffer[256];
-    KODE_Parameter* param = MDescriptor->parameters[param_id];
+    KODE_Parameter* param = MDescriptor->getParameter(param_id);
     param->getDisplayText(value,buffer);
     KODE_Strlcpy(display,buffer,size);
     //display[size-1] = 0;
@@ -1178,9 +1178,9 @@ public: // extensions
   bool clap_state_save(clap_ostream *stream) {
     KODE_Print("Saving state..\n");
     KODE_Assert(stream);
-      uint32_t version = MDescriptor->version;
+      uint32_t version = MDescriptor->getVersion();
       stream->write(stream,&version,sizeof(uint32_t));
-      uint32_t num_params = MDescriptor->parameters.size();
+      uint32_t num_params = MDescriptor->getNumParameters();
       stream->write(stream,&num_params,sizeof(uint32_t));
       for (uint32_t i=0; i<num_params; i++) {
         float value = MInstance->getParameterValue(i);

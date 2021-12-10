@@ -23,10 +23,10 @@ public:
 
 public:
 
-  virtual char* getDisplayString(float AValue, char* buffer) override {
+  virtual char* getDisplayText(float AValue, char* ABuffer, uint32_t ANumDigits=0) override {
     int32_t i = floorf(from01(AValue));
-    strcpy(buffer,MStrings[i]);
-    return buffer;
+    strcpy(ABuffer,MStrings[i]);
+    return ABuffer;
   }
 
 };

@@ -116,14 +116,14 @@ public:
     MMakerBuffer      = (char*)malloc(KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
     MCopyrightBuffer  = (char*)malloc(KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
 
-    strncpy(MNameBuffer,      MDescriptor->name,        KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
-    strncpy(MLabelBuffer,     MDescriptor->name,        KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1); // todo: make valid c symbol (see lv2)
-    strncpy(MMakerBuffer,     MDescriptor->author,      KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
-    strncpy(MCopyrightBuffer, MDescriptor->license_text, KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
+    strncpy(MNameBuffer,      MDescriptor->getName(),        KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
+    strncpy(MLabelBuffer,     MDescriptor->getName(),        KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1); // todo: make valid c symbol (see lv2)
+    strncpy(MMakerBuffer,     MDescriptor->getAuthor(),      KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
+    strncpy(MCopyrightBuffer, MDescriptor->getLicenseText(), KODE_PLUGIN_LADSPA_MAX_NAME_LENGTH-1);
 
     uint32_t numports = KODE_LadspaSetupPorts(MDescriptor,&MPorts);
 
-    MLadspaDescriptor->UniqueID                   = MDescriptor->short_id;
+    MLadspaDescriptor->UniqueID                   = MDescriptor->getShortId();
     MLadspaDescriptor->Label                      = MLabelBuffer;
     MLadspaDescriptor->Properties                 = LADSPA_PROPERTY_HARD_RT_CAPABLE; // LADSPA_PROPERTY_REALTIME, LADSPA_PROPERTY_INPLACE_BROKEN
     MLadspaDescriptor->Name                       = MNameBuffer;

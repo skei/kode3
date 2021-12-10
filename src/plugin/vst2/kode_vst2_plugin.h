@@ -103,8 +103,8 @@ public:
     //instance->setDefaultParameterValues();
     //instance->updateAllParameters();
     int32_t flags = effFlagsCanReplacing;
-    if (MDescriptor->options.is_synth)    flags |= effFlagsIsSynth;
-    if (MDescriptor->options.has_editor)  flags |= effFlagsHasEditor;
+    if (MDescriptor->isSynth())    flags |= effFlagsIsSynth;
+    if (MDescriptor->hasEditor())  flags |= effFlagsHasEditor;
     //if (MDescriptor->options.use_chunks)) flags |= effFlagsProgramChunks;
     //if (MPlugin->hasFlag(kpf_silentStop)) flags |= effFlagsNoSoundInStop;
     //#ifndef KODE_PLUGIN_VST2_VESTIGE
@@ -112,13 +112,13 @@ public:
     //#endif
     memset(effect,0,sizeof(AEffect));
     effect->magic                     = kEffectMagic;
-    effect->uniqueID                  = MDescriptor->short_id;
+    effect->uniqueID                  = MDescriptor->getShortId();
     effect->flags                     = flags;
-    effect->numInputs                 = MDescriptor->inputs.size();
-    effect->numOutputs                = MDescriptor->outputs.size();
-    effect->numParams                 = MDescriptor->parameters.size();
-    effect->numPrograms               = MDescriptor->presets.size();
-    effect->version                   = MDescriptor->version;
+    effect->numInputs                 = MDescriptor->getNumInputs();
+    effect->numOutputs                = MDescriptor->getNumOutputs();
+    effect->numParams                 = MDescriptor->getNumParameters();
+    effect->numPrograms               = MDescriptor->getNumPresets();
+    effect->version                   = MDescriptor->getVersion();
     effect->initialDelay              = 0;
     effect->object                    = vst2_instance;
     effect->user                      = nullptr;//instance;

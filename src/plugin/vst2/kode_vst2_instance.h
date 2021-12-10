@@ -133,12 +133,12 @@ private:
 //------------------------------
 
   void initParameters() {
-    uint32_t num = MDescriptor->parameters.size();
+    uint32_t num = MDescriptor->getNumParameters();
     for (uint32_t i=0; i<num; i++) {
-      KODE_Parameter* parameter = MDescriptor->parameters[i];
-      parameter->def_value = parameter->to01( parameter->def_value );
-      parameter->min_value = parameter->to01( parameter->min_value );
-      parameter->max_value = parameter->to01( parameter->max_value );
+      KODE_Parameter* parameter = MDescriptor->getParameter(i);
+      parameter->setDefValue(parameter->to01( parameter->getDefValue() ));
+      parameter->setMinValue(parameter->to01( parameter->getMinValue() ));
+      parameter->setMaxValue(parameter->to01( parameter->getMaxValue() ));
     }
   }
 
@@ -154,7 +154,7 @@ private:
     uint32_t message = 0;
     while (MProcessMessageQueue.read(&message)) {
       float value = MInstance->getParameterValue(message);
-      value = MDescriptor->parameters[message]->from01(value);
+      value = MDescriptor->getParameter(message)->from01(value);
       MInstance->on_plugin_parameter(message,value);
     }
   }
@@ -256,8 +256,8 @@ public: // vst2
     updateParametersInProcess();
     //MHost->updateTime();
     uint32_t i;
-    for (i=0; i<MDescriptor->inputs.size(); i++)  { MProcessContext.inputs[i]  = inputs[i]; }
-    for (i=0; i<MDescriptor->outputs.size(); i++) { MProcessContext.outputs[i] = outputs[i]; }
+    for (i=0; i<MDescriptor->getNumInputs(); i++)  { MProcessContext.inputs[i]  = inputs[i]; }
+    for (i=0; i<MDescriptor->getNumOutputs(); i++) { MProcessContext.outputs[i] = outputs[i]; }
     MProcessContext.numsamples    = sampleFrames;
     //MProcessContext.oversample    = 1;
     MProcessContext.samplerate    = MSampleRate;
@@ -269,7 +269,7 @@ public: // vst2
     MProcessContext.playstate     = MPlayState;
     MInstance->on_plugin_process(&MProcessContext);
     //on_postProcess();
-    if (MDescriptor->options.can_send_midi) {
+    if (MDescriptor->canSendMidi()) {
       MVst2Host->flushMidi( (VstEvents*)&MVstEvents );
       MVstEvents.numEvents = 0;
     }
@@ -392,8 +392,8 @@ public: // vst2
 
       case effGetParamLabel: { // 6
         //KODE_Vst2Trace("vst2: dispatcher/effGetParamLabel %i\n",index);
-        KODE_Parameter* pa = MDescriptor->parameters[index];
-        strcpy((char*)ptr,pa->label);
+        KODE_Parameter* pa = MDescriptor->getParameter(index);
+        strcpy((char*)ptr,pa->getLabel());
         return 1;
         break;
       }
@@ -408,7 +408,7 @@ public: // vst2
 
       case effGetParamDisplay: { // 7
         //KODE_Vst2Trace("vst2: dispatcher/effGetParamDisplay %i\n",index);
-        KODE_Parameter* pa = MDescriptor->parameters[index];
+        KODE_Parameter* pa = MDescriptor->getParameter(index);
         float v = MInstance->getParameterValue(index);
         v = pa->from01(v);
         char str[32];
@@ -428,8 +428,8 @@ public: // vst2
 
       case effGetParamName: { // 8
         //KODE_Vst2Trace("vst2: dispatcher/effGetParamName %i\n",index);
-        KODE_Parameter* pa = MDescriptor->parameters[index];
-        strcpy((char*)ptr,pa->name);
+        KODE_Parameter* pa = MDescriptor->getParameter(index);
+        strcpy((char*)ptr,pa->getName());
         return 1;
         break;
       }
@@ -532,9 +532,9 @@ public: // vst2
 
       case effEditGetRect: // 13
         //KODE_Vst2Trace("vst2: dispatcher/effEditGetRect\n");
-        if (MDescriptor->options.has_editor) {
-          uint32_t w = MDescriptor->editorWidth;
-          uint32_t h = MDescriptor->editorHeight;
+        if (MDescriptor->hasEditor()) {
+          uint32_t w = MDescriptor->getEditorWidth();
+          uint32_t h = MDescriptor->getEditorHeight();
           //if (w == 0) w = MInstance->getDefaultEditorWidth();
           //if (h == 0) h = MInstance->getDefaultEditorHeight();
           MVstRect.left     = 0;
@@ -557,7 +557,7 @@ public: // vst2
       case effEditOpen: // 14
         //KODE_Vst2Trace("vst2: dispatcher/effEditOpen\n");
         #ifndef KODE_NO_GUI
-        if (MDescriptor->options.has_editor) {
+        if (MDescriptor->hasEditor()) {
           if (!MIsEditorOpen) {
             MIsEditorOpen = true;
             //MEditor = (KODE_Editor*)MInstance->on_openEditor(ptr);
@@ -592,7 +592,7 @@ public: // vst2
       case effEditClose: // 15
         //KODE_Vst2Trace("vst2: dispatcher/effEditClose\n");
         #ifndef KODE_NO_GUI
-        if (MDescriptor->options.has_editor) {
+        if (MDescriptor->hasEditor()) {
           if (MIsEditorOpen) {
             MIsEditorOpen = false;
             if (MEditor) {
@@ -631,7 +631,7 @@ public: // vst2
       case effEditIdle: // 19
         //KODE_Vst2Trace("vst2: dispatcher/effEditIdle\n");
         #ifndef KODE_NO_GUI
-        if (MDescriptor->options.has_editor) {
+        if (MDescriptor->hasEditor()) {
           if (MIsEditorOpen) {
             //KODE_Assert(MEditor);
 
@@ -698,7 +698,7 @@ public: // vst2
           uint32_t size = MInstance->on_plugin_saveState(&buffer,0);
           if ((size == 0) && (buffer == nullptr)) {
             buffer = MInstance->getParameterValueBuffer();
-            size = MDescriptor->parameters.size() * sizeof(float);
+            size = MDescriptor->getNumParameters() * sizeof(float);
           }
           *(void**)ptr = buffer;
           return size;
@@ -727,7 +727,7 @@ public: // vst2
           //if (index==0) return MInstance->on_loadBank(ptr,value); // was not retrurn
           //else  /*if (index==1)*/ return MInstance->on_loadProgram(ptr,value);
           float* buffer = (float*)ptr;
-          uint32_t num_params = MDescriptor->parameters.size();;
+          uint32_t num_params = MDescriptor->getNumParameters();;
           for (uint32_t i=0; i<num_params; i++) {
             float v = buffer[i];
             MInstance->setParameterValue(i,v);
@@ -768,7 +768,7 @@ public: // vst2
 
       case effProcessEvents: { // 25
         //KODE_Vst2Trace("vst2: dispatcher/effProcessEvents\n");
-        if ((MDescriptor->options.is_synth) || (MDescriptor->options.can_receive_midi)) {
+        if ((MDescriptor->isSynth()) || (MDescriptor->canReceiveMidi())) {
           VstEvents* ev = (VstEvents*)ptr;
           int num_events = ev->numEvents;
           for (int32_t i=0; i<num_events; i++) {
@@ -797,8 +797,8 @@ public: // vst2
       case effCanBeAutomated: { // 26
         //KODE_Vst2Trace("vst2: dispatcher/effCanBeAutomated %i\n",index);
         uint32_t res = 0;
-        KODE_Parameter* param = MDescriptor->parameters[index];
-        if (param->options.can_automate) res = 1;
+        KODE_Parameter* param = MDescriptor->getParameter(index);
+        if (param->canAutomate()) res = 1;
         return res;
       }
 
@@ -917,7 +917,7 @@ public: // vst2
       case effGetPlugCategory: { // 35
         //KODE_Vst2Trace("vst2: dispatcher/effGetPlugCategory\n");
         uint32_t res = 0;
-        res = (MDescriptor->options.is_synth) ? kPlugCategSynth : kPlugCategEffect;
+        res = (MDescriptor->isSynth()) ? kPlugCategSynth : kPlugCategEffect;
         //if (MPlugin->hasFlag(kpf_tool)) res = kPlugCategGenerator;
         return res;
       }
@@ -1009,7 +1009,7 @@ public: // vst2
 
       case effGetEffectName: // 45
         //KODE_Vst2Trace("vst2: dispatcher/effGetEffectName\n");
-        strcpy(str,MDescriptor->name);
+        strcpy(str,MDescriptor->getName());
         //#ifdef KODE_32BIT
         //  str += "_32";
         //#endif
@@ -1031,7 +1031,7 @@ public: // vst2
 
       case effGetVendorString: // 47
         //KODE_Vst2Trace("vst2: dispatcher/effGetVendorString\n");
-        strcpy((char*)ptr,(char*)MDescriptor->author);
+        strcpy((char*)ptr,(char*)MDescriptor->getAuthor());
         break;
 
       //----------
@@ -1043,7 +1043,7 @@ public: // vst2
 
       case effGetProductString: // 48
         //KODE_Vst2Trace("vst2: dispatcher/effGetProductString\n");
-        strcpy((char*)ptr,(char*)MDescriptor->description);
+        strcpy((char*)ptr,(char*)MDescriptor->getDescription());
         break;
 
       //----------
@@ -1054,7 +1054,7 @@ public: // vst2
 
       case effGetVendorVersion: // 49
         //KODE_Vst2Trace("vst2: dispatcher/effGetVendorVersion\n");
-        return MDescriptor->version;
+        return MDescriptor->getVersion();
 
       //----------
 
@@ -1111,13 +1111,13 @@ public: // vst2
         char* p = (char*)ptr;
 
         // plug-in will send Vst/MIDI events to Host
-        if (MDescriptor->options.can_send_midi) {
+        if (MDescriptor->canSendMidi()) {
           if (!strcmp(p,"sendVstEvents"))    {} //KODE_Vst2Trace(" -> 1\n"); return 1; }
           if (!strcmp(p,"sendVstMidiEvent")) {} //KODE_Vst2Trace(" -> 1\n"); return 1; }
         }
 
         // plug-in can receive Vst/MIDI events to Host
-        if (MDescriptor->options.can_receive_midi) {
+        if (MDescriptor->canReceiveMidi()) {
           if (!strcmp(p,"receiveVstEvents"))     {} //KODE_Vst2Trace(" -> 1\n"); return 1; }
           if (!strcmp(p,"receiveVstMidiEvent"))  {} //KODE_Vst2Trace(" -> 1\n"); return 1; }
         }

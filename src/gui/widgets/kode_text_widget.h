@@ -62,7 +62,7 @@ public:
         KODE_Parameter* param = getParameter();
         if (param) {
           //APainter->drawText(rect,param->getName(),MTextAlignment,MTextColor);
-          txt = param->name;
+          txt = param->getName();
         }
       }
       //else {
