@@ -1,9 +1,18 @@
 # kode3
 
+
+deprecated!
+obsolete!
+(but not yet buried)
+
+this was a prototype, proof-of-concept..
+
+now go to: https://github.com/skei/MIP
+
+
+
 WORK IN PROGRESS!
-
 plugin toolkit/framework..
-
 
 # os
 
